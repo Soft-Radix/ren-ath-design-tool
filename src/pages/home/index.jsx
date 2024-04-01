@@ -4,6 +4,7 @@ import bgImage from "../../assets/images/home/bgImage.png";
 import text from "../../assets/images/home/text.png";
 import model from "../../assets/images/home/model.png";
 import { motion } from "framer-motion";
+import SectionHeading from "../../components/common/sectionHeading";
 
 const Home = () => {
   return (
@@ -30,6 +31,10 @@ const Home = () => {
           <img src={model} className={styles.modelImg} alt="" />
         </motion.div>
       </div>
+      <SectionHeading
+        heading="Our Categories"
+        subHeading="Here are some of the categories we provides"
+      />
     </>
   );
 };
