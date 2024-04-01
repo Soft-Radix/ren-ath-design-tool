@@ -1,4 +1,16 @@
 @import "/src/scss/var";
 
 .mainWrap {
+  height: 767px;
+  position: relative;
+  overflow: hidden;
+}
+.textWrap {
+  display: flex;
+  justify-content: center;
+  padding-top: 10rem;
+}
+.modelWrap {
+  position: absolute;
+  bottom: -4px;
 }
