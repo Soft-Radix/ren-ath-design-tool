@@ -1,0 +1,38 @@
+@import "./var";
+
+// ========== button styling ==============
+button.btn {
+  min-height: 44px;
+  border-radius: 8px;
+  background: $secondary;
+  color: $white;
+  min-width: 130px;
+  font-size: $fontMd;
+  text-transform: none;
+
+  &.btn_contained {
+    &:hover {
+      background: $secondary;
+      filter: brightness(0.985);
+    }
+  }
+
+  &.btn_outlined {
+    background-color: transparent;
+    border: 1px solid $secondary;
+    color: $secondary;
+  }
+
+  @include max($lg) {
+    min-height: 42px;
+    min-width: 120px;
+  }
+  @include max($md) {
+    min-height: 40px;
+    min-width: 110px;
+  }
+  @include max($sm) {
+    min-height: 32px;
+    min-width: 80px;
+  }
+}

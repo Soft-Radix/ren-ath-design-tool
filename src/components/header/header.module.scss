@@ -1,0 +1,26 @@
+@import "/src/scss/var";
+
+.mainWrap {
+  border-bottom: 0.5px solid $secondary;
+}
+
+.innerWrap {
+  display: flex;
+  padding: 20px 0;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.buttonsWrap {
+  display: flex;
+  gap: 16px;
+}
+
+@include max($sm) {
+  .buttonsWrap {
+    gap: 12px;
+  }
+  .mainLogo {
+    width: 150px;
+  }
+}
