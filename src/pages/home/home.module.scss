@@ -9,8 +9,39 @@
   display: flex;
   justify-content: center;
   padding-top: 10rem;
+  img {
+    max-width: 85%;
+  }
 }
 .modelWrap {
   position: absolute;
   bottom: -4px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+@include max($xl) {
+  .mainWrap,
+  .modelImg {
+    height: 700px;
+  }
+}
+@include max($lg) {
+  .mainWrap,
+  .modelImg {
+    height: 600px;
+  }
+}
+@include max($md) {
+  .mainWrap,
+  .modelImg {
+    height: 500px;
+  }
+}
+@include max($sm) {
+  .mainWrap,
+  .modelImg {
+    height: 400px;
+  }
 }

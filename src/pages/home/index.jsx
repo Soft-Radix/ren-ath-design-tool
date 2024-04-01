@@ -27,7 +27,7 @@ const Home = () => {
           transition={{ ease: "easeOut", duration: 0.5 }}
           className={styles.modelWrap}
         >
-          <img src={model} alt="" />
+          <img src={model} className={styles.modelImg} alt="" />
         </motion.div>
       </div>
     </>
