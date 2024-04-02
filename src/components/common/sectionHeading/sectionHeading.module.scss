@@ -16,7 +16,7 @@
     padding: 60px 0 40px;
   }
   @include max($sm) {
-    padding: 40px 0 20px;
+    padding: 40px 0 30px;
   }
 }
 
@@ -24,6 +24,9 @@
   font-size: 40px;
   color: $primary;
   font-weight: $fontBold;
+  @include max($md) {
+    font-size: 36px;
+  }
   @include max($sm) {
     font-size: 32px;
   }

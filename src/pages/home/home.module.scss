@@ -21,6 +21,15 @@
   justify-content: center;
 }
 
+.categoryWrap {
+  display: flex;
+  justify-content: space-between;
+  img {
+    flex: 1;
+    max-width: 48%;
+  }
+}
+
 @include max($xl) {
   .mainWrap,
   .modelImg {
@@ -43,5 +52,12 @@
   .mainWrap,
   .modelImg {
     height: 400px;
+  }
+  .categoryWrap {
+    flex-direction: column;
+    gap: 20px;
+    img {
+      max-width: 100%;
+    }
   }
 }
