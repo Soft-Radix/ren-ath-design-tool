@@ -1,9 +1,12 @@
 @import "/src/scss/var";
 
 .mainWrap {
-  height: 767px;
+  // height: 767px;
   position: relative;
   overflow: hidden;
+  img {
+    width: 100%;
+  }
 }
 .textWrap {
   display: flex;
@@ -30,34 +33,109 @@
   }
 }
 
-@include max($xl) {
-  .mainWrap,
-  .modelImg {
-    height: 700px;
+.productsWrap {
+  @include row(22%, 15px, 50px, center);
+  @include max($xl) {
+    --width: 26%;
   }
+  @include max($lg) {
+    --width: 30%;
+  }
+  @include max(918) {
+    --width: 35%;
+  }
+  @include max($md) {
+    --width: 40%;
+  }
+  @include max($sm) {
+    --width: 100%;
+  }
+}
+
+@include max($xl) {
+  // .mainWrap,
+  // .modelImg {
+  //   height: 700px;
+  // }
 }
 @include max($lg) {
-  .mainWrap,
-  .modelImg {
-    height: 600px;
-  }
+  // .mainWrap,
+  // .modelImg {
+  //   height: 600px;
+  // }
 }
 @include max($md) {
-  .mainWrap,
-  .modelImg {
-    height: 500px;
-  }
+  // .mainWrap,
+  // .modelImg {
+  //   height: 500px;
+  // }
 }
 @include max($sm) {
-  .mainWrap,
-  .modelImg {
-    height: 400px;
-  }
+  // .mainWrap,
+  // .modelImg {
+  //   height: 400px;
+  // }
   .categoryWrap {
     flex-direction: column;
     gap: 20px;
     img {
       max-width: 100%;
     }
+  }
+}
+
+.learnAbout {
+  margin-top: 110px;
+  padding: 65px 0;
+  border-top: 0.5px solid $secondary;
+  border-bottom: 0.5px solid $secondary;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 40px;
+  .text {
+    text-align: center;
+    font-size: 40px;
+    color: $primary;
+    font-weight: $fontBold;
+    span {
+      font-weight: 800;
+      @include max($lg) {
+        display: block;
+      }
+    }
+    @include max($md) {
+      font-size: 36px;
+    }
+    @include max($sm) {
+      font-size: 28px;
+    }
+  }
+  .socialWrap {
+    display: flex;
+    gap: 60px;
+    align-items: center;
+    .item {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      span {
+        font-size: 20px;
+        color: $primary;
+      }
+      img {
+        height: 56px;
+      }
+    }
+    .line {
+      height: 60px;
+      width: 1px;
+      background: $secondary;
+    }
+  }
+  @include max($sm) {
+    margin-top: 90px;
+    padding: 50px 0;
   }
 }

@@ -36,3 +36,20 @@ $fontBold: 500;
   align-items: center;
   justify-content: center;
 }
+
+@mixin row($width, $space, $gap, $jc) {
+  --width: #{$width};
+  --space: #{$space};
+  --gap: #{$gap};
+  --jc: #{$jc};
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: var(--jc);
+  margin: 0 calc(-1 * var(--space));
+  gap: var(--gap) 0;
+  > * {
+    padding: 0 var(--space);
+    flex-basis: var(--width);
+    max-width: var(--width);
+  }
+}

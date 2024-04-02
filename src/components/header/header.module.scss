@@ -16,11 +16,28 @@
   gap: 16px;
 }
 
+@include max($md) {
+  .mainLogo {
+    width: 250px;
+  }
+}
+
+@include max(530) {
+  .mainLogo {
+    width: 200px;
+  }
+}
+
 @include max($sm) {
-  .buttonsWrap {
-    gap: 12px;
+  .innerWrap {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
   }
   .mainLogo {
-    width: 150px;
+    width: 80%;
+  }
+  .buttonsWrap {
+    gap: 12px;
   }
 }
