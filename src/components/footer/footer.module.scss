@@ -1,0 +1,30 @@
+@import "/src/scss/var";
+
+.mainWrap {
+  padding: 24px 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  @include max(890) {
+    flex-direction: column;
+    gap: 25px;
+  }
+}
+
+.policyWrap {
+  display: flex;
+  gap: 10px;
+  .text {
+    &:hover {
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+  }
+  .line {
+    width: 1px;
+    height: 20px;
+    background: $primary;
+  }
+}

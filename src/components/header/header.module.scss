@@ -1,0 +1,43 @@
+@import "/src/scss/var";
+
+.mainWrap {
+  border-bottom: 0.5px solid $secondary;
+}
+
+.innerWrap {
+  display: flex;
+  padding: 20px 0;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.buttonsWrap {
+  display: flex;
+  gap: 16px;
+}
+
+@include max($md) {
+  .mainLogo {
+    width: 250px;
+  }
+}
+
+@include max(530) {
+  .mainLogo {
+    width: 200px;
+  }
+}
+
+@include max($sm) {
+  .innerWrap {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  .mainLogo {
+    width: 80%;
+  }
+  .buttonsWrap {
+    gap: 12px;
+  }
+}

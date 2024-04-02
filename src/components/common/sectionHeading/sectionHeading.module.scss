@@ -1,0 +1,41 @@
+@import "/src/scss/var";
+
+.mainWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 100px 0 70px;
+
+  @include max($xl) {
+    padding: 90px 0 65px;
+  }
+  @include max($lg) {
+    padding: 80px 0 60px;
+  }
+  @include max($md) {
+    padding: 60px 0 40px;
+  }
+  @include max($sm) {
+    padding: 40px 0 30px;
+  }
+}
+
+.heading {
+  font-size: 40px;
+  color: $primary;
+  font-weight: $fontBold;
+  @include max($md) {
+    font-size: 36px;
+  }
+  @include max($sm) {
+    font-size: 32px;
+  }
+}
+.subHeading {
+  margin-top: 5px;
+  font-size: 20px;
+  color: $primary;
+  @include max($sm) {
+    font-size: 18px;
+  }
+}

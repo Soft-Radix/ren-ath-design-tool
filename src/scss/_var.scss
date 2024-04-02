@@ -1,0 +1,55 @@
+$primary: #0e2b3a;
+$secondary: #768f99;
+$white: #ffffff;
+$black: #000000;
+
+$sm: 440;
+$md: 768;
+$lg: 1024;
+$xl: 1240;
+
+// font size
+$fontSm: 14px;
+$fontMd: 16px;
+
+// font weight
+$fontNormal: 400;
+$fontBold: 500;
+
+@mixin min($value) {
+  @media screen and (min-width: ($value + 1 + "px")) {
+    @content;
+  }
+}
+@mixin max($value) {
+  @media screen and (max-width: ($value + "px")) {
+    @content;
+  }
+}
+@mixin minMax($min, $max) {
+  @media (min-width: ($min + "px")) and (max-width: ($max + "px")) {
+    @content;
+  }
+}
+@mixin flexCenter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin row($width, $space, $gap, $jc) {
+  --width: #{$width};
+  --space: #{$space};
+  --gap: #{$gap};
+  --jc: #{$jc};
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: var(--jc);
+  margin: 0 calc(-1 * var(--space));
+  gap: var(--gap) 0;
+  > * {
+    padding: 0 var(--space);
+    flex-basis: var(--width);
+    max-width: var(--width);
+  }
+}

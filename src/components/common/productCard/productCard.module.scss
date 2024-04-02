@@ -1,0 +1,41 @@
+@import "/src/scss/var";
+
+.outerWrap {
+  display: flex;
+  justify-content: center;
+}
+
+.mainWrap {
+  width: 282px;
+  border-radius: 8px;
+  border: 1px solid $secondary;
+}
+
+.imgContainer {
+  background: rgba(118, 143, 153, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 208px;
+  img {
+    max-height: 198px;
+  }
+}
+
+.title {
+  font-weight: $fontBold;
+  height: 67px;
+  text-align: center;
+  border-bottom: 1px solid $secondary;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20%;
+}
+
+.btnWrap {
+  padding: 16px;
+  :global(.btn) {
+    width: 100%;
+  }
+}
