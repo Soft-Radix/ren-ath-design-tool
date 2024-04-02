@@ -27,6 +27,7 @@ import {
   menImg5,
   menImg6,
 } from "./images";
+import Footer from "../../components/footer";
 
 const Home = () => {
   return (
@@ -129,6 +130,7 @@ const Home = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 };
