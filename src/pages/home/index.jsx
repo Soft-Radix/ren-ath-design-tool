@@ -72,23 +72,31 @@ const Home = () => {
           <ProductCard
             image={womenImg1}
             title="Long Sleeve Hitting Tees with Hood"
+            id="W1"
           />
           <ProductCard
             image={womenImg2}
             title="Long Sleeve Hitting Tees without Hood"
+            id="W2"
           />
-          <ProductCard image={womenImg3} title="Long Sleeve Jersey" />
-          <ProductCard image={womenImg4} title="Short Sleeve Hitting Tee" />
-          <ProductCard image={womenImg5} title="Short Sleeve Jersey" />
+          <ProductCard image={womenImg3} title="Long Sleeve Jersey" id="W3" />
+          <ProductCard
+            image={womenImg4}
+            title="Short Sleeve Hitting Tee"
+            id="W4"
+          />
+          <ProductCard image={womenImg5} title="Short Sleeve Jersey" id="W5" />
           <ProductCard
             image={womenImg6}
             title="Sleeveless Jersey with Sleeve"
+            id="W6"
           />
           <ProductCard
             image={womenImg7}
             title="Sleeveless Jersey without Sleeve"
+            id="W7"
           />
-          <ProductCard image={womenImg8} title="Sleeve Only" />
+          <ProductCard image={womenImg8} title="Sleeve Only" id="W8" />
         </div>
 
         <SectionHeading
@@ -97,18 +105,28 @@ const Home = () => {
         />
 
         <div className={styles.productsWrap}>
-          <ProductCard image={menImg1} title="Flex Custom Board Shorts" />
+          <ProductCard
+            image={menImg1}
+            title="Flex Custom Board Shorts"
+            id="M1"
+          />
           <ProductCard
             image={menImg2}
             title="Long Sleeve Hitting Tees with Hood"
+            id="M2"
           />
           <ProductCard
             image={menImg3}
             title="Long Sleeve Hitting Tees without Hood"
+            id="M3"
           />
-          <ProductCard image={menImg4} title="Short Sleeve Hitting Tee" />
-          <ProductCard image={menImg5} title="Short Sleeve Jersey" />
-          <ProductCard image={menImg6} title="Sleeveless Jersey" />
+          <ProductCard
+            image={menImg4}
+            title="Short Sleeve Hitting Tee"
+            id="M4"
+          />
+          <ProductCard image={menImg5} title="Short Sleeve Jersey" id="M5" />
+          <ProductCard image={menImg6} title="Sleeveless Jersey" id="M6" />
         </div>
       </Container>
       <div className={styles.learnAbout}>

@@ -1,13 +1,15 @@
-import styles from "./sidebar.module.scss";
 import mainLogo from "../../../assets/images/mainLogo.png";
+import styles from "./sidebar.module.scss";
 import sidebarItems from "./sidebarItems";
 
 const Sidebar = () => {
   const renderItem = ({ name, Icon }, index) => {
     return (
       <div className={styles.item} key={index}>
-        <span className={styles.line} />
-        <Icon />
+        <div className={`${styles.line} ${styles.hideLine}`} />
+        <div className={styles.iconWrap}>
+          <Icon />
+        </div>
         <span className={styles.name}>{name}</span>
       </div>
     );

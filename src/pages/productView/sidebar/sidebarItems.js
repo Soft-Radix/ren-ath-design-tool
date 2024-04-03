@@ -8,12 +8,12 @@ import {
 } from "../../../assets/svg/icons";
 
 const sidebarItems = [
-  { name: "Color", Icon: ColorIcon },
-  { name: "Number", Icon: NumberIcon },
-  { name: "Name", Icon: NameIcon },
-  { name: "Text", Icon: TextIcon },
-  { name: "Logo", Icon: LogoIcon },
-  { name: "Gradient", Icon: GradientIcon },
+  { id: 1, name: "Color", Icon: ColorIcon },
+  { id: 2, name: "Number", Icon: NumberIcon },
+  { id: 3, name: "Name", Icon: NameIcon },
+  { id: 4, name: "Text", Icon: TextIcon },
+  { id: 5, name: "Logo", Icon: LogoIcon },
+  { id: 6, name: "Gradient", Icon: GradientIcon },
 ];
 
 export default sidebarItems;

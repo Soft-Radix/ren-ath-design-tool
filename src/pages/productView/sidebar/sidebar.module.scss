@@ -15,3 +15,29 @@
     max-width: 135px;
   }
 }
+
+.itemsWrap {
+  padding-left: 14px;
+  .item {
+    display: flex;
+    padding: 13px 0;
+    align-items: center;
+    gap: 5px;
+    .iconWrap {
+      height: 26px;
+      width: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    .line {
+      height: 20px;
+      width: 2px;
+      border-radius: 5px;
+      background: $primary;
+      &.hideLine {
+        visibility: hidden;
+      }
+    }
+  }
+}
