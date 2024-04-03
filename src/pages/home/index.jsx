@@ -1,17 +1,21 @@
-import Header from "../../components/header";
-import styles from "./home.module.scss";
+import { Container } from "@mui/material";
 import bgImage from "../../assets/images/home/bgImage.png";
-import text from "../../assets/images/home/text.png";
-import model from "../../assets/images/home/model.png";
 import category1 from "../../assets/images/home/category1.png";
 import category2 from "../../assets/images/home/category2.png";
-import { motion } from "framer-motion";
-import SectionHeading from "../../components/common/sectionHeading";
-import { Container } from "@mui/material";
-import ProductCard from "../../components/common/productCard";
-import instagramIcon from "../../assets/svg/instagram.svg";
 import globalIcon from "../../assets/svg/global.svg";
+import instagramIcon from "../../assets/svg/instagram.svg";
+import ProductCard from "../../components/common/productCard";
+import SectionHeading from "../../components/common/sectionHeading";
+import Footer from "../../components/footer";
+import Header from "../../components/header";
+import styles from "./home.module.scss";
 import {
+  menImg1,
+  menImg2,
+  menImg3,
+  menImg4,
+  menImg5,
+  menImg6,
   womenImg1,
   womenImg2,
   womenImg3,
@@ -20,14 +24,7 @@ import {
   womenImg6,
   womenImg7,
   womenImg8,
-  menImg1,
-  menImg2,
-  menImg3,
-  menImg4,
-  menImg5,
-  menImg6,
 } from "./images";
-import Footer from "../../components/footer";
 
 const Home = () => {
   return (

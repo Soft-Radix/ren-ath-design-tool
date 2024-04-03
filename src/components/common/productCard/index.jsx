@@ -1,7 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import ThemeButton from "../ThemeButton";
 import styles from "./productCard.module.scss";
 
 const ProductCard = ({ title, image }) => {
+  const navigate = useNavigate();
+
   return (
     <div className={styles.outerWrap}>
       <div className={styles.mainWrap}>
@@ -10,7 +13,9 @@ const ProductCard = ({ title, image }) => {
         </div>
         <div className={styles.title}>{title}</div>
         <div className={styles.btnWrap}>
-          <ThemeButton>Customize Now</ThemeButton>
+          <ThemeButton onClick={() => navigate("product-view")}>
+            Customize Now
+          </ThemeButton>
         </div>
       </div>
     </div>

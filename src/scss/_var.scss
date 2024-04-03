@@ -2,6 +2,7 @@ $primary: #0e2b3a;
 $secondary: #768f99;
 $white: #ffffff;
 $black: #000000;
+$lineBg: rgba(118, 143, 153, 0.3);
 
 $sm: 440;
 $md: 768;
@@ -11,10 +12,14 @@ $xl: 1240;
 // font size
 $fontSm: 14px;
 $fontMd: 16px;
+$fontLg: 18px;
+$fontXl: 20px;
+$font2Xl: 22px;
 
 // font weight
 $fontNormal: 400;
 $fontBold: 500;
+$fontExtraBold: 600;
 
 @mixin min($value) {
   @media screen and (min-width: ($value + 1 + "px")) {
