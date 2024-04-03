@@ -18,7 +18,7 @@
 
 .itemsWrap {
   .item {
-    border-radius: 8px;
+    border-radius: 6px;
     margin: 2px 10px;
     cursor: pointer;
     display: flex;
@@ -41,6 +41,10 @@
       &.hideLine {
         visibility: hidden;
       }
+    }
+    .name {
+      font-size: $fontMd;
+      font-weight: $fontBold;
     }
   }
 }
