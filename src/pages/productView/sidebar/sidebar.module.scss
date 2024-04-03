@@ -1,0 +1,17 @@
+@import "/src/scss/var";
+
+.mainWrap {
+  width: 160px;
+  border-right: 1px solid $lineBg;
+  height: 100vh;
+}
+
+.logo {
+  height: 75px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  img {
+    max-width: 135px;
+  }
+}
