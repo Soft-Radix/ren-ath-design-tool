@@ -1,4 +1,5 @@
 import { useProductStore } from "../../store";
+import Scene from "./Scene";
 import Header from "./header";
 import styles from "./productView.module.scss";
 import Sidebar from "./sidebar";
@@ -18,7 +19,9 @@ const ProductView = () => {
             <div className={styles.title}>{selectedSidebarItemName}</div>
             <div className={styles.content}></div>
           </div>
-          <div className={styles.canvasWrap}></div>
+          <div className={styles.canvasWrap}>
+            <Scene />
+          </div>
         </div>
       </div>
     </div>

@@ -1,13 +1,18 @@
 import { create } from "zustand";
+import Cookies from "universal-cookie";
+const cookies = new Cookies(null, { path: "/" });
+const { id, name } = cookies.get("productDetails");
 
 // For updating product in product view
 export const useProductStore = create((set) => ({
-  id: "W1",
+  id: id || "W1",
+  name: name || "Long Sleeve Hitting Tees with Hood",
   selectedSidebarItem: 1,
   selectedSidebarItemName: "Color",
-  updateProduct: (updatedId) =>
+  updateProduct: (updatedId, updatedName) =>
     set(() => ({
       id: updatedId,
+      name: updatedName,
     })),
   updateSelectedSidebarItem: (updatedId) =>
     set(() => ({

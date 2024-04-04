@@ -2,10 +2,12 @@ import { useNavigate } from "react-router-dom";
 import ThemeButton from "../ThemeButton";
 import styles from "./productCard.module.scss";
 import { useProductStore } from "../../../store";
+import Cookies from "universal-cookie";
 
 const ProductCard = ({ title, image, id }) => {
   const navigate = useNavigate();
   const updateProduct = useProductStore((state) => state.updateProduct);
+  const cookies = new Cookies(null, { path: "/" });
 
   return (
     <div className={styles.outerWrap}>
@@ -17,8 +19,12 @@ const ProductCard = ({ title, image, id }) => {
         <div className={styles.btnWrap}>
           <ThemeButton
             onClick={() => {
-              updateProduct(id);
+              updateProduct(id, title);
               navigate("product-view");
+              cookies.set("productDetails", {
+                id: id,
+                name: title,
+              });
             }}
           >
             Customize Now
