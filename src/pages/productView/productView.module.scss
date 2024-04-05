@@ -1,1 +1,31 @@
 @import "/src/scss/var";
+
+.mainWrap {
+  display: flex;
+  align-items: flex-start;
+}
+
+.rightWrap {
+  flex-grow: 1;
+}
+
+.contentWrap {
+  display: flex;
+  height: calc(100vh - 79px);
+  .propertiesWrap {
+    height: 100%;
+    width: 290px;
+    border-right: 1px solid $lineBg;
+    .title {
+      padding: 13px 24px;
+      border-bottom: 1px solid $lineBg;
+      font-size: $fontLg;
+      font-weight: $fontBold;
+    }
+  }
+}
+
+.canvasWrap {
+  flex-grow: 1;
+  background: $canvasBg;
+}
