@@ -1,6 +1,11 @@
 import React, { Suspense, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
-import { Environment, Grid, useProgress } from "@react-three/drei";
+import {
+  Environment,
+  Grid,
+  OrbitControls,
+  useProgress,
+} from "@react-three/drei";
 import { Model as W1 } from "../../../public/models/W1/Long-sleeve-hitting-tees-with-hood";
 import { Model as M1 } from "../../../public/models/M1/Flex-custom-board-shorts";
 import { Model as M6 } from "../../../public/models/M6/Sleeveless-jersey";
@@ -45,6 +50,12 @@ const Scene = () => {
         ) : null}
 
         {/* <Grid position={[0, -0.01, 0]} args={[15, 15]} /> */}
+        <ambientLight intensity={6} />
+        <OrbitControls
+          minPolarAngle={Math.PI * 0.35}
+          maxPolarAngle={Math.PI * 0.55}
+          enableZoom={false}
+        />
       </Canvas>
     </Suspense>
   );

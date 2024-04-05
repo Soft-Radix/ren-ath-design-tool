@@ -21,12 +21,12 @@ export function Model(props) {
 
   return (
     <>
-      <ambientLight intensity={6} />
+      {/* <ambientLight intensity={6} />
       <OrbitControls
         minPolarAngle={Math.PI * 0.35}
         maxPolarAngle={Math.PI * 0.55}
         enableZoom={false}
-      />
+      /> */}
 
       <group {...props} dispose={null}>
         <group scale={0.394} ref={modelRef}>
