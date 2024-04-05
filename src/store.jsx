@@ -1,4 +1,6 @@
 import { create } from "zustand";
+
+// Save data as cookies in browser
 import Cookies from "universal-cookie";
 const cookies = new Cookies(null, { path: "/" });
 const { id, name } = cookies.get("productDetails");

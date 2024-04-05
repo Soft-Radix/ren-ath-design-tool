@@ -2,11 +2,17 @@ import { useProductStore } from "../../store";
 import Scene from "./Scene";
 import Header from "./header";
 import styles from "./productView.module.scss";
+import Color from "./propertiesContent/Color";
+import Gradient from "./propertiesContent/Gradient";
+import Logo from "./propertiesContent/Logo";
+import Name from "./propertiesContent/Name";
+import Number from "./propertiesContent/Number";
+import Text from "./propertiesContent/Text";
 import Sidebar from "./sidebar";
 
 const ProductView = () => {
-  const selectedSidebarItemName = useProductStore(
-    (state) => state.selectedSidebarItemName
+  const { selectedSidebarItem, selectedSidebarItemName } = useProductStore(
+    (state) => state
   );
 
   return (
@@ -17,7 +23,21 @@ const ProductView = () => {
         <div className={styles.contentWrap}>
           <div className={styles.propertiesWrap}>
             <div className={styles.title}>{selectedSidebarItemName}</div>
-            <div className={styles.content}></div>
+            <div className={styles.content}>
+              {selectedSidebarItem === 1 ? (
+                <Color />
+              ) : selectedSidebarItem === 2 ? (
+                <Number />
+              ) : selectedSidebarItem === 3 ? (
+                <Name />
+              ) : selectedSidebarItem === 4 ? (
+                <Text />
+              ) : selectedSidebarItem === 5 ? (
+                <Logo />
+              ) : selectedSidebarItem === 6 ? (
+                <Gradient />
+              ) : null}
+            </div>
           </div>
           <div className={styles.canvasWrap}>
             <Scene />
