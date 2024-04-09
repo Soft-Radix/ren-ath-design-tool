@@ -18,6 +18,7 @@ export const useProductStore = create((set) => ({
   color: {},
   number: "",
   numberPosition: 0,
+  font: 1,
   updateProduct: (updatedId, updatedName) =>
     set(() => ({
       id: updatedId,
@@ -56,5 +57,9 @@ export const useProductStore = create((set) => ({
   updateNumberPosition: (updatedPosition) =>
     set(() => ({
       numberPosition: updatedPosition,
+    })),
+  updateFont: (updatedFont) =>
+    set(() => ({
+      font: updatedFont,
     })),
 }));

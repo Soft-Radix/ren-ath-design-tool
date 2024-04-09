@@ -10,10 +10,22 @@ import back from "../../../assets/images/products/placement/back.png";
 import chest_left from "../../../assets/images/products/placement/chest_left.png";
 import chest_right from "../../../assets/images/products/placement/chest_right.png";
 import { useProductStore } from "../../../store";
+import "../../../assets/fonts/Roboto.ttf";
+import "../../../assets/fonts/BebasNeue.ttf";
+import "../../../assets/fonts/BungeeSpice.ttf";
+import "../../../assets/fonts/TiltNeon.ttf";
+import { motion } from "framer-motion";
 
 const Number = () => {
-  const { number, updateNumber, numberPosition, updateNumberPosition } =
-    useProductStore((state) => state);
+  const {
+    number,
+    updateNumber,
+    numberPosition,
+    updateNumberPosition,
+    font,
+    updateFont,
+  } = useProductStore((state) => state);
+
   return (
     <div className={styles.numberWrap}>
       <Accordion>
@@ -74,6 +86,51 @@ const Number = () => {
               e.target.value.length < 4 && updateNumber(e.target.value)
             }
           />
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          Change Font
+        </AccordionSummary>
+        <AccordionDetails>
+          <div className={styles.fontWrap}>
+            <motion.div
+              className={`${styles.fontItem1} ${
+                font === 1 ? styles.selected : ""
+              }`}
+              onClick={() => updateFont(1)}
+              whileHover={{ scale: 1.02 }}
+            >
+              F1 2345567789
+            </motion.div>
+            <motion.div
+              className={`${styles.fontItem2} ${
+                font === 2 ? styles.selected : ""
+              }`}
+              onClick={() => updateFont(2)}
+              whileHover={{ scale: 1.02 }}
+            >
+              F1 2345567789
+            </motion.div>
+            <motion.div
+              className={`${styles.fontItem3} ${
+                font === 3 ? styles.selected : ""
+              }`}
+              onClick={() => updateFont(3)}
+              whileHover={{ scale: 1.02 }}
+            >
+              F1 2345567789
+            </motion.div>{" "}
+            <motion.div
+              className={`${styles.fontItem4} ${
+                font === 4 ? styles.selected : ""
+              }`}
+              onClick={() => updateFont(4)}
+              whileHover={{ scale: 1.02 }}
+            >
+              F1 2345567789
+            </motion.div>
+          </div>
         </AccordionDetails>
       </Accordion>
     </div>

@@ -1,5 +1,18 @@
 @import "/src/scss/var";
 
+@font-face {
+  font-family: "TiltNeon";
+  src: url("/src/assets/fonts/TiltNeon.ttf") format("truetype");
+}
+@font-face {
+  font-family: "BebasNeue";
+  src: url("/src/assets/fonts/BebasNeue.ttf") format("truetype");
+}
+@font-face {
+  font-family: "BungeeSpice";
+  src: url("/src/assets/fonts/BungeeSpice.ttf") format("truetype");
+}
+
 .colorViewer {
   height: 20px;
   min-width: 20px;
@@ -61,5 +74,34 @@
     font-weight: $fontBold;
     font-size: $fontSm;
     outline: none;
+  }
+  :global {
+    .MuiAccordionSummary-content {
+      font-size: $fontMd;
+      font-weight: $fontExtraBold;
+      color: $primary;
+    }
+  }
+  .fontWrap {
+    & > * {
+      cursor: pointer;
+      padding: 10px 0;
+      font-size: $fontLg;
+      &.selected {
+        border: 1px solid $secondary;
+        border-radius: 6px;
+        margin: 0 -6px;
+        padding-left: 5px;
+      }
+    }
+    .fontItem2 {
+      font-family: "TiltNeon";
+    }
+    .fontItem3 {
+      font-family: "BebasNeue";
+    }
+    .fontItem4 {
+      font-family: "BungeeSpice";
+    }
   }
 }
