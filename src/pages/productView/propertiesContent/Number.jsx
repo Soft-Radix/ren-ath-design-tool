@@ -18,7 +18,7 @@ const Number = () => {
     <div className={styles.numberWrap}>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          Add Number
+          + Add Number
         </AccordionSummary>
         <AccordionDetails>
           <div className={styles.addNumberWrap}>
@@ -68,9 +68,10 @@ const Number = () => {
             type="number"
             className={styles.numberInput}
             max="999"
+            placeholder="Enter a number"
             value={number}
             onChange={(e) =>
-              e.target.value < 1000 && updateNumber(e.target.value)
+              e.target.value.length < 4 && updateNumber(e.target.value)
             }
           />
         </AccordionDetails>

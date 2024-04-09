@@ -16,7 +16,7 @@ export const useProductStore = create((set) => ({
   selectedSidebarItemName: "Color",
   ref: null,
   color: {},
-  number: 0,
+  number: "",
   numberPosition: 0,
   updateProduct: (updatedId, updatedName) =>
     set(() => ({
