@@ -9,6 +9,12 @@
   src: url("/src/assets/fonts/BebasNeue.ttf") format("truetype");
 }
 
+.colorPalletWrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 .colorViewer {
   height: 20px;
   min-width: 20px;
@@ -19,6 +25,7 @@
   align-items: center;
   justify-content: center;
 }
+
 // Color component styles
 .colorWrap {
   .mainColorViewer {
@@ -30,14 +37,10 @@
       display: flex;
       align-items: center;
     }
-    .MuiAccordionDetails-root {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
   }
 }
 
+// Number component styles
 .numberWrap {
   .addNumberWrap {
     display: flex;
@@ -95,6 +98,25 @@
     }
     .fontItem3 {
       font-family: "BebasNeue";
+    }
+  }
+
+  .fontColorWrap {
+    .buttonWrap {
+      display: flex;
+      gap: 15px;
+      :global {
+        .btn {
+          border-radius: 2px;
+          min-width: 60px;
+          min-height: 28px;
+          font-size: $fontXsm;
+          font-weight: $fontExtraBold;
+        }
+      }
+    }
+    .colorPalletWrap {
+      margin-top: 20px;
     }
   }
 }

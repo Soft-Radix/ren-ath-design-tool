@@ -16,9 +16,13 @@ export const useProductStore = create((set) => ({
   selectedSidebarItemName: "Color",
   ref: null,
   color: {},
+
   number: "",
   numberPosition: 0,
-  font: 1,
+  numberFont: 1,
+  numberColor: "",
+  numberOutline: "",
+
   updateProduct: (updatedId, updatedName) =>
     set(() => ({
       id: updatedId,
@@ -58,8 +62,16 @@ export const useProductStore = create((set) => ({
     set(() => ({
       numberPosition: updatedPosition,
     })),
-  updateFont: (updatedFont) =>
+  updateNumberFont: (updatedFont) =>
     set(() => ({
-      font: updatedFont,
+      numberFont: updatedFont,
+    })),
+  updateNumberColor: (color) =>
+    set(() => ({
+      numberColor: color,
+    })),
+  updateNumberOutline: (color) =>
+    set(() => ({
+      numberOutline: color,
     })),
 }));

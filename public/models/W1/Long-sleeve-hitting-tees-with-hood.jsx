@@ -26,9 +26,14 @@ export function Model(props) {
   });
 
   const modelRef = useRef();
-  const { updateRef, number, numberPosition, font } = useProductStore(
-    (state) => state
-  );
+  const {
+    updateRef,
+    number,
+    numberPosition,
+    numberFont,
+    numberColor,
+    numberOutline,
+  } = useProductStore((state) => state);
 
   useEffect(() => {
     modelRef.current.children.forEach((element) => {
@@ -114,19 +119,21 @@ export function Model(props) {
                       makeDefault
                       manual
                       aspect={2}
-                      position={[0, 0, 2]}
+                      position={[0, 0.2, 2]}
                     />
 
                     <Text
                       rotation={[0, 0, 0]}
                       fontSize={2}
-                      color="black"
+                      color={numberColor || "black"}
+                      outlineColor={numberOutline || "black"}
+                      outlineWidth={numberOutline ? 0.05 : 0}
                       font={
-                        font === 1
+                        numberFont === 1
                           ? font1
-                          : font === 2
+                          : numberFont === 2
                           ? font2
-                          : font === 3
+                          : numberFont === 3
                           ? font3
                           : font1
                       }
@@ -163,18 +170,20 @@ export function Model(props) {
                       makeDefault
                       manual
                       aspect={2}
-                      position={[0, 0, 2]}
+                      position={[0, 0.2, 2]}
                     />
                     <Text
                       rotation={[0, 0, 0]}
                       fontSize={2}
-                      color="black"
+                      color={numberColor || "black"}
+                      outlineColor={numberOutline || "black"}
+                      outlineWidth={numberOutline ? 0.05 : 0}
                       font={
-                        font === 1
+                        numberFont === 1
                           ? font1
-                          : font === 2
+                          : numberFont === 2
                           ? font2
-                          : font === 3
+                          : numberFont === 3
                           ? font3
                           : font1
                       }
