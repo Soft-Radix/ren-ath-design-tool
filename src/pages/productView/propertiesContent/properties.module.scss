@@ -8,10 +8,6 @@
   font-family: "BebasNeue";
   src: url("/src/assets/fonts/BebasNeue.ttf") format("truetype");
 }
-@font-face {
-  font-family: "BungeeSpice";
-  src: url("/src/assets/fonts/BungeeSpice.ttf") format("truetype");
-}
 
 .colorViewer {
   height: 20px;
@@ -99,9 +95,6 @@
     }
     .fontItem3 {
       font-family: "BebasNeue";
-    }
-    .fontItem4 {
-      font-family: "BungeeSpice";
     }
   }
 }

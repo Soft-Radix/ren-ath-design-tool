@@ -11,6 +11,9 @@ import { DoubleSide } from "three";
 import { useProductStore } from "../../../src/store";
 import { degToRad } from "three/src/math/MathUtils";
 import { motion } from "framer-motion-3d";
+import font1 from "../../../src/assets/fonts/Roboto.ttf";
+import font2 from "../../../src/assets/fonts/TiltNeon.ttf";
+import font3 from "../../../src/assets/fonts/BebasNeue.ttf";
 
 export function Model(props) {
   const { nodes, materials } = useGLTF(
@@ -23,7 +26,7 @@ export function Model(props) {
   });
 
   const modelRef = useRef();
-  const { updateRef, number, numberPosition } = useProductStore(
+  const { updateRef, number, numberPosition, font } = useProductStore(
     (state) => state
   );
 
@@ -114,7 +117,20 @@ export function Model(props) {
                       position={[0, 0, 2]}
                     />
 
-                    <Text rotation={[0, 0, 0]} fontSize={2} color="black">
+                    <Text
+                      rotation={[0, 0, 0]}
+                      fontSize={2}
+                      color="black"
+                      font={
+                        font === 1
+                          ? font1
+                          : font === 2
+                          ? font2
+                          : font === 3
+                          ? font3
+                          : font1
+                      }
+                    >
                       {number}
                     </Text>
                   </RenderTexture>
@@ -149,7 +165,20 @@ export function Model(props) {
                       aspect={2}
                       position={[0, 0, 2]}
                     />
-                    <Text rotation={[0, 0, 0]} fontSize={2} color="black">
+                    <Text
+                      rotation={[0, 0, 0]}
+                      fontSize={2}
+                      color="black"
+                      font={
+                        font === 1
+                          ? font1
+                          : font === 2
+                          ? font2
+                          : font === 3
+                          ? font3
+                          : font1
+                      }
+                    >
                       {number}
                     </Text>
                   </RenderTexture>
