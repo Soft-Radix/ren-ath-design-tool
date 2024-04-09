@@ -42,20 +42,16 @@ export function Model(props) {
     if (numberPosition === 1) {
       setNumber1Position([0, 2.5, 4]);
       setNumber1Scale([4.5, 2.5, 2]);
-      // modelRef.current.rotation.y = degToRad(0);
       setNumber1Rotation(0);
     } else if (numberPosition === 2) {
-      // modelRef.current.rotation.y = degToRad(180);
       setNumber1Rotation(180);
     } else if (numberPosition === 3) {
       setNumber1Position([1.5, 4, 3]);
       setNumber1Scale([2, 1.5, 3]);
-      // modelRef.current.rotation.y = degToRad(0);
       setNumber1Rotation(0);
     } else if (numberPosition === 4) {
       setNumber1Position([-1.5, 4, 3]);
       setNumber1Scale([2, 1.5, 3]);
-      // modelRef.current.rotation.y = degToRad(0);
       setNumber1Rotation(0);
     }
   }, [numberPosition]);
