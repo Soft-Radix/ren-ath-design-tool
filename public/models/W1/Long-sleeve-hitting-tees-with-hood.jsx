@@ -75,6 +75,20 @@ export function Model(props) {
   // Name states
   const [name1Position, setName1Position] = useState([0, 2.5, 4]);
   const [name1Scale, setName1Scale] = useState([4.5, 2.5, 2]);
+  const [name1FontSize, setName1FontSize] = useState(2);
+
+  useEffect(() => {
+    // Calculate adjusted font size based on modelName length and decal dimensions
+    if (modelName.length > 2) {
+      const textWidth = modelName.length; // Approximate text width
+      const maxWidth = name1Scale[0] * 0.8; // 80% of decal width
+      const adjustedWidth = Math.min(textWidth, maxWidth);
+      const adjustedFontSize = (adjustedWidth / modelName.length) * 2; // Adjust the factor as needed
+      setName1FontSize(adjustedFontSize);
+    } else {
+      setName1FontSize(2); // Default font size
+    }
+  }, [modelName, name1Scale]);
 
   return (
     <>
@@ -177,10 +191,10 @@ export function Model(props) {
                     aspect={2}
                     position={[0, 0.1, 2.5]}
                   />
-                  <color attach="background" args={["#af2040"]} />
+                  <color attach="background" args={["#e1816c"]} />
                   <Text
                     rotation={[0, 0, 0]}
-                    fontSize={2}
+                    fontSize={name1FontSize}
                     color={nameColor || "black"}
                     outlineColor={nameOutline || "black"}
                     outlineWidth={nameOutline ? 0.05 : 0}
