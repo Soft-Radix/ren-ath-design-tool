@@ -21,6 +21,7 @@ export function Model(props) {
   );
 
   // Set camera position
+  // const camera = useThree((state) => state.camera);
   useThree(({ camera }) => {
     camera.position.set(0, 2, 8);
   });
@@ -33,6 +34,12 @@ export function Model(props) {
     numberFont,
     numberColor,
     numberOutline,
+
+    modelName,
+    namePosition,
+    nameFont,
+    nameColor,
+    nameOutline,
   } = useProductStore((state) => state);
 
   useEffect(() => {
@@ -40,6 +47,7 @@ export function Model(props) {
       element.material.side = DoubleSide;
     });
     updateRef(modelRef);
+    // camera.position.set(0, 2, 8);
   }, []);
 
   // Number states
@@ -63,6 +71,10 @@ export function Model(props) {
       setNumber1Rotation(0);
     }
   }, [numberPosition]);
+
+  // Name states
+  const [name1Position, setName1Position] = useState([0, 2.5, 4]);
+  const [name1Scale, setName1Scale] = useState([4.5, 2.5, 2]);
 
   return (
     <>
@@ -144,6 +156,49 @@ export function Model(props) {
                 </meshStandardMaterial>
               </Decal>
             )}
+
+            <Decal
+              // debug={true}
+              position={name1Position}
+              rotation={[0, 0, 0]}
+              scale={name1Scale}
+              origin={[0, 0, 0]}
+              // ref={textDecalRef}
+            >
+              <meshStandardMaterial
+                transparent
+                polygonOffset
+                polygonOffsetFactor={-1}
+              >
+                <RenderTexture attach="map">
+                  <PerspectiveCamera
+                    makeDefault
+                    manual
+                    aspect={2}
+                    position={[0, 0.1, 2.5]}
+                  />
+                  <color attach="background" args={["#af2040"]} />
+                  <Text
+                    rotation={[0, 0, 0]}
+                    fontSize={2}
+                    color={nameColor || "black"}
+                    outlineColor={nameOutline || "black"}
+                    outlineWidth={nameOutline ? 0.05 : 0}
+                    font={
+                      nameFont === 1
+                        ? font1
+                        : nameFont === 2
+                        ? font2
+                        : nameFont === 3
+                        ? font3
+                        : font1
+                    }
+                  >
+                    {modelName}
+                  </Text>
+                </RenderTexture>
+              </meshStandardMaterial>
+            </Decal>
           </mesh>
           <mesh
             geometry={

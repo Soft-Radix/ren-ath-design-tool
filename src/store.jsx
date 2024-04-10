@@ -23,6 +23,12 @@ export const useProductStore = create((set) => ({
   numberColor: "",
   numberOutline: "",
 
+  modelName: "",
+  namePosition: 0,
+  nameFont: 1,
+  nameColor: "",
+  nameOutline: "",
+
   updateProduct: (updatedId, updatedName) =>
     set(() => ({
       id: updatedId,
@@ -54,6 +60,7 @@ export const useProductStore = create((set) => ({
     set((state) => ({
       color: { ...state.color, ...updatedColor },
     })),
+
   updateNumber: (updatedNumber) =>
     set(() => ({
       number: updatedNumber,
@@ -73,5 +80,26 @@ export const useProductStore = create((set) => ({
   updateNumberOutline: (color) =>
     set(() => ({
       numberOutline: color,
+    })),
+
+  updateName: (updatedName) =>
+    set(() => ({
+      modelName: updatedName,
+    })),
+  updateNamePosition: (updatedPosition) =>
+    set(() => ({
+      namePosition: updatedPosition,
+    })),
+  updateNameFont: (updatedFont) =>
+    set(() => ({
+      nameFont: updatedFont,
+    })),
+  updateNameColor: (color) =>
+    set(() => ({
+      nameColor: color,
+    })),
+  updateNameOutline: (color) =>
+    set(() => ({
+      nameOutline: color,
     })),
 }));
