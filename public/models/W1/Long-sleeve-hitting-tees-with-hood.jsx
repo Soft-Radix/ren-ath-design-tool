@@ -1,8 +1,10 @@
 import {
   Decal,
+  OrbitControls,
   PerspectiveCamera,
   RenderTexture,
   Text,
+  useCursor,
   useGLTF,
 } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
@@ -14,19 +16,22 @@ import { motion } from "framer-motion-3d";
 import font1 from "../../../src/assets/fonts/Roboto.ttf";
 import font2 from "../../../src/assets/fonts/TiltNeon.ttf";
 import font3 from "../../../src/assets/fonts/BebasNeue.ttf";
+import { useDrag } from "@use-gesture/react";
 
 export function Model(props) {
+  const orbitRef = useRef();
+  const modelRef = useRef();
+
   const { nodes, materials } = useGLTF(
     "./models/W1/long-sleeve-hitting-tees-with-hood.glb"
   );
 
   // Set camera position
   // const camera = useThree((state) => state.camera);
-  useThree(({ camera }) => {
-    camera.position.set(0, 2, 8);
-  });
+  // useThree(({ camera }) => {
+  //   camera.position.set(0, 2, 8);
+  // });
 
-  const modelRef = useRef();
   const {
     updateRef,
     number,
@@ -73,9 +78,13 @@ export function Model(props) {
   }, [numberPosition]);
 
   // Name states
-  const [name1Position, setName1Position] = useState([0, 2.5, 4]);
-  const [name1Scale, setName1Scale] = useState([4.5, 2.5, 2]);
+  const [name1Position, setName1Position] = useState([0, 0, 2]);
+  const [name1Scale, setName1Scale] = useState([4.5, 2.5, 4]);
   const [name1FontSize, setName1FontSize] = useState(2);
+
+  const [hovered, setHovered] = useState(false);
+  const toggleHovered = () => setHovered(!hovered);
+  useCursor(hovered, "grab");
 
   useEffect(() => {
     // Calculate adjusted font size based on modelName length and decal dimensions
@@ -90,14 +99,39 @@ export function Model(props) {
     }
   }, [modelName, name1Scale]);
 
+  const bind = useDrag(
+    ({ offset: [x, y], down }) => {
+      orbitRef.current.enabled = !down;
+      orbitRef.current.cursor = "pointer";
+
+      const xPos = x * 0.02;
+      const yPos = -(y * 0.03);
+
+      console.log("yPos ==> ", yPos);
+
+      // const xPos =
+      //   x * 0.005 > -0.8 && x * 0.005 < 0.8 ? x * 0.005 : name1Position[0];
+      // const zPos =
+      //   6.05 - y * 0.005 < 6.8 && 6.05 - y * 0.005 > 4.8
+      //     ? 6.05 - y * 0.005
+      //     : name1Position[2];
+
+      const finalPosition = [xPos, yPos, name1Position[2]];
+
+      setName1Position(finalPosition);
+    },
+    { pointerEvents: true }
+  );
+
   return (
     <>
-      {/* <ambientLight intensity={6} />
+      <ambientLight intensity={6} />
       <OrbitControls
-        minPolarAngle={Math.PI * 0.35}
-        maxPolarAngle={Math.PI * 0.55}
-        enableZoom={false}
-      /> */}
+        ref={orbitRef}
+        // minPolarAngle={Math.PI * 0.35}
+        // maxPolarAngle={Math.PI * 0.55}
+        // enableZoom={false}
+      />
 
       <group {...props} dispose={null}>
         <motion.group
@@ -171,48 +205,54 @@ export function Model(props) {
               </Decal>
             )}
 
-            <Decal
-              // debug={true}
-              position={name1Position}
-              rotation={[0, 0, 0]}
-              scale={name1Scale}
-              origin={[0, 0, 0]}
-              // ref={textDecalRef}
-            >
-              <meshStandardMaterial
-                transparent
-                polygonOffset
-                polygonOffsetFactor={-1}
+            {modelName && (
+              <Decal
+                {...bind()}
+                onPointerEnter={toggleHovered}
+                onPointerLeave={toggleHovered}
+                position={name1Position}
+                rotation={[0, 0, 0]}
+                scale={name1Scale}
+                origin={[0, 0, 0]}
               >
-                <RenderTexture attach="map">
-                  <PerspectiveCamera
-                    makeDefault
-                    manual
-                    aspect={2}
-                    position={[0, 0.1, 2.5]}
-                  />
-                  <color attach="background" args={["#e1816c"]} />
-                  <Text
-                    rotation={[0, 0, 0]}
-                    fontSize={name1FontSize}
-                    color={nameColor || "black"}
-                    outlineColor={nameOutline || "black"}
-                    outlineWidth={nameOutline ? 0.05 : 0}
-                    font={
-                      nameFont === 1
-                        ? font1
-                        : nameFont === 2
-                        ? font2
-                        : nameFont === 3
-                        ? font3
-                        : font1
-                    }
-                  >
-                    {modelName}
-                  </Text>
-                </RenderTexture>
-              </meshStandardMaterial>
-            </Decal>
+                <meshStandardMaterial
+                  transparent
+                  polygonOffset
+                  polygonOffsetFactor={-1}
+                >
+                  <RenderTexture attach="map">
+                    <PerspectiveCamera
+                      makeDefault
+                      manual
+                      aspect={2}
+                      position={[0, 0.1, 2.5]}
+                    />
+                    {hovered && (
+                      <color attach="background" args={["#e1816c"]} />
+                    )}
+
+                    <Text
+                      rotation={[0, 0, 0]}
+                      fontSize={name1FontSize}
+                      color={nameColor || "black"}
+                      outlineColor={nameOutline || "black"}
+                      outlineWidth={nameOutline ? 0.05 : 0}
+                      font={
+                        nameFont === 1
+                          ? font1
+                          : nameFont === 2
+                          ? font2
+                          : nameFont === 3
+                          ? font3
+                          : font1
+                      }
+                    >
+                      {modelName}
+                    </Text>
+                  </RenderTexture>
+                </meshStandardMaterial>
+              </Decal>
+            )}
           </mesh>
           <mesh
             geometry={

@@ -38,39 +38,12 @@ const Name = () => {
   const [type, setType] = useState(1);
 
   return (
-    <div className={styles.numberWrap}>
+    <div className={`${styles.numberWrap} ${styles.nameWrap}`}>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           + Add Name
         </AccordionSummary>
         <AccordionDetails>
-          <div className={styles.addNumberWrap}>
-            <div
-              className={styles.colorViewer}
-              style={{ backgroundColor: "transparent" }}
-              onClick={() => updateNamePosition(0)}
-            >
-              <CrossIcon />
-            </div>
-            <div className={styles.layers}>
-              <div
-                className={`${styles.imgWrap} ${
-                  namePosition === 1 ? styles.selected : ""
-                }`}
-                onClick={() => updateNamePosition(1)}
-              >
-                <img src={front} alt="" />
-              </div>
-              <div
-                className={`${styles.imgWrap} ${
-                  namePosition === 2 ? styles.selected : ""
-                }`}
-                onClick={() => updateNamePosition(2)}
-              >
-                <img src={back} alt="" />
-              </div>
-            </div>
-          </div>
           <input
             className={styles.numberInput}
             placeholder="Enter name"
