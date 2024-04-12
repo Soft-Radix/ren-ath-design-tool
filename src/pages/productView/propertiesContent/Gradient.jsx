@@ -21,7 +21,9 @@ const colorList = [
 
 const Gradient = () => {
   const ref = useProductStore((state) => state.ref);
-  const { color, updateColor } = useProductStore((state) => state);
+  const { color, updateColor, gradient, updateGradient } = useProductStore(
+    (state) => state
+  );
 
   const children = ref?.current?.children || [];
 
@@ -58,7 +60,11 @@ const Gradient = () => {
               </ThemeButton>
               <div
                 className={styles.gradientViewer}
-                style={{ backgroundColor: color[childIndex] }}
+                style={{
+                  background: `linear-gradient(90deg, ${
+                    color[childIndex] || "transparent"
+                  }, ${gradient[childIndex] || "transparent"})`,
+                }}
               />
             </div>
             <div className={styles.colorPalletWrap}>
@@ -66,7 +72,9 @@ const Gradient = () => {
                 className={styles.colorViewer}
                 style={{ backgroundColor: "transparent" }}
                 onClick={() => {
-                  updateColor({ [childIndex]: null });
+                  type === 1
+                    ? updateColor({ [childIndex]: null })
+                    : updateGradient({ [childIndex]: null });
                   item.material.color = new ParceColor(0xffffff);
                 }}
               >
@@ -78,13 +86,18 @@ const Gradient = () => {
                   className={styles.colorViewer}
                   style={{ backgroundColor: itemColor }}
                   onClick={() => {
-                    updateColor({ [childIndex]: itemColor });
+                    type === 1
+                      ? updateColor({ [childIndex]: itemColor })
+                      : updateGradient({ [childIndex]: itemColor });
                     item.material.color = new ParceColor(itemColor);
                   }}
                 >
-                  {color[childIndex] && color[childIndex] === itemColor && (
-                    <TickIcon />
-                  )}
+                  {type === 1 &&
+                    color[childIndex] &&
+                    color[childIndex] === itemColor && <TickIcon />}
+                  {type === 2 &&
+                    gradient[childIndex] &&
+                    gradient[childIndex] === itemColor && <TickIcon />}
                 </div>
               ))}
             </div>

@@ -15,7 +15,9 @@ export const useProductStore = create((set) => ({
   selectedSidebarItem: 1,
   selectedSidebarItemName: "Color",
   ref: null,
+
   color: {},
+  gradient: {},
 
   number: "",
   numberPosition: 0,
@@ -56,9 +58,14 @@ export const useProductStore = create((set) => ({
     set(() => ({
       ref: updatedRef,
     })),
+
   updateColor: (updatedColor) =>
     set((state) => ({
       color: { ...state.color, ...updatedColor },
+    })),
+  updateGradient: (updatedGradient) =>
+    set((state) => ({
+      gradient: { ...state.gradient, ...updatedGradient },
     })),
 
   updateNumber: (updatedNumber) =>
