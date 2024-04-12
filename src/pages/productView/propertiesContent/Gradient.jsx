@@ -27,6 +27,10 @@ const Gradient = () => {
 
   const [type, setType] = useState(1);
 
+  useEffect(() => {
+    console.log("color ==> ", color);
+  }, [color]);
+
   return (
     <div className={`${styles.colorWrap} ${styles.gradientWrap}`}>
       {children?.map((item, childIndex) => (
@@ -50,11 +54,11 @@ const Gradient = () => {
                 onClick={() => setType(2)}
                 variant={type === 1 ? "outlined" : "contained"}
               >
-                Outline
+                Gradient
               </ThemeButton>
               <div
                 className={styles.gradientViewer}
-                style={{ backgroundColor: color }}
+                style={{ backgroundColor: color[childIndex] }}
               />
             </div>
             <div className={styles.colorPalletWrap}>
