@@ -10,6 +10,7 @@ import { Model as W7 } from "../../../public/models/W7/Sleeveless-jersey-without
 import { Model as W8 } from "../../../public/models/W8/Sleeve-only";
 import loaderGif from "../../assets/gif/loader.gif";
 import { useProductStore } from "../../store";
+import { Grid } from "@react-three/drei";
 
 const Scene = () => {
   const productId = useProductStore((state) => state.id);
@@ -43,7 +44,9 @@ const Scene = () => {
           <M6 />
         ) : null}
 
-        {/* <Grid position={[0, -0.01, 0]} args={[15, 15]} /> */}
+        {/* <Grid position={[0, -0.01, 0]} args={[15, 15]} />
+        <axesHelper args={[8]} /> */}
+
         {/* <ambientLight intensity={6} />
         <OrbitControls
           minPolarAngle={Math.PI * 0.35}

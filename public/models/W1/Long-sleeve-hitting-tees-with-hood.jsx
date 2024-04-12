@@ -58,6 +58,9 @@ export function Model(props) {
   const [number1Scale, setNumber1Scale] = useState([4.5, 2.5, 2]);
   const [number1Rotation, setNumber1Rotation] = useState(0);
   useEffect(() => {
+    camera.position.set(0, 2, 8);
+    camera.lookAt(0, 0, 0);
+
     if (numberPosition === 1) {
       setNumber1Position([0, 2.5, 4]);
       setNumber1Scale([4.5, 2.5, 2]);
@@ -82,10 +85,15 @@ export function Model(props) {
   const [name1Rotation, setName1Rotation] = useState([0, 0, 0]);
 
   useEffect(() => {
+    camera.position.set(0, 2, 8);
+    camera.lookAt(0, 0, 0);
+
     if (namePosition === 1) {
       setName1Rotation([0, 0, 0]);
+      setNumber1Rotation(0);
     } else if (namePosition === 2) {
       setName1Rotation([0, degToRad(180), 0]);
+      setNumber1Rotation(180);
     }
   }, [namePosition]);
 
@@ -135,7 +143,7 @@ export function Model(props) {
         ref={orbitRef}
         // minPolarAngle={Math.PI * 0.35}
         // maxPolarAngle={Math.PI * 0.55}
-        // enableZoom={false}
+        enableZoom={false}
       />
 
       <group {...props} dispose={null}>
