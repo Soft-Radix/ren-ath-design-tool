@@ -127,4 +127,30 @@
     margin: 0;
     width: 90%;
   }
+  .textLayerWrap {
+    margin-top: 10px;
+    :global {
+      .MuiFormGroup-root {
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+        > * {
+          margin: 0;
+          flex-basis: 48%;
+          svg {
+            height: 20px;
+            width: 20px;
+          }
+        }
+      }
+      .MuiButtonBase-root {
+        padding: 5px;
+      }
+      .MuiTypography-root {
+        font-size: 14px;
+        font-weight: 500;
+        color: $primary;
+      }
+    }
+  }
 }

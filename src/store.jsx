@@ -24,7 +24,7 @@ export const useProductStore = create((set) => ({
   numberOutline: "",
 
   modelName: "",
-  namePosition: 0,
+  namePosition: 1,
   nameFont: 1,
   nameColor: "",
   nameOutline: "",

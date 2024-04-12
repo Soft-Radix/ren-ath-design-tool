@@ -2,10 +2,12 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
+import FormControl from "@mui/material/FormControl";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
 import { motion } from "framer-motion";
 import React, { useState } from "react";
-import back from "../../../assets/images/products/placement/back.png";
-import front from "../../../assets/images/products/placement/front.png";
 import { CrossIcon, TickIcon } from "../../../assets/svg/icons";
 import ThemeButton from "../../../components/common/ThemeButton";
 import { useProductStore } from "../../../store";
@@ -50,6 +52,28 @@ const Name = () => {
             value={modelName}
             onChange={(e) => updateName(e.target.value)}
           />
+
+          <FormControl className={styles.textLayerWrap}>
+            <RadioGroup
+              aria-labelledby="demo-controlled-radio-buttons-group"
+              name="controlled-radio-buttons-group"
+              value={namePosition}
+              onChange={(e) => updateNamePosition(Number(e.target.value))}
+            >
+              <FormControlLabel value={1} control={<Radio />} label="Front" />
+              <FormControlLabel value={2} control={<Radio />} label="Back" />
+              <FormControlLabel
+                value={3}
+                control={<Radio />}
+                label="Left Sleeve"
+              />
+              <FormControlLabel
+                value={4}
+                control={<Radio />}
+                label="Right Sleeve"
+              />
+            </RadioGroup>
+          </FormControl>
         </AccordionDetails>
       </Accordion>
 

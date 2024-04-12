@@ -22,15 +22,10 @@ export function Model(props) {
   const orbitRef = useRef();
   const modelRef = useRef();
 
+  // DESTRUCTURE OF MODEL NODES
   const { nodes, materials } = useGLTF(
     "./models/W1/long-sleeve-hitting-tees-with-hood.glb"
   );
-
-  // Set camera position
-  // const camera = useThree((state) => state.camera);
-  // useThree(({ camera }) => {
-  //   camera.position.set(0, 2, 8);
-  // });
 
   const {
     updateRef,
@@ -47,15 +42,18 @@ export function Model(props) {
     nameOutline,
   } = useProductStore((state) => state);
 
+  // SET CAMERA POSITION
+  const camera = useThree((state) => state.camera);
+
   useEffect(() => {
     modelRef.current.children.forEach((element) => {
       element.material.side = DoubleSide;
     });
     updateRef(modelRef);
-    // camera.position.set(0, 2, 8);
+    camera.position.set(0, 2, 8);
   }, []);
 
-  // Number states
+  // NUMBER STATES
   const [number1Position, setNumber1Position] = useState([0, 2.5, 4]);
   const [number1Scale, setNumber1Scale] = useState([4.5, 2.5, 2]);
   const [number1Rotation, setNumber1Rotation] = useState(0);
@@ -77,15 +75,26 @@ export function Model(props) {
     }
   }, [numberPosition]);
 
-  // Name states
-  const [name1Position, setName1Position] = useState([0, 0, 2]);
-  const [name1Scale, setName1Scale] = useState([4.5, 2.5, 4]);
+  // NAME STATES
+  const name1Scale = [4.5, 2.5, 10];
   const [name1FontSize, setName1FontSize] = useState(2);
+  const [name1Position, setName1Position] = useState([0, 0, 1]);
+  const [name1Rotation, setName1Rotation] = useState([0, 0, 0]);
 
+  useEffect(() => {
+    if (namePosition === 1) {
+      setName1Rotation([0, 0, 0]);
+    } else if (namePosition === 2) {
+      setName1Rotation([0, degToRad(180), 0]);
+    }
+  }, [namePosition]);
+
+  //CHANGE CURSOR DEFAULT TO POINTER
   const [hovered, setHovered] = useState(false);
   const toggleHovered = () => setHovered(!hovered);
   useCursor(hovered, "grab");
 
+  // HANDLE SCALING ON TEXT CHANGE
   useEffect(() => {
     // Calculate adjusted font size based on modelName length and decal dimensions
     if (modelName.length > 2) {
@@ -97,26 +106,22 @@ export function Model(props) {
     } else {
       setName1FontSize(2); // Default font size
     }
-  }, [modelName, name1Scale]);
+  }, [modelName]);
 
+  // HANDLE TEXT DRAG ON FIRST LAYER
   const bind = useDrag(
     ({ offset: [x, y], down }) => {
       orbitRef.current.enabled = !down;
       orbitRef.current.cursor = "pointer";
 
-      const xPos = x * 0.02;
+      const xPos = namePosition === 1 ? x * 0.02 : -(x * 0.02);
       const yPos = -(y * 0.03);
 
-      console.log("yPos ==> ", yPos);
-
-      // const xPos =
-      //   x * 0.005 > -0.8 && x * 0.005 < 0.8 ? x * 0.005 : name1Position[0];
-      // const zPos =
-      //   6.05 - y * 0.005 < 6.8 && 6.05 - y * 0.005 > 4.8
-      //     ? 6.05 - y * 0.005
-      //     : name1Position[2];
-
-      const finalPosition = [xPos, yPos, name1Position[2]];
+      const finalPosition = [
+        xPos < 2 && xPos > -2 ? xPos : name1Position[0],
+        yPos < 6.5 && yPos > -7 ? yPos : name1Position[1],
+        name1Position[2],
+      ];
 
       setName1Position(finalPosition);
     },
@@ -205,7 +210,7 @@ export function Model(props) {
               </Decal>
             )}
 
-            {modelName && (
+            {modelName && namePosition === 1 && (
               <Decal
                 {...bind()}
                 onPointerEnter={toggleHovered}
@@ -228,7 +233,7 @@ export function Model(props) {
                       position={[0, 0.1, 2.5]}
                     />
                     {hovered && (
-                      <color attach="background" args={["#e1816c"]} />
+                      <color attach="background" args={["#279954"]} />
                     )}
 
                     <Text
@@ -298,6 +303,54 @@ export function Model(props) {
                       }
                     >
                       {number}
+                    </Text>
+                  </RenderTexture>
+                </meshStandardMaterial>
+              </Decal>
+            )}
+            {modelName && namePosition === 2 && (
+              <Decal
+                {...bind()}
+                onPointerEnter={toggleHovered}
+                onPointerLeave={toggleHovered}
+                position={name1Position}
+                rotation={name1Rotation}
+                scale={name1Scale}
+                origin={[0, 0, 0]}
+              >
+                <meshStandardMaterial
+                  transparent
+                  polygonOffset
+                  polygonOffsetFactor={-1}
+                >
+                  <RenderTexture attach="map">
+                    <PerspectiveCamera
+                      makeDefault
+                      manual
+                      aspect={2}
+                      position={[0, 0.1, 2.5]}
+                    />
+                    {hovered && (
+                      <color attach="background" args={["#279954"]} />
+                    )}
+
+                    <Text
+                      rotation={[0, 0, 0]}
+                      fontSize={name1FontSize}
+                      color={nameColor || "black"}
+                      outlineColor={nameOutline || "black"}
+                      outlineWidth={nameOutline ? 0.05 : 0}
+                      font={
+                        nameFont === 1
+                          ? font1
+                          : nameFont === 2
+                          ? font2
+                          : nameFont === 3
+                          ? font3
+                          : font1
+                      }
+                    >
+                      {modelName}
                     </Text>
                   </RenderTexture>
                 </meshStandardMaterial>
