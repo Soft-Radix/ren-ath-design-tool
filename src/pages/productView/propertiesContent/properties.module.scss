@@ -128,7 +128,7 @@
     width: 90%;
   }
   .textLayerWrap {
-    margin-top: 10px;
+    margin-bottom: 15px;
     :global {
       .MuiFormGroup-root {
         display: flex;
@@ -152,5 +152,29 @@
         color: $primary;
       }
     }
+  }
+}
+
+// Gradient components styles
+.gradientWrap {
+  .buttonWrap {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    :global {
+      .btn {
+        border-radius: 2px;
+        min-width: 60px;
+        min-height: 28px;
+        font-size: $fontXsm;
+        font-weight: $fontExtraBold;
+      }
+    }
+  }
+  .gradientViewer {
+    border: 1px solid $secondary;
+    border-radius: 2px;
+    height: 31px;
+    width: 71px;
   }
 }

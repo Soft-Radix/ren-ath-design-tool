@@ -11,6 +11,8 @@ import React, { useState } from "react";
 import { CrossIcon, TickIcon } from "../../../assets/svg/icons";
 import ThemeButton from "../../../components/common/ThemeButton";
 import { useProductStore } from "../../../store";
+import front from "../../../assets/images/products/placement/front.png";
+import back from "../../../assets/images/products/placement/back.png";
 import styles from "./properties.module.scss";
 
 const Name = () => {
@@ -46,34 +48,32 @@ const Name = () => {
           + Add Name
         </AccordionSummary>
         <AccordionDetails>
+          <div className={`${styles.textLayerWrap} ${styles.addNumberWrap}`}>
+            <div className={styles.layers}>
+              <div
+                className={`${styles.imgWrap} ${
+                  namePosition === 1 ? styles.selected : ""
+                }`}
+                onClick={() => updateNamePosition(1)}
+              >
+                <img src={front} alt="" />
+              </div>
+              <div
+                className={`${styles.imgWrap} ${
+                  namePosition === 2 ? styles.selected : ""
+                }`}
+                onClick={() => updateNamePosition(2)}
+              >
+                <img src={back} alt="" />
+              </div>
+            </div>
+          </div>
           <input
             className={styles.numberInput}
             placeholder="Enter name"
             value={modelName}
             onChange={(e) => updateName(e.target.value)}
           />
-
-          <FormControl className={styles.textLayerWrap}>
-            <RadioGroup
-              aria-labelledby="demo-controlled-radio-buttons-group"
-              name="controlled-radio-buttons-group"
-              value={namePosition}
-              onChange={(e) => updateNamePosition(Number(e.target.value))}
-            >
-              <FormControlLabel value={1} control={<Radio />} label="Front" />
-              <FormControlLabel value={2} control={<Radio />} label="Back" />
-              <FormControlLabel
-                value={3}
-                control={<Radio />}
-                label="Left Sleeve"
-              />
-              <FormControlLabel
-                value={4}
-                control={<Radio />}
-                label="Right Sleeve"
-              />
-            </RadioGroup>
-          </FormControl>
         </AccordionDetails>
       </Accordion>
 
