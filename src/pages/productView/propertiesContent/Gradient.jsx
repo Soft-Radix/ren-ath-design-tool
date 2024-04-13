@@ -27,83 +27,93 @@ const Gradient = () => {
 
   const children = ref?.current?.children || [];
 
-  const [type, setType] = useState(1);
-
   useEffect(() => {
-    console.log("color ==> ", color);
-  }, [color]);
+    console.log("children ==> ", children);
+  }, [children]);
 
   return (
     <div className={`${styles.colorWrap} ${styles.gradientWrap}`}>
-      {children?.map((item, childIndex) => (
-        <Accordion key={item.uuid}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <div
-              className={`${styles.colorViewer} ${styles.mainColorViewer}`}
-              style={{ backgroundColor: color[childIndex] }}
-            />
-            {item.name}
-          </AccordionSummary>
-          <AccordionDetails>
-            <div className={styles.buttonWrap}>
-              <ThemeButton
-                onClick={() => setType(1)}
-                variant={type === 2 ? "outlined" : "contained"}
-              >
-                Color
-              </ThemeButton>
-              <ThemeButton
-                onClick={() => setType(2)}
-                variant={type === 1 ? "outlined" : "contained"}
-              >
-                Gradient
-              </ThemeButton>
+      {children?.map((item, childIndex) => {
+        const [type, setType] = useState(1);
+
+        return (
+          <Accordion key={item.uuid}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <div
-                className={styles.gradientViewer}
+                className={`${styles.colorViewer} ${styles.mainColorViewer}`}
                 style={{
                   background: `linear-gradient(90deg, ${
                     color[childIndex] || "transparent"
                   }, ${gradient[childIndex] || "transparent"})`,
                 }}
               />
-            </div>
-            <div className={styles.colorPalletWrap}>
-              <div
-                className={styles.colorViewer}
-                style={{ backgroundColor: "transparent" }}
-                onClick={() => {
-                  type === 1
-                    ? updateColor({ [childIndex]: null })
-                    : updateGradient({ [childIndex]: null });
-                  item.material.color = new ParceColor(0xffffff);
-                }}
-              >
-                <CrossIcon />
-              </div>
-              {colorList.map((itemColor, index) => (
+              {item.name}
+            </AccordionSummary>
+            <AccordionDetails>
+              <div className={styles.buttonWrap}>
+                <ThemeButton
+                  onClick={() => setType(1)}
+                  variant={type === 2 ? "outlined" : "contained"}
+                >
+                  Color
+                </ThemeButton>
+                <ThemeButton
+                  onClick={() => setType(2)}
+                  variant={type === 1 ? "outlined" : "contained"}
+                >
+                  Gradient
+                </ThemeButton>
                 <div
-                  key={index}
+                  className={styles.gradientViewer}
+                  style={{
+                    background: `linear-gradient(90deg, ${
+                      color[childIndex] || "transparent"
+                    }, ${gradient[childIndex] || "transparent"})`,
+                  }}
+                />
+              </div>
+              <div className={styles.colorPalletWrap}>
+                <div
                   className={styles.colorViewer}
-                  style={{ backgroundColor: itemColor }}
+                  style={{ backgroundColor: "transparent" }}
                   onClick={() => {
-                    type === 1
-                      ? updateColor({ [childIndex]: itemColor })
-                      : updateGradient({ [childIndex]: itemColor });
-                    item.material.color = new ParceColor(itemColor);
+                    if (type === 1) {
+                      updateColor({ [childIndex]: null });
+                      item.material.color = new ParceColor(0xffffff);
+                    } else {
+                      updateGradient({ [childIndex]: null });
+                    }
                   }}
                 >
-                  {type === 1 &&
-                    color[childIndex] &&
-                    color[childIndex] === itemColor && <TickIcon />}
-                  {type === 2 &&
-                    gradient[childIndex] &&
-                    gradient[childIndex] === itemColor && <TickIcon />}
+                  <CrossIcon />
                 </div>
-              ))}
-            </div>
-          </AccordionDetails>
-        </Accordion>
-      ))}
+                {colorList.map((itemColor, index) => (
+                  <div
+                    key={index}
+                    className={styles.colorViewer}
+                    style={{ backgroundColor: itemColor }}
+                    onClick={() => {
+                      if (type === 1) {
+                        updateColor({ [childIndex]: itemColor });
+                        item.material.color = new ParceColor(itemColor);
+                      } else {
+                        updateGradient({ [childIndex]: itemColor });
+                      }
+                    }}
+                  >
+                    {type === 1 &&
+                      color[childIndex] &&
+                      color[childIndex] === itemColor && <TickIcon />}
+                    {type === 2 &&
+                      gradient[childIndex] &&
+                      gradient[childIndex] === itemColor && <TickIcon />}
+                  </div>
+                ))}
+              </div>
+            </AccordionDetails>
+          </Accordion>
+        );
+      })}
     </div>
   );
 };

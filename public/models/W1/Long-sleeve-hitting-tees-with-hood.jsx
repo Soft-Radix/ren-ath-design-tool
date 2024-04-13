@@ -1,5 +1,6 @@
 import {
   Decal,
+  GradientTexture,
   OrbitControls,
   PerspectiveCamera,
   RenderTexture,
@@ -28,6 +29,9 @@ export function Model(props) {
   );
 
   const {
+    color,
+    gradient,
+
     updateRef,
     number,
     numberPosition,
@@ -141,8 +145,8 @@ export function Model(props) {
       <ambientLight intensity={6} />
       <OrbitControls
         ref={orbitRef}
-        // minPolarAngle={Math.PI * 0.35}
-        // maxPolarAngle={Math.PI * 0.55}
+        minPolarAngle={Math.PI * 0.35}
+        maxPolarAngle={Math.PI * 0.55}
         enableZoom={false}
       />
 
@@ -161,7 +165,17 @@ export function Model(props) {
             }
             material={materials.blinn2}
             name="Layer 1"
-          />
+          >
+            {gradient[0] && (
+              <meshStandardMaterial DoubleSide>
+                <GradientTexture
+                  stops={[0, 1]} // As many stops as you want
+                  colors={[color[0] || "transparent", gradient[0]]} // Colors need to match the number of stops
+                  size={1024} // Size is optional, default = 1024
+                />
+              </meshStandardMaterial>
+            )}
+          </mesh>
           <mesh
             geometry={
               nodes["31106-women-long-sleeve-sub-warmup-w-hood_2"].geometry
@@ -266,6 +280,16 @@ export function Model(props) {
                 </meshStandardMaterial>
               </Decal>
             )}
+
+            {gradient[1] && (
+              <meshStandardMaterial DoubleSide>
+                <GradientTexture
+                  stops={[0, 1]} // As many stops as you want
+                  colors={[color[1] || "transparent", gradient[1]]} // Colors need to match the number of stops
+                  size={1024} // Size is optional, default = 1024
+                />
+              </meshStandardMaterial>
+            )}
           </mesh>
           <mesh
             geometry={
@@ -364,6 +388,16 @@ export function Model(props) {
                 </meshStandardMaterial>
               </Decal>
             )}
+
+            {gradient[2] && (
+              <meshStandardMaterial DoubleSide>
+                <GradientTexture
+                  stops={[0, 1]} // As many stops as you want
+                  colors={[color[2] || "transparent", gradient[2]]} // Colors need to match the number of stops
+                  size={1024} // Size is optional, default = 1024
+                />
+              </meshStandardMaterial>
+            )}
           </mesh>
           <mesh
             geometry={
@@ -371,14 +405,34 @@ export function Model(props) {
             }
             material={materials.blinn3}
             name="Layer 4"
-          />
+          >
+            {gradient[3] && (
+              <meshStandardMaterial DoubleSide>
+                <GradientTexture
+                  stops={[0, 1]} // As many stops as you want
+                  colors={[color[3] || "transparent", gradient[3]]} // Colors need to match the number of stops
+                  size={1024} // Size is optional, default = 1024
+                />
+              </meshStandardMaterial>
+            )}
+          </mesh>
           <mesh
             geometry={
               nodes["31106-women-long-sleeve-sub-warmup-w-hood_5"].geometry
             }
             material={materials.blinn1}
             name="Layer 5"
-          />
+          >
+            {gradient[4] && (
+              <meshStandardMaterial DoubleSide>
+                <GradientTexture
+                  stops={[0, 1]} // As many stops as you want
+                  colors={[color[4] || "transparent", gradient[4]]} // Colors need to match the number of stops
+                  size={1024} // Size is optional, default = 1024
+                />
+              </meshStandardMaterial>
+            )}
+          </mesh>
         </motion.group>
       </group>
     </>
