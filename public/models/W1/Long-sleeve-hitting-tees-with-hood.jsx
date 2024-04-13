@@ -356,7 +356,7 @@ export function Model(props) {
                 onPointerEnter={toggleHovered}
                 onPointerLeave={toggleHovered}
                 scale={[logoScale * 5, logoScale * 5, 10]}
-                debug={true}
+                // debug={true}
                 position={modelLogoPosition}
                 rotation={logoRotation}
                 map={logoTexture}
@@ -478,7 +478,7 @@ export function Model(props) {
                 onPointerEnter={toggleHovered}
                 onPointerLeave={toggleHovered}
                 scale={[logoScale * 5, logoScale * 5, 10]}
-                debug={true}
+                // debug={true}
                 position={modelLogoPosition}
                 rotation={logoRotation}
                 map={logoTexture}
