@@ -1,5 +1,20 @@
 @import "/src/scss/var";
 
+@font-face {
+  font-family: "TiltNeon";
+  src: url("/src/assets/fonts/TiltNeon.ttf") format("truetype");
+}
+@font-face {
+  font-family: "BebasNeue";
+  src: url("/src/assets/fonts/BebasNeue.ttf") format("truetype");
+}
+
+.colorPalletWrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 .colorViewer {
   height: 20px;
   min-width: 20px;
@@ -10,6 +25,7 @@
   align-items: center;
   justify-content: center;
 }
+
 // Color component styles
 .colorWrap {
   .mainColorViewer {
@@ -21,14 +37,10 @@
       display: flex;
       align-items: center;
     }
-    .MuiAccordionDetails-root {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
   }
 }
 
+// Number component styles
 .numberWrap {
   .addNumberWrap {
     display: flex;
@@ -61,5 +73,206 @@
     font-weight: $fontBold;
     font-size: $fontSm;
     outline: none;
+  }
+  :global {
+    .MuiAccordionSummary-content {
+      font-size: $fontMd;
+      font-weight: $fontExtraBold;
+      color: $primary;
+    }
+  }
+  .fontWrap {
+    & > * {
+      cursor: pointer;
+      padding: 10px 0;
+      font-size: $fontLg;
+      &.selected {
+        border: 1px solid $secondary;
+        border-radius: 6px;
+        margin: 0 -6px;
+        padding-left: 5px;
+      }
+    }
+    .fontItem2 {
+      font-family: "TiltNeon";
+    }
+    .fontItem3 {
+      font-family: "BebasNeue";
+    }
+  }
+
+  .fontColorWrap {
+    .buttonWrap {
+      display: flex;
+      gap: 15px;
+      :global {
+        .btn {
+          border-radius: 2px;
+          min-width: 60px;
+          min-height: 28px;
+          font-size: $fontXsm;
+          font-weight: $fontExtraBold;
+        }
+      }
+    }
+    .colorPalletWrap {
+      margin-top: 20px;
+    }
+  }
+}
+
+// Name components styles
+.nameWrap {
+  .numberInput {
+    margin: 0;
+    width: 90%;
+  }
+  .textLayerWrap {
+    margin-bottom: 15px;
+    :global {
+      .MuiFormGroup-root {
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+        > * {
+          margin: 0;
+          flex-basis: 48%;
+          svg {
+            height: 20px;
+            width: 20px;
+          }
+        }
+      }
+      .MuiButtonBase-root {
+        padding: 5px;
+      }
+      .MuiTypography-root {
+        font-size: 14px;
+        font-weight: 500;
+        color: $primary;
+      }
+    }
+  }
+}
+
+// Gradient components styles
+.gradientWrap {
+  .buttonWrap {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    justify-content: space-between;
+    :global {
+      .btn {
+        border-radius: 2px;
+        min-width: 60px;
+        min-height: 28px;
+        font-size: $fontXsm;
+        font-weight: $fontExtraBold;
+      }
+    }
+  }
+  .gradientViewer {
+    border: 1px solid $secondary;
+    border-radius: 2px;
+    height: 31px;
+    width: 71px;
+  }
+
+  .scaleAngleWrap {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    .sliderWrap {
+      span {
+        color: $white;
+        font-size: $fontXsm;
+        font-weight: $fontExtraBold;
+      }
+      border-radius: 2px;
+      display: flex;
+      flex-grow: 1;
+      align-items: center;
+      gap: 10px;
+      background-color: $secondary;
+      padding: 12px 15px 12px 10px;
+
+      :global {
+        .rc-slider-handle {
+          border: none;
+          background: $primary;
+          height: 11px;
+          width: 11px;
+          margin-top: -3px;
+          box-shadow: none;
+          opacity: 1;
+        }
+        .rc-slider-track {
+          background: $primary;
+        }
+      }
+    }
+  }
+}
+
+// Logo components styles
+.logoWrap {
+  margin-top: 10px;
+
+  .imageWrap {
+    position: relative;
+    padding: 10px;
+    border-radius: 4px;
+    background: rgba(118, 143, 153, 0.1);
+    margin-top: 20px;
+    @include flexCenter;
+
+    .selectedImg {
+      max-width: 100%;
+      max-height: 200px;
+    }
+    .crossImg {
+      position: absolute;
+      top: -5px;
+      right: -3px;
+      cursor: pointer;
+    }
+  }
+  .sliderWrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    :global {
+      .rc-slider-handle {
+        border: none;
+        background: $primary;
+        height: 11px;
+        width: 11px;
+        margin-top: -3px;
+        box-shadow: none;
+        opacity: 1;
+      }
+      .rc-slider-track {
+        background: $primary;
+      }
+    }
+  }
+  .uploadWrap {
+    @include flexCenter;
+    gap: 10px;
+
+    .textWrap {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      .text1 {
+        color: $primary;
+        font-size: $fontMd;
+        font-weight: $fontExtraBold;
+      }
+      .text2 {
+        font-size: $fontXsm;
+      }
+    }
   }
 }

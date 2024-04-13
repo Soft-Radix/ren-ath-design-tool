@@ -1,21 +1,16 @@
-import React, { Suspense, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
-import {
-  Environment,
-  Grid,
-  OrbitControls,
-  useProgress,
-} from "@react-three/drei";
-import { Model as W1 } from "../../../public/models/W1/Long-sleeve-hitting-tees-with-hood";
+import React, { Suspense } from "react";
 import { Model as M1 } from "../../../public/models/M1/Flex-custom-board-shorts";
 import { Model as M6 } from "../../../public/models/M6/Sleeveless-jersey";
+import { Model as W1 } from "../../../public/models/W1/Long-sleeve-hitting-tees-with-hood";
 import { Model as W2 } from "../../../public/models/W2/Long-sleeve-hitting-tees-without-hood";
 import { Model as W4 } from "../../../public/models/W4/Short-sleeve-hitting-tee";
 import { Model as W6 } from "../../../public/models/W6/Sleeveless-jersey-with-sleeve";
 import { Model as W7 } from "../../../public/models/W7/Sleeveless-jersey-without-sleeve";
 import { Model as W8 } from "../../../public/models/W8/Sleeve-only";
-import { useProductStore } from "../../store";
 import loaderGif from "../../assets/gif/loader.gif";
+import { useProductStore } from "../../store";
+import { Grid } from "@react-three/drei";
 
 const Scene = () => {
   const productId = useProductStore((state) => state.id);
@@ -49,13 +44,15 @@ const Scene = () => {
           <M6 />
         ) : null}
 
-        {/* <Grid position={[0, -0.01, 0]} args={[15, 15]} /> */}
-        <ambientLight intensity={6} />
+        {/* <Grid position={[0, -0.01, 0]} args={[15, 15]} />
+        <axesHelper args={[8]} /> */}
+
+        {/* <ambientLight intensity={6} />
         <OrbitControls
           minPolarAngle={Math.PI * 0.35}
           maxPolarAngle={Math.PI * 0.55}
           enableZoom={false}
-        />
+        /> */}
       </Canvas>
     </Suspense>
   );

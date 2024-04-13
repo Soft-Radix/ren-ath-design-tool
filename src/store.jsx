@@ -15,9 +15,29 @@ export const useProductStore = create((set) => ({
   selectedSidebarItem: 1,
   selectedSidebarItemName: "Color",
   ref: null,
+
   color: {},
-  number: 0,
+  gradient: {},
+  gradientScale: {},
+  gradientAngle: {},
+
+  number: "",
   numberPosition: 0,
+  numberFont: 1,
+  numberColor: "",
+  numberOutline: "",
+
+  modelName: "",
+  namePosition: 1,
+  nameFont: 1,
+  nameColor: "",
+  nameOutline: "",
+
+  logo: null,
+  logoPosition: 1,
+  logoScale: 0.5,
+  logoRotate: 0,
+
   updateProduct: (updatedId, updatedName) =>
     set(() => ({
       id: updatedId,
@@ -45,10 +65,24 @@ export const useProductStore = create((set) => ({
     set(() => ({
       ref: updatedRef,
     })),
+
   updateColor: (updatedColor) =>
     set((state) => ({
       color: { ...state.color, ...updatedColor },
     })),
+  updateGradient: (updatedGradient) =>
+    set((state) => ({
+      gradient: { ...state.gradient, ...updatedGradient },
+    })),
+  updateGradientScale: (updatedScale) =>
+    set(() => ({
+      gradientScale: updatedScale,
+    })),
+  updateGradientAngle: (updatedAngle) =>
+    set(() => ({
+      gradientAngle: updatedAngle,
+    })),
+
   updateNumber: (updatedNumber) =>
     set(() => ({
       number: updatedNumber,
@@ -56,5 +90,55 @@ export const useProductStore = create((set) => ({
   updateNumberPosition: (updatedPosition) =>
     set(() => ({
       numberPosition: updatedPosition,
+    })),
+  updateNumberFont: (updatedFont) =>
+    set(() => ({
+      numberFont: updatedFont,
+    })),
+  updateNumberColor: (color) =>
+    set(() => ({
+      numberColor: color,
+    })),
+  updateNumberOutline: (color) =>
+    set(() => ({
+      numberOutline: color,
+    })),
+
+  updateName: (updatedName) =>
+    set(() => ({
+      modelName: updatedName,
+    })),
+  updateNamePosition: (updatedPosition) =>
+    set(() => ({
+      namePosition: updatedPosition,
+    })),
+  updateNameFont: (updatedFont) =>
+    set(() => ({
+      nameFont: updatedFont,
+    })),
+  updateNameColor: (color) =>
+    set(() => ({
+      nameColor: color,
+    })),
+  updateNameOutline: (color) =>
+    set(() => ({
+      nameOutline: color,
+    })),
+
+  updateLogo: (imageFile) =>
+    set(() => ({
+      logo: imageFile ? URL.createObjectURL(imageFile) : null,
+    })),
+  updateLogoPosition: (position) =>
+    set(() => ({
+      logoPosition: position,
+    })),
+  updateLogoScale: (updatedScale) =>
+    set(() => ({
+      logoScale: updatedScale,
+    })),
+  updateLogoAngle: (updatedAngle) =>
+    set(() => ({
+      logoAngle: updatedAngle,
     })),
 }));

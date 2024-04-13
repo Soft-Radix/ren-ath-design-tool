@@ -36,31 +36,33 @@ const Color = () => {
             {item.name}
           </AccordionSummary>
           <AccordionDetails>
-            <div
-              className={styles.colorViewer}
-              style={{ backgroundColor: "transparent" }}
-              onClick={() => {
-                updateColor({ [childIndex]: null });
-                item.material.color = new ParceColor(0xffffff);
-              }}
-            >
-              <CrossIcon />
-            </div>
-            {colorList.map((itemColor, index) => (
+            <div className={styles.colorPalletWrap}>
               <div
-                key={index}
                 className={styles.colorViewer}
-                style={{ backgroundColor: itemColor }}
+                style={{ backgroundColor: "transparent" }}
                 onClick={() => {
-                  updateColor({ [childIndex]: itemColor });
-                  item.material.color = new ParceColor(itemColor);
+                  updateColor({ [childIndex]: null });
+                  item.material.color = new ParceColor(0xffffff);
                 }}
               >
-                {color[childIndex] && color[childIndex] === itemColor && (
-                  <TickIcon />
-                )}
+                <CrossIcon />
               </div>
-            ))}
+              {colorList.map((itemColor, index) => (
+                <div
+                  key={index}
+                  className={styles.colorViewer}
+                  style={{ backgroundColor: itemColor }}
+                  onClick={() => {
+                    updateColor({ [childIndex]: itemColor });
+                    item.material.color = new ParceColor(itemColor);
+                  }}
+                >
+                  {color[childIndex] && color[childIndex] === itemColor && (
+                    <TickIcon />
+                  )}
+                </div>
+              ))}
+            </div>
           </AccordionDetails>
         </Accordion>
       ))}
