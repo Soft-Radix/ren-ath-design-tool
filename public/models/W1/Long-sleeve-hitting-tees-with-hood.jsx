@@ -7,6 +7,7 @@ import {
   Text,
   useCursor,
   useGLTF,
+  useTexture,
 } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import React, { useEffect, useRef, useState } from "react";
@@ -46,7 +47,16 @@ export function Model(props) {
     nameFont,
     nameColor,
     nameOutline,
+
+    logo,
+    logoPosition,
+    logoScale,
+    logoAngle,
   } = useProductStore((state) => state);
+
+  useEffect(() => {
+    console.log("logoScale ==> ", logoScale);
+  }, [logoScale]);
 
   // SET CAMERA POSITION
   const camera = useThree((state) => state.camera);
@@ -141,6 +151,53 @@ export function Model(props) {
     },
     { pointerEvents: true }
   );
+
+  // HANDLE LOGO STATES
+  const logoTexture = useTexture(logo || "./textures/1.png");
+  const [modelLogoPosition, setModelLogoPosition] = useState([0, 0, 1]);
+  const [logoRotation, setLogoRotation] = useState([0, 0, 0]);
+
+  // HANDLE TEXT DRAG ON FIRST LAYER
+  const logoBind = useDrag(
+    ({ offset: [x, y], down }) => {
+      orbitRef.current.enabled = !down;
+      orbitRef.current.cursor = "pointer";
+
+      const xPos = logoPosition === 1 ? x * 0.02 : -(x * 0.02);
+      const yPos = -(y * 0.03);
+
+      const finalPosition = [
+        xPos < 3 && xPos > -3 ? xPos : modelLogoPosition[0],
+        yPos < 6.5 && yPos > -7 ? yPos : modelLogoPosition[1],
+        modelLogoPosition[2],
+      ];
+
+      setModelLogoPosition(finalPosition);
+    },
+    { pointerEvents: true }
+  );
+
+  useEffect(() => {
+    setLogoRotation([
+      0,
+      logoPosition === 1 ? 0 : degToRad(180),
+      degToRad(logoAngle),
+    ]);
+  }, [logoAngle, logoPosition]);
+
+  useEffect(() => {
+    camera.position.set(0, 2, 8);
+    camera.lookAt(0, 0, 0);
+
+    if (logoPosition === 1) {
+      setLogoRotation([0, 0, 0]);
+      setNumber1Rotation(0);
+    } else if (logoPosition === 2) {
+      setLogoRotation([0, degToRad(180), 0]);
+
+      setNumber1Rotation(180);
+    }
+  }, [logoPosition]);
 
   return (
     <>
@@ -292,6 +349,20 @@ export function Model(props) {
                 />
               </meshStandardMaterial>
             )}
+
+            {logo && logoPosition === 1 && (
+              <Decal
+                {...logoBind()}
+                onPointerEnter={toggleHovered}
+                onPointerLeave={toggleHovered}
+                scale={[logoScale * 5, logoScale * 5, 10]}
+                debug={true}
+                position={modelLogoPosition}
+                rotation={logoRotation}
+                map={logoTexture}
+                origin={[0, 0, 0]}
+              />
+            )}
           </mesh>
           <mesh
             geometry={
@@ -399,6 +470,20 @@ export function Model(props) {
                   size={1024} // Size is optional, default = 1024
                 />
               </meshStandardMaterial>
+            )}
+
+            {logo && logoPosition === 2 && (
+              <Decal
+                {...logoBind()}
+                onPointerEnter={toggleHovered}
+                onPointerLeave={toggleHovered}
+                scale={[logoScale * 5, logoScale * 5, 10]}
+                debug={true}
+                position={modelLogoPosition}
+                rotation={logoRotation}
+                map={logoTexture}
+                origin={[0, 0, 0]}
+              />
             )}
           </mesh>
           <mesh

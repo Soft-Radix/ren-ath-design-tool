@@ -2,17 +2,13 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
-import FormControl from "@mui/material/FormControl";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
 import { motion } from "framer-motion";
 import React, { useState } from "react";
+import back from "../../../assets/images/products/placement/back.png";
+import front from "../../../assets/images/products/placement/front.png";
 import { CrossIcon, TickIcon } from "../../../assets/svg/icons";
 import ThemeButton from "../../../components/common/ThemeButton";
 import { useProductStore } from "../../../store";
-import front from "../../../assets/images/products/placement/front.png";
-import back from "../../../assets/images/products/placement/back.png";
 import styles from "./properties.module.scss";
 
 const Name = () => {

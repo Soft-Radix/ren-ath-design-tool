@@ -33,6 +33,11 @@ export const useProductStore = create((set) => ({
   nameColor: "",
   nameOutline: "",
 
+  logo: null,
+  logoPosition: 1,
+  logoScale: 0.5,
+  logoRotate: 0,
+
   updateProduct: (updatedId, updatedName) =>
     set(() => ({
       id: updatedId,
@@ -118,5 +123,22 @@ export const useProductStore = create((set) => ({
   updateNameOutline: (color) =>
     set(() => ({
       nameOutline: color,
+    })),
+
+  updateLogo: (imageFile) =>
+    set(() => ({
+      logo: imageFile ? URL.createObjectURL(imageFile) : null,
+    })),
+  updateLogoPosition: (position) =>
+    set(() => ({
+      logoPosition: position,
+    })),
+  updateLogoScale: (updatedScale) =>
+    set(() => ({
+      logoScale: updatedScale,
+    })),
+  updateLogoAngle: (updatedAngle) =>
+    set(() => ({
+      logoAngle: updatedAngle,
     })),
 }));
