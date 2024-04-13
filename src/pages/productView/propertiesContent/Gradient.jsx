@@ -8,6 +8,8 @@ import { useProductStore } from "../../../store";
 import { Color as ParceColor } from "three";
 import styles from "./properties.module.scss";
 import ThemeButton from "../../../components/common/ThemeButton";
+import Slider from "rc-slider";
+import "rc-slider/assets/index.css";
 
 const colorList = [
   "#D14E24",
@@ -21,15 +23,18 @@ const colorList = [
 
 const Gradient = () => {
   const ref = useProductStore((state) => state.ref);
-  const { color, updateColor, gradient, updateGradient } = useProductStore(
-    (state) => state
-  );
+  const {
+    color,
+    updateColor,
+    gradient,
+    updateGradient,
+    gradientScale,
+    gradientAngle,
+    updateGradientScale,
+    updateGradientAngle,
+  } = useProductStore((state) => state);
 
   const children = ref?.current?.children || [];
-
-  useEffect(() => {
-    console.log("children ==> ", children);
-  }, [children]);
 
   return (
     <div className={`${styles.colorWrap} ${styles.gradientWrap}`}>
@@ -50,6 +55,28 @@ const Gradient = () => {
               {item.name}
             </AccordionSummary>
             <AccordionDetails>
+              <div className={styles.scaleAngleWrap}>
+                <div className={styles.sliderWrap}>
+                  <span>Scale</span>
+                  <Slider
+                    min={0.1}
+                    max={1}
+                    step={0.01}
+                    value={gradientScale[childIndex]}
+                    onChange={(e) => updateGradientScale({ [childIndex]: e })}
+                  />
+                </div>
+                {/* <div className={styles.sliderWrap}>
+                  <span>Angle</span>
+                  <Slider
+                    min={0}
+                    max={360}
+                    step={1}
+                    value={gradientAngle[childIndex]}
+                    onChange={(e) => updateGradientAngle({ [childIndex]: e })}
+                  />
+                </div> */}
+              </div>
               <div className={styles.buttonWrap}>
                 <ThemeButton
                   onClick={() => setType(1)}

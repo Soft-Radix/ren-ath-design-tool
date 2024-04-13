@@ -18,6 +18,8 @@ export const useProductStore = create((set) => ({
 
   color: {},
   gradient: {},
+  gradientScale: {},
+  gradientAngle: {},
 
   number: "",
   numberPosition: 0,
@@ -66,6 +68,14 @@ export const useProductStore = create((set) => ({
   updateGradient: (updatedGradient) =>
     set((state) => ({
       gradient: { ...state.gradient, ...updatedGradient },
+    })),
+  updateGradientScale: (updatedScale) =>
+    set(() => ({
+      gradientScale: updatedScale,
+    })),
+  updateGradientAngle: (updatedAngle) =>
+    set(() => ({
+      gradientAngle: updatedAngle,
     })),
 
   updateNumber: (updatedNumber) =>

@@ -161,6 +161,7 @@
     display: flex;
     gap: 15px;
     margin-bottom: 20px;
+    justify-content: space-between;
     :global {
       .btn {
         border-radius: 2px;
@@ -176,5 +177,40 @@
     border-radius: 2px;
     height: 31px;
     width: 71px;
+  }
+
+  .scaleAngleWrap {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    .sliderWrap {
+      span {
+        color: $white;
+        font-size: $fontXsm;
+        font-weight: $fontExtraBold;
+      }
+      border-radius: 2px;
+      display: flex;
+      flex-grow: 1;
+      align-items: center;
+      gap: 10px;
+      background-color: $secondary;
+      padding: 12px 15px 12px 10px;
+
+      :global {
+        .rc-slider-handle {
+          border: none;
+          background: $primary;
+          height: 11px;
+          width: 11px;
+          margin-top: -3px;
+          box-shadow: none;
+          opacity: 1;
+        }
+        .rc-slider-track {
+          background: $primary;
+        }
+      }
+    }
   }
 }

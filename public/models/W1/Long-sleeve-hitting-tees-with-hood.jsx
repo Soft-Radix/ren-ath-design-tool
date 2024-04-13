@@ -31,6 +31,8 @@ export function Model(props) {
   const {
     color,
     gradient,
+    gradientScale,
+    gradientAngle,
 
     updateRef,
     number,
@@ -167,9 +169,9 @@ export function Model(props) {
             name="Layer 1"
           >
             {gradient[0] && (
-              <meshStandardMaterial DoubleSide>
+              <meshStandardMaterial side={DoubleSide}>
                 <GradientTexture
-                  stops={[0, 1]} // As many stops as you want
+                  stops={[0, gradientScale[0] || 0.1]} // As many stops as you want
                   colors={[color[0] || "transparent", gradient[0]]} // Colors need to match the number of stops
                   size={1024} // Size is optional, default = 1024
                 />
@@ -282,9 +284,9 @@ export function Model(props) {
             )}
 
             {gradient[1] && (
-              <meshStandardMaterial DoubleSide>
+              <meshStandardMaterial side={DoubleSide}>
                 <GradientTexture
-                  stops={[0, 1]} // As many stops as you want
+                  stops={[0, gradientScale[1] || 0.1]} // As many stops as you want
                   colors={[color[1] || "transparent", gradient[1]]} // Colors need to match the number of stops
                   size={1024} // Size is optional, default = 1024
                 />
@@ -390,9 +392,9 @@ export function Model(props) {
             )}
 
             {gradient[2] && (
-              <meshStandardMaterial DoubleSide>
+              <meshStandardMaterial side={DoubleSide}>
                 <GradientTexture
-                  stops={[0, 1]} // As many stops as you want
+                  stops={[0, gradientScale[2] || 0.1]} // As many stops as you want
                   colors={[color[2] || "transparent", gradient[2]]} // Colors need to match the number of stops
                   size={1024} // Size is optional, default = 1024
                 />
@@ -407,9 +409,9 @@ export function Model(props) {
             name="Layer 4"
           >
             {gradient[3] && (
-              <meshStandardMaterial DoubleSide>
+              <meshStandardMaterial side={DoubleSide}>
                 <GradientTexture
-                  stops={[0, 1]} // As many stops as you want
+                  stops={[0, gradientScale[3] || 0.1]} // As many stops as you want
                   colors={[color[3] || "transparent", gradient[3]]} // Colors need to match the number of stops
                   size={1024} // Size is optional, default = 1024
                 />
@@ -424,9 +426,9 @@ export function Model(props) {
             name="Layer 5"
           >
             {gradient[4] && (
-              <meshStandardMaterial DoubleSide>
+              <meshStandardMaterial side={DoubleSide}>
                 <GradientTexture
-                  stops={[0, 1]} // As many stops as you want
+                  stops={[0, gradientScale[4] || 0.1]} // As many stops as you want
                   colors={[color[4] || "transparent", gradient[4]]} // Colors need to match the number of stops
                   size={1024} // Size is optional, default = 1024
                 />
