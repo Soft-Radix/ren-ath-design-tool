@@ -8,6 +8,7 @@ import Gradient from "./propertiesContent/Gradient";
 import Logo from "./propertiesContent/Logo";
 import Name from "./propertiesContent/Name";
 import Number from "./propertiesContent/Number";
+import Pattern from "./propertiesContent/Pattern";
 import Sidebar from "./sidebar";
 
 const ProductView = () => {
@@ -28,6 +29,8 @@ const ProductView = () => {
                 <Design />
               ) : selectedSidebarItem === 1 ? (
                 <Color />
+              ) : selectedSidebarItem === 1.1 ? (
+                <Pattern />
               ) : selectedSidebarItem === 2 ? (
                 <Number />
               ) : selectedSidebarItem === 3 ? (

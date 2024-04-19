@@ -56,6 +56,8 @@ export const useProductStore = create((set) => ({
           ? "Design"
           : updatedId === 1
           ? "Color"
+          : updatedId === 1.1
+          ? "Pattern"
           : updatedId === 2
           ? "Number"
           : updatedId === 3
