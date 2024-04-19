@@ -4,7 +4,7 @@ import styles from "./productCard.module.scss";
 import { useProductStore } from "../../../store";
 import Cookies from "universal-cookie";
 
-const ProductCard = ({ title, image, id }) => {
+const ProductCard = ({ title, image, id, designCount }) => {
   const navigate = useNavigate();
   const updateProduct = useProductStore((state) => state.updateProduct);
   const cookies = new Cookies(null, { path: "/" });
@@ -19,11 +19,12 @@ const ProductCard = ({ title, image, id }) => {
         <div className={styles.btnWrap}>
           <ThemeButton
             onClick={() => {
-              updateProduct(id, title);
+              updateProduct(id, title, designCount);
               navigate("product-view");
               cookies.set("productDetails", {
                 id: id,
                 name: title,
+                designCount: designCount,
               });
             }}
           >

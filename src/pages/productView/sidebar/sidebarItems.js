@@ -1,6 +1,5 @@
 import {
   ColorIcon,
-  EditIcon,
   GradientIcon,
   LogoIcon,
   NameIcon,
