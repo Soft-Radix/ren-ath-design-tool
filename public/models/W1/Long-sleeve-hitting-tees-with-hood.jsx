@@ -54,10 +54,6 @@ export function Model(props) {
     logoAngle,
   } = useProductStore((state) => state);
 
-  useEffect(() => {
-    console.log("logoScale ==> ", logoScale);
-  }, [logoScale]);
-
   // SET CAMERA POSITION
   const camera = useThree((state) => state.camera);
 
@@ -65,6 +61,7 @@ export function Model(props) {
     modelRef.current.children.forEach((element) => {
       element.material.side = DoubleSide;
     });
+
     updateRef(modelRef);
     camera.position.set(0, 2, 8);
   }, []);
@@ -113,7 +110,7 @@ export function Model(props) {
     }
   }, [namePosition]);
 
-  //CHANGE CURSOR DEFAULT TO POINTER
+  // CHANGE CURSOR DEFAULT TO POINTER
   const [hovered, setHovered] = useState(false);
   const toggleHovered = () => setHovered(!hovered);
   useCursor(hovered, "grab");

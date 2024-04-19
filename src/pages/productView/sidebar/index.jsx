@@ -9,7 +9,9 @@ const Sidebar = () => {
     (state) => state.selectedSidebarItem
   );
   const updateSelectedSidebarItem = useProductStore(
+    
     (state) => state.updateSelectedSidebarItem
+
   );
 
   const renderItem = ({ id, name, Icon }) => {
