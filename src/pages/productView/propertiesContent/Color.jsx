@@ -20,9 +20,9 @@ const colorList = [
 
 const Color = () => {
   const ref = useProductStore((state) => state.ref);
-  const { color, updateColor } = useProductStore((state) => state);
-
   const children = ref?.current?.children || [];
+
+  const { color, updateColor } = useProductStore((state) => state);
 
   return (
     <div className={styles.colorWrap}>
