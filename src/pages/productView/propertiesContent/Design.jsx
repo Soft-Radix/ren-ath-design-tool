@@ -4,9 +4,7 @@ import { useProductStore } from "../../../store";
 
 const Design = () => {
   const { id, designCount } = useProductStore((state) => state);
-  const { designPosition, updateDesignPosition } = useProductStore(
-    (state) => state
-  );
+  const { designType, updateDesignType } = useProductStore((state) => state);
 
   const renderDivs = () => {
     const divs = [];
@@ -18,9 +16,9 @@ const Design = () => {
       divs.push(
         <div
           className={`${styles.imgWrap} ${
-            designPosition === i ? styles.selected : ""
+            designType === i ? styles.selected : ""
           }`}
-          onClick={() => updateDesignPosition(i)}
+          onClick={() => updateDesignType(i)}
           key={i}
         >
           <img src={imageUrl} alt="" />

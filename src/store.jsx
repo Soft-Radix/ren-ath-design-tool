@@ -18,7 +18,7 @@ export const useProductStore = create((set) => ({
   ref: null,
 
   designCount: designCount,
-  designPosition: 0,
+  designType: 0,
 
   color: {},
   gradient: {},
@@ -75,9 +75,9 @@ export const useProductStore = create((set) => ({
       ref: updatedRef,
     })),
 
-  updateDesignPosition: (updatedPosition) =>
+  updateDesignType: (type) =>
     set(() => ({
-      designPosition: updatedPosition,
+      designType: type,
     })),
 
   updateColor: (updatedColor) =>

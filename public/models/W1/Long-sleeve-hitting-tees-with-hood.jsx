@@ -217,7 +217,7 @@ export function Model(props) {
         >
           <mesh
             geometry={
-              nodes["31106-women-long-sleeve-sub-warmup-w-hood_1"].geometry
+              nodes.Dress_1_Group6255_0003_Dress_1_Group6255_0003_1.geometry
             }
             material={materials.blinn2}
             name="Layer 1"
@@ -234,7 +234,7 @@ export function Model(props) {
           </mesh>
           <mesh
             geometry={
-              nodes["31106-women-long-sleeve-sub-warmup-w-hood_2"].geometry
+              nodes.Dress_1_Group6255_0003_Dress_1_Group6255_0003_2.geometry
             }
             material={
               materials.Dress_1_Group6255_0003_Dress_1_Group6255_0003_blinn
@@ -363,7 +363,7 @@ export function Model(props) {
           </mesh>
           <mesh
             geometry={
-              nodes["31106-women-long-sleeve-sub-warmup-w-hood_3"].geometry
+              nodes.Dress_1_Group6255_0003_Dress_1_Group6255_0003_3.geometry
             }
             material={materials.blinn4}
             name="Layer 3"
@@ -485,7 +485,7 @@ export function Model(props) {
           </mesh>
           <mesh
             geometry={
-              nodes["31106-women-long-sleeve-sub-warmup-w-hood_4"].geometry
+              nodes.Dress_1_Group6255_0003_Dress_1_Group6255_0003_4.geometry
             }
             material={materials.blinn3}
             name="Layer 4"
@@ -502,7 +502,7 @@ export function Model(props) {
           </mesh>
           <mesh
             geometry={
-              nodes["31106-women-long-sleeve-sub-warmup-w-hood_5"].geometry
+              nodes.Dress_1_Group6255_0003_Dress_1_Group6255_0003_5.geometry
             }
             material={materials.blinn1}
             name="Layer 5"
