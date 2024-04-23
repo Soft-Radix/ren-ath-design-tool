@@ -11,7 +11,13 @@ import {
 } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import React, { useEffect, useRef, useState } from "react";
-import { DoubleSide } from "three";
+import {
+  AlphaFormat,
+  DoubleSide,
+  Color as ParceColor,
+  RepeatWrapping,
+  SRGBColorSpace,
+} from "three";
 import { useProductStore } from "../../../src/store";
 import { degToRad } from "three/src/math/MathUtils";
 import { motion } from "framer-motion-3d";
@@ -57,6 +63,9 @@ export function Model(props) {
   // SET CAMERA POSITION
   const camera = useThree((state) => state.camera);
 
+  // ADD TEXTURE ON LAYER
+  const layerTexture = useTexture("./textures/pattern.png");
+
   useEffect(() => {
     modelRef.current.children.forEach((element) => {
       element.material.side = DoubleSide;
@@ -64,6 +73,16 @@ export function Model(props) {
 
     updateRef(modelRef);
     camera.position.set(0, 2, 8);
+
+    console.log("modelRef ==> ", modelRef.current.children[1].material);
+    console.log("layerTexture ==> ", layerTexture);
+
+    layerTexture.wrapS = RepeatWrapping;
+    layerTexture.wrapT = RepeatWrapping;
+    layerTexture.repeat.set(8, 8);
+    // layerTexture.rotation = 0;
+    modelRef.current.children[1].material.aoMap = layerTexture;
+    // modelRef.current.children[1].material.blendColor = new ParceColor(0xffffff);
   }, []);
 
   // NUMBER STATES
@@ -203,7 +222,7 @@ export function Model(props) {
         ref={orbitRef}
         minPolarAngle={Math.PI * 0.35}
         maxPolarAngle={Math.PI * 0.55}
-        enableZoom={false}
+        // enableZoom={false}
       />
 
       <group {...props} dispose={null}>
