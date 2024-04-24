@@ -10,21 +10,15 @@ import {
   useTexture,
 } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
-import React, { useEffect, useRef, useState } from "react";
-import {
-  AlphaFormat,
-  DoubleSide,
-  Color as ParceColor,
-  RepeatWrapping,
-  SRGBColorSpace,
-} from "three";
-import { useProductStore } from "../../../src/store";
-import { degToRad } from "three/src/math/MathUtils";
+import { useDrag } from "@use-gesture/react";
 import { motion } from "framer-motion-3d";
+import React, { useEffect, useRef, useState } from "react";
+import { Color, DoubleSide, RepeatWrapping, SRGBColorSpace } from "three";
+import { degToRad } from "three/src/math/MathUtils";
+import font3 from "../../../src/assets/fonts/BebasNeue.ttf";
 import font1 from "../../../src/assets/fonts/Roboto.ttf";
 import font2 from "../../../src/assets/fonts/TiltNeon.ttf";
-import font3 from "../../../src/assets/fonts/BebasNeue.ttf";
-import { useDrag } from "@use-gesture/react";
+import { useProductStore } from "../../../src/store";
 
 export function Model(props) {
   const orbitRef = useRef();
@@ -74,14 +68,25 @@ export function Model(props) {
     updateRef(modelRef);
     camera.position.set(0, 2, 8);
 
-    console.log("modelRef ==> ", modelRef.current.children[1].material);
+    // UPDATION OF TEXTURE COLOR
+
+    console.log("modelRef ==> ", modelRef.current.children[1]);
     console.log("layerTexture ==> ", layerTexture);
 
-    layerTexture.wrapS = RepeatWrapping;
-    layerTexture.wrapT = RepeatWrapping;
-    layerTexture.repeat.set(8, 8);
-    // layerTexture.rotation = 0;
+    layerTexture.wrapS = layerTexture.wrapT = RepeatWrapping;
+    layerTexture.repeat.set(4, 4);
+    layerTexture.rotation = 0;
+    layerTexture.encoding = SRGBColorSpace;
+
+    // modelRef.current.children[1].material.blending = MultiplyBlending;
+    // modelRef.current.children[1].material.transparent = true;
+    // modelRef.current.children[1].material.opacity = 1;
+
     modelRef.current.children[1].material.aoMap = layerTexture;
+    modelRef.current.children[1].material.aoMapIntensity = 1;
+    // modelRef.current.children[1].material.lightMap = layerTexture;
+    // modelRef.current.children[1].material.lightMapIntensity = 20;
+
     // modelRef.current.children[1].material.blendColor = new ParceColor(0xffffff);
   }, []);
 
