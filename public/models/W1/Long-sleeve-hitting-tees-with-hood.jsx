@@ -45,6 +45,8 @@ export function Model(props) {
     gradientScale,
     gradientAngle,
 
+    pattern,
+
     updateRef,
     number,
     numberPosition,
@@ -68,7 +70,46 @@ export function Model(props) {
   const camera = useThree((state) => state.camera);
 
   // ADD TEXTURE ON LAYER
-  const layerTexture = useTexture("./textures/pattern.png");
+  const [layerTexture, layerTexture2, layerTexture3] = useTexture([
+    "./textures/pattern.png",
+    "./textures/pattern2.png",
+    "./textures/pattern3.png",
+  ]);
+
+  useEffect(() => {
+    console.log("modelRef ==> ", modelRef.current.children[1]);
+    // console.log("layerTexture ==> ", layerTexture);
+
+    layerTexture.wrapS = layerTexture.wrapT = RepeatWrapping;
+    layerTexture.repeat.set(4, 4);
+    layerTexture.rotation = 0;
+    layerTexture.channel = 1;
+
+    layerTexture2.wrapS = layerTexture2.wrapT = RepeatWrapping;
+    layerTexture2.repeat.set(4, 4);
+    layerTexture2.rotation = 0;
+    layerTexture2.channel = 1;
+
+    layerTexture3.wrapS = layerTexture3.wrapT = RepeatWrapping;
+    layerTexture3.repeat.set(4, 4);
+    layerTexture3.rotation = 0;
+    layerTexture3.channel = 1;
+
+    // modelRef.current.children[1].material.blending = MultiplyBlending;
+    // modelRef.current.children[1].material.transparent = true;
+    // modelRef.current.children[1].material.opacity = 1;
+
+    // modelRef.current.children[1].material.aoMap = layerTexture;
+    // modelRef.current.children[1].material.aoMapIntensity = 1;
+    modelRef.current.children[1].material.aoMap =
+      pattern === 1
+        ? layerTexture
+        : pattern === 2
+        ? layerTexture2
+        : layerTexture3;
+
+    // modelRef.current.children[1].material.lightMapIntensity = 20;
+  }, [pattern]);
 
   useEffect(() => {
     modelRef.current.children.forEach((element) => {
@@ -77,25 +118,6 @@ export function Model(props) {
 
     updateRef(modelRef);
     camera.position.set(0, 2, 8);
-
-    // UPDATION OF TEXTURE COLOR
-
-    // console.log("modelRef ==> ", modelRef.current.children[1]);
-    console.log("layerTexture ==> ", layerTexture);
-
-    layerTexture.wrapS = layerTexture.wrapT = RepeatWrapping;
-    layerTexture.repeat.set(4, 4);
-    layerTexture.rotation = 0;
-    layerTexture.channel = 1;
-
-    // modelRef.current.children[1].material.blending = MultiplyBlending;
-    // modelRef.current.children[1].material.transparent = true;
-    // modelRef.current.children[1].material.opacity = 1;
-
-    // modelRef.current.children[1].material.aoMap = layerTexture;
-    // modelRef.current.children[1].material.aoMapIntensity = 1;
-    modelRef.current.children[1].material.map = layerTexture;
-    // modelRef.current.children[1].material.lightMapIntensity = 20;
   }, []);
 
   // NUMBER STATES

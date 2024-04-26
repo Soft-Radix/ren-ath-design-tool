@@ -25,6 +25,10 @@ export const useProductStore = create((set) => ({
   gradientScale: {},
   gradientAngle: {},
 
+  pattern: 1,
+  patternScale: {},
+  patternAngle: {},
+
   number: "",
   numberPosition: 0,
   numberFont: 1,
@@ -95,6 +99,11 @@ export const useProductStore = create((set) => ({
   updateGradientAngle: (updatedAngle) =>
     set(() => ({
       gradientAngle: updatedAngle,
+    })),
+
+  updatePattern: (updatedPattern) =>
+    set(() => ({
+      pattern: updatedPattern,
     })),
 
   updateNumber: (updatedNumber) =>
