@@ -3,10 +3,16 @@ import { BackButtonIcon, ShareButton } from "../../../assets/svg/icons";
 import ThemeButton from "../../../components/common/ThemeButton";
 import styles from "./header.module.scss";
 import { useProductStore } from "../../../store";
+import { useEffect } from "react";
 
 const Header = () => {
   const productName = useProductStore((state) => state.name);
+  const id = useProductStore((state) => state.id);
   const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   console.log("id ==> ", id);
+  // }, [id]);
 
   return (
     <div className={styles.mainWrap}>

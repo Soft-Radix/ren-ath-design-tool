@@ -26,6 +26,31 @@
   justify-content: center;
 }
 
+// Design component styles
+.designWrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px;
+  .imgWrap {
+    cursor: pointer;
+    border-radius: 4px;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(118, 143, 153, 0.2);
+    img {
+      max-height: 90%;
+      max-width: 90%;
+    }
+    &.selected {
+      border: 1px solid $primary;
+    }
+  }
+}
+
 // Color component styles
 .colorWrap {
   .mainColorViewer {
@@ -36,6 +61,36 @@
     .MuiAccordionSummary-content {
       display: flex;
       align-items: center;
+    }
+  }
+}
+
+// Pattern component styles
+.patternWrap {
+  .contentWrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    .imgWrap {
+      cursor: pointer;
+      border-radius: 4px;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(118, 143, 153, 0.2);
+      img {
+        background: rgb(216, 216, 216);
+        max-height: 90%;
+        max-width: 90%;
+      }
+      &.selected {
+        border: 1px solid $primary;
+      }
+      &:hover {
+        border: 1px solid $primary;
+      }
     }
   }
 }

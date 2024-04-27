@@ -3,23 +3,31 @@ import { create } from "zustand";
 // Save data as cookies in browser
 import Cookies from "universal-cookie";
 const cookies = new Cookies(null, { path: "/" });
-const { id, name } = cookies.get("productDetails") || {
+const { id, name, designCount } = cookies.get("productDetails") || {
   id: "W1",
   name: "Long Sleeve Hitting Tees with Hood",
+  designCount: 0,
 };
 
 // For updating product in product view
 export const useProductStore = create((set) => ({
   id: id,
   name: name,
-  selectedSidebarItem: 1,
-  selectedSidebarItemName: "Color",
+  selectedSidebarItem: 0.9,
+  selectedSidebarItemName: "Design",
   ref: null,
+
+  designCount: designCount,
+  designType: 0,
 
   color: {},
   gradient: {},
   gradientScale: {},
   gradientAngle: {},
+
+  pattern: 1,
+  patternScale: {},
+  patternAngle: {},
 
   number: "",
   numberPosition: 0,
@@ -38,17 +46,22 @@ export const useProductStore = create((set) => ({
   logoScale: 0.5,
   logoRotate: 0,
 
-  updateProduct: (updatedId, updatedName) =>
+  updateProduct: (updatedId, updatedName, updatedDesignCount) =>
     set(() => ({
       id: updatedId,
       name: updatedName,
+      designCount: updatedDesignCount,
     })),
   updateSelectedSidebarItem: (updatedId) =>
     set(() => ({
       selectedSidebarItem: updatedId,
       selectedSidebarItemName:
-        updatedId === 1
+        updatedId === 0.9
+          ? "Design"
+          : updatedId === 1
           ? "Color"
+          : updatedId === 1.1
+          ? "Pattern"
           : updatedId === 2
           ? "Number"
           : updatedId === 3
@@ -66,6 +79,11 @@ export const useProductStore = create((set) => ({
       ref: updatedRef,
     })),
 
+  updateDesignType: (type) =>
+    set(() => ({
+      designType: type,
+    })),
+
   updateColor: (updatedColor) =>
     set((state) => ({
       color: { ...state.color, ...updatedColor },
@@ -81,6 +99,11 @@ export const useProductStore = create((set) => ({
   updateGradientAngle: (updatedAngle) =>
     set(() => ({
       gradientAngle: updatedAngle,
+    })),
+
+  updatePattern: (updatedPattern) =>
+    set(() => ({
+      pattern: updatedPattern,
     })),
 
   updateNumber: (updatedNumber) =>

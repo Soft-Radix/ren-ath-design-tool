@@ -10,15 +10,25 @@ import {
   useTexture,
 } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
-import React, { useEffect, useRef, useState } from "react";
-import { DoubleSide } from "three";
-import { useProductStore } from "../../../src/store";
-import { degToRad } from "three/src/math/MathUtils";
+import { useDrag } from "@use-gesture/react";
 import { motion } from "framer-motion-3d";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  Color,
+  DataTexture,
+  DoubleSide,
+  MultiplyBlending,
+  RGBAFormat,
+  RepeatWrapping,
+  SRGBColorSpace,
+  TextureLoader,
+  UnsignedByteType,
+} from "three";
+import { degToRad } from "three/src/math/MathUtils";
+import font3 from "../../../src/assets/fonts/BebasNeue.ttf";
 import font1 from "../../../src/assets/fonts/Roboto.ttf";
 import font2 from "../../../src/assets/fonts/TiltNeon.ttf";
-import font3 from "../../../src/assets/fonts/BebasNeue.ttf";
-import { useDrag } from "@use-gesture/react";
+import { useProductStore } from "../../../src/store";
 
 export function Model(props) {
   const orbitRef = useRef();
@@ -34,6 +44,8 @@ export function Model(props) {
     gradient,
     gradientScale,
     gradientAngle,
+
+    pattern,
 
     updateRef,
     number,
@@ -54,17 +66,44 @@ export function Model(props) {
     logoAngle,
   } = useProductStore((state) => state);
 
-  useEffect(() => {
-    console.log("logoScale ==> ", logoScale);
-  }, [logoScale]);
-
   // SET CAMERA POSITION
   const camera = useThree((state) => state.camera);
+
+  // ADD TEXTURE ON LAYER
+  const [textureUrl, setTextureUrl] = useState("./textures/pattern.png");
+  const layerTexture = useTexture(textureUrl);
+
+  useEffect(() => {
+    setTextureUrl(
+      pattern === 1
+        ? "./textures/pattern.png"
+        : pattern === 2
+        ? "./textures/pattern2.png"
+        : "./textures/pattern3.png"
+    );
+  }, [pattern]);
+
+  useEffect(() => {
+    // console.log("modelRef ==> ", modelRef.current.children[1]);
+    // console.log("layerTexture ==> ", layerTexture);
+
+    layerTexture.wrapS = layerTexture.wrapT = RepeatWrapping;
+    layerTexture.repeat.set(4, 4);
+    layerTexture.rotation = 0;
+    layerTexture.channel = 1;
+    layerTexture.needsUpdate = true;
+
+    // modelRef.current.children[1].material.aoMap = layerTexture;
+    // modelRef.current.children[1].material.aoMapIntensity = 1;
+    modelRef.current.children[1].material.map = layerTexture;
+    // modelRef.current.children[1].material.lightMapIntensity = 20;
+  }, [textureUrl]);
 
   useEffect(() => {
     modelRef.current.children.forEach((element) => {
       element.material.side = DoubleSide;
     });
+
     updateRef(modelRef);
     camera.position.set(0, 2, 8);
   }, []);
@@ -113,7 +152,7 @@ export function Model(props) {
     }
   }, [namePosition]);
 
-  //CHANGE CURSOR DEFAULT TO POINTER
+  // CHANGE CURSOR DEFAULT TO POINTER
   const [hovered, setHovered] = useState(false);
   const toggleHovered = () => setHovered(!hovered);
   useCursor(hovered, "grab");
@@ -206,7 +245,7 @@ export function Model(props) {
         ref={orbitRef}
         minPolarAngle={Math.PI * 0.35}
         maxPolarAngle={Math.PI * 0.55}
-        enableZoom={false}
+        // enableZoom={false}
       />
 
       <group {...props} dispose={null}>
@@ -220,7 +259,7 @@ export function Model(props) {
         >
           <mesh
             geometry={
-              nodes["31106-women-long-sleeve-sub-warmup-w-hood_1"].geometry
+              nodes.Dress_1_Group6255_0003_Dress_1_Group6255_0003_1.geometry
             }
             material={materials.blinn2}
             name="Layer 1"
@@ -237,7 +276,7 @@ export function Model(props) {
           </mesh>
           <mesh
             geometry={
-              nodes["31106-women-long-sleeve-sub-warmup-w-hood_2"].geometry
+              nodes.Dress_1_Group6255_0003_Dress_1_Group6255_0003_2.geometry
             }
             material={
               materials.Dress_1_Group6255_0003_Dress_1_Group6255_0003_blinn
@@ -366,7 +405,7 @@ export function Model(props) {
           </mesh>
           <mesh
             geometry={
-              nodes["31106-women-long-sleeve-sub-warmup-w-hood_3"].geometry
+              nodes.Dress_1_Group6255_0003_Dress_1_Group6255_0003_3.geometry
             }
             material={materials.blinn4}
             name="Layer 3"
@@ -488,7 +527,7 @@ export function Model(props) {
           </mesh>
           <mesh
             geometry={
-              nodes["31106-women-long-sleeve-sub-warmup-w-hood_4"].geometry
+              nodes.Dress_1_Group6255_0003_Dress_1_Group6255_0003_4.geometry
             }
             material={materials.blinn3}
             name="Layer 4"
@@ -505,7 +544,7 @@ export function Model(props) {
           </mesh>
           <mesh
             geometry={
-              nodes["31106-women-long-sleeve-sub-warmup-w-hood_5"].geometry
+              nodes.Dress_1_Group6255_0003_Dress_1_Group6255_0003_5.geometry
             }
             material={materials.blinn1}
             name="Layer 5"

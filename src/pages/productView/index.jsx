@@ -3,10 +3,12 @@ import Scene from "./Scene";
 import Header from "./header";
 import styles from "./productView.module.scss";
 import Color from "./propertiesContent/Color";
+import Design from "./propertiesContent/Design";
 import Gradient from "./propertiesContent/Gradient";
 import Logo from "./propertiesContent/Logo";
 import Name from "./propertiesContent/Name";
 import Number from "./propertiesContent/Number";
+import Pattern from "./propertiesContent/Pattern";
 import Sidebar from "./sidebar";
 
 const ProductView = () => {
@@ -23,8 +25,12 @@ const ProductView = () => {
           <div className={styles.propertiesWrap}>
             <div className={styles.title}>{selectedSidebarItemName}</div>
             <div className={styles.content}>
-              {selectedSidebarItem === 1 ? (
+              {selectedSidebarItem === 0.9 ? (
+                <Design />
+              ) : selectedSidebarItem === 1 ? (
                 <Color />
+              ) : selectedSidebarItem === 1.1 ? (
+                <Pattern />
               ) : selectedSidebarItem === 2 ? (
                 <Number />
               ) : selectedSidebarItem === 3 ? (
