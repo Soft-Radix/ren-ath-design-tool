@@ -95,7 +95,7 @@ export function Model(props) {
 
     // modelRef.current.children[1].material.aoMap = layerTexture;
     // modelRef.current.children[1].material.aoMapIntensity = 1;
-    modelRef.current.children[1].material.map = layerTexture;
+    // modelRef.current.children[1].material.map = layerTexture;
     // modelRef.current.children[1].material.lightMapIntensity = 20;
   }, [textureUrl]);
 
