@@ -22,7 +22,9 @@ const Color = () => {
   const ref = useProductStore((state) => state.ref);
   const children = ref?.current?.children || [];
 
-  const { color, updateColor } = useProductStore((state) => state);
+  const { color, updateColor, updateColorIndex } = useProductStore(
+    (state) => state
+  );
 
   return (
     <div className={styles.colorWrap}>
@@ -53,6 +55,7 @@ const Color = () => {
                   className={styles.colorViewer}
                   style={{ backgroundColor: itemColor }}
                   onClick={() => {
+                    updateColorIndex(childIndex);
                     updateColor({ [childIndex]: itemColor });
                     item.material.color = new ParceColor(itemColor);
                   }}

@@ -10,7 +10,7 @@ const Design = () => {
     const divs = [];
     for (let i = 1; i <= designCount; i++) {
       const imageUrl = new URL(
-        `../../../assets/images/Design/${id}/img${i}.png`,
+        `../../../assets/images/Design/${id}/design${i}.png`,
         import.meta.url
       ).href;
       divs.push(

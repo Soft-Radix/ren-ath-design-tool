@@ -13,17 +13,7 @@ import { useThree } from "@react-three/fiber";
 import { useDrag } from "@use-gesture/react";
 import { motion } from "framer-motion-3d";
 import React, { useEffect, useRef, useState } from "react";
-import {
-  Color,
-  DataTexture,
-  DoubleSide,
-  MultiplyBlending,
-  RGBAFormat,
-  RepeatWrapping,
-  SRGBColorSpace,
-  TextureLoader,
-  UnsignedByteType,
-} from "three";
+import { DoubleSide, RepeatWrapping } from "three";
 import { degToRad } from "three/src/math/MathUtils";
 import font3 from "../../../src/assets/fonts/BebasNeue.ttf";
 import font1 from "../../../src/assets/fonts/Roboto.ttf";
@@ -70,29 +60,35 @@ export function Model(props) {
   const camera = useThree((state) => state.camera);
 
   // ADD TEXTURE ON LAYER
-  const [textureUrl, setTextureUrl] = useState("./textures/pattern.png");
+  const [textureUrl, setTextureUrl] = useState("./textures/pattern1.png");
   const layerTexture = useTexture(textureUrl);
 
   useEffect(() => {
-    setTextureUrl(
-      pattern === 1
-        ? "./textures/pattern.png"
-        : pattern === 2
-        ? "./textures/pattern2.png"
-        : "./textures/pattern3.png"
-    );
+    let changeTexture = `./textures/pattern${pattern}.png`;
+    setTextureUrl(changeTexture);
+    // for (let i = 1; i <= 30; i++) {
+    //   if (pattern === i) {
+    //     changeTexture = `./textures/pattern${i}.png`;
+    //   }
+    // }
+    // setTextureUrl(
+    //   pattern === 1
+    //     ? "./textures/pattern1.png"
+    //     : pattern === 2
+    //     ? "./textures/pattern2.png"
+    //     : "./textures/pattern3.png"
+    // );
   }, [pattern]);
 
   useEffect(() => {
+    // console.log("🚀 ~ useEffect ~ layerTexture:", layerTexture);
     // console.log("modelRef ==> ", modelRef.current.children[1]);
     // console.log("layerTexture ==> ", layerTexture);
-
-    layerTexture.wrapS = layerTexture.wrapT = RepeatWrapping;
-    layerTexture.repeat.set(4, 4);
-    layerTexture.rotation = 0;
-    layerTexture.channel = 1;
-    layerTexture.needsUpdate = true;
-
+    // layerTexture.wrapS = layerTexture.wrapT = RepeatWrapping;
+    // layerTexture.repeat.set(6,6); // add scale to texture
+    // layerTexture.rotation = 0;
+    // layerTexture.channel = 1;
+    // layerTexture.needsUpdate = true;
     // modelRef.current.children[1].material.aoMap = layerTexture;
     // modelRef.current.children[1].material.aoMapIntensity = 1;
     // modelRef.current.children[1].material.map = layerTexture;
@@ -192,7 +188,7 @@ export function Model(props) {
   );
 
   // HANDLE LOGO STATES
-  const logoTexture = useTexture(logo || "./textures/1.png");
+  const logoTexture = useTexture(logo || "./textures/pattern7.png");
   const [modelLogoPosition, setModelLogoPosition] = useState([0, 0, 1]);
   const [logoRotation, setLogoRotation] = useState([0, 0, 0]);
 
@@ -233,7 +229,6 @@ export function Model(props) {
       setNumber1Rotation(0);
     } else if (logoPosition === 2) {
       setLogoRotation([0, degToRad(180), 0]);
-
       setNumber1Rotation(180);
     }
   }, [logoPosition]);

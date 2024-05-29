@@ -19,13 +19,14 @@ export const useProductStore = create((set) => ({
 
   designCount: designCount,
   designType: 0,
-
   color: {},
+  colorIndex: null,
   gradient: {},
   gradientScale: {},
   gradientAngle: {},
 
-  pattern: 1,
+  pattern: null,
+  layer: 0,
   patternScale: {},
   patternAngle: {},
 
@@ -88,6 +89,10 @@ export const useProductStore = create((set) => ({
     set((state) => ({
       color: { ...state.color, ...updatedColor },
     })),
+  updateColorIndex: (newIndex) =>
+    set(() => ({
+      colorIndex: newIndex,
+    })),
   updateGradient: (updatedGradient) =>
     set((state) => ({
       gradient: { ...state.gradient, ...updatedGradient },
@@ -105,7 +110,10 @@ export const useProductStore = create((set) => ({
     set(() => ({
       pattern: updatedPattern,
     })),
-
+  updateLayer: (updatedLayer) =>
+    set(() => ({
+      layer: updatedLayer,
+    })),
   updateNumber: (updatedNumber) =>
     set(() => ({
       number: updatedNumber,
