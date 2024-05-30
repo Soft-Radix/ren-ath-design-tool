@@ -26,7 +26,7 @@ export const useProductStore = create((set) => ({
   gradientAngle: {},
 
   pattern: null,
-  layer: 0,
+  layer: null,
   patternScale: {},
   patternAngle: {},
 
@@ -46,7 +46,7 @@ export const useProductStore = create((set) => ({
   logoPosition: 1,
   logoScale: 0.5,
   logoRotate: 0,
-
+  isDesign: false,
   updateProduct: (updatedId, updatedName, updatedDesignCount) =>
     set(() => ({
       id: updatedId,
@@ -172,4 +172,9 @@ export const useProductStore = create((set) => ({
     set(() => ({
       logoAngle: updatedAngle,
     })),
+  updateIsDesign: (updatedIsDesign) => {
+    set(() => ({
+      isDesign: updatedIsDesign,
+    }));
+  },
 }));

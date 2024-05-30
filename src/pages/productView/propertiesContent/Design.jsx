@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
-import styles from "./properties.module.scss";
+import React from "react";
 import { useProductStore } from "../../../store";
+import styles from "./properties.module.scss";
 
 const Design = () => {
   const { id, designCount } = useProductStore((state) => state);
-  const { designType, updateDesignType } = useProductStore((state) => state);
+  const { designType, updateDesignType, updateIsDesign, isDesign } =
+    useProductStore((state) => state);
 
   const renderDivs = () => {
     const divs = [];
@@ -18,7 +19,14 @@ const Design = () => {
           className={`${styles.imgWrap} ${
             designType === i ? styles.selected : ""
           }`}
-          onClick={() => updateDesignType(i)}
+          onClick={() => {
+            if (designType === i) {
+              updateIsDesign(!isDesign);
+            } else {
+              updateIsDesign(true);
+            }
+            updateDesignType(i);
+          }}
           key={i}
         >
           <img src={imageUrl} alt="" />

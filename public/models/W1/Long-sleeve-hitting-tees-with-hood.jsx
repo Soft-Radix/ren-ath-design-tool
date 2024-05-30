@@ -64,8 +64,10 @@ export function Model(props) {
   const layerTexture = useTexture(textureUrl);
 
   useEffect(() => {
-    let changeTexture = `./textures/pattern${pattern}.png`;
-    setTextureUrl(changeTexture);
+    if (pattern) {
+      let changeTexture = `./textures/pattern${pattern}.png`;
+      setTextureUrl(changeTexture);
+    }
     // for (let i = 1; i <= 30; i++) {
     //   if (pattern === i) {
     //     changeTexture = `./textures/pattern${i}.png`;
