@@ -61,8 +61,8 @@ export function Model(props) {
     layer,
     isDesign,
   } = useProductStore((state) => state);
-  console.log("🚀 ~ Model ~ numberPosition:", numberPosition);
-  console.log("🚀 ~ Model ~ number:", number);
+  // //console.log("🚀 ~ Model ~ numberPosition:", numberPosition);
+  // //console.log("🚀 ~ Model ~ number:", number);
 
   // SET CAMERA POSITION
   const camera = useThree((state) => state.camera);
@@ -80,7 +80,7 @@ export function Model(props) {
   const primaryTexture = useTexture(designTexture);
   const secondaryTexture = useTexture(secondaryTextureUrl);
 
-  console.log("🚀 ~ Model ~ isDesign:", isDesign);
+  // //console.log("🚀 ~ Model ~ isDesign:", isDesign);
 
   // state to update color of each layer
   const [layerColor, setLayerColor] = useState(threeJsColor);
@@ -92,20 +92,29 @@ export function Model(props) {
   // effect to update set colorLayer state
   useEffect(() => {
     let changeColor;
+    const colorsCollection = [...secondaryColors];
     if (color[colorIndex]) {
       changeColor = color[colorIndex];
+      colorsCollection[colorIndex] = changeColor;
     } else {
       changeColor = threeJsColor;
     }
+    setSecondaryColors(colorsCollection);
     setLayerColor(changeColor);
   }, [color[colorIndex]]);
 
+  const [secondaryTextures, setSecondaryTextures] = useState([]);
+  const [secondaryColors, setSecondaryColors] = useState([]);
+  //console.log("secondaryColors", secondaryColors);
   // Effect to update secondary texture based on pattern change
   useEffect(() => {
     if (pattern !== null) {
-      setSecondaryTextureUrl(`./textures/pattern${pattern}.png`);
+      const url = `./textures/pattern${pattern}.png`;
+      setSecondaryTextureUrl(url);
     }
   }, [pattern]);
+
+  //console.log("secondaryTextures", secondaryTextures);
 
   // Effect to update primary texture based on designType change
   useEffect(() => {
@@ -115,6 +124,83 @@ export function Model(props) {
   }, [designType]);
 
   // Effects for setting up materials and textures
+  // useEffect(() => {
+  //   if (modelRef.current && isDesign) {
+  //     // Set up primary texture
+  //     primaryTexture.wrapS = primaryTexture.wrapT = Three.RepeatWrapping;
+  //     primaryTexture.repeat.set(1, 1);
+  //     primaryTexture.rotation = 0;
+  //     primaryTexture.encoding = Three.sRGBEncoding;
+
+  //     // Create shader material
+  //     const material = new ShaderMaterial({
+  //       uniforms: {
+  //         primaryTexture: { value: primaryTexture },
+  //         secondaryTexture: { value: secondaryTexture },
+  //         hasSecondaryTexture: { value: !!secondaryTexture && layer !== null },
+  //         defaultColor: { value: new Three.Color(layerColor) },
+  //         selectedLayer: { value: layer },
+  //       },
+  //       vertexShader: `
+  //       varying vec2 vUv;
+  //       void main() {
+  //         vUv = uv;
+  //         gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  //       }
+  //       `,
+  //       fragmentShader: `
+  //         uniform sampler2D primaryTexture;
+  //         uniform sampler2D secondaryTexture;
+  //         uniform bool hasSecondaryTexture;
+  //         uniform vec3 defaultColor;
+  //         uniform int selectedLayer;
+  //         varying vec2 vUv;
+
+  //         void main() {
+  //           vec4 primaryColor = texture2D(primaryTexture, vUv);
+  //           vec4 secondaryColor = hasSecondaryTexture ? texture2D(secondaryTexture, vUv) : vec4(defaultColor, 1.0);
+  //           vec4 baseColor = vec4(defaultColor, 1.0);
+  //           if (selectedLayer == 1) {
+  //             // Mix secondary texture only if it's the selected layer
+  //             gl_FragColor = mix(secondaryColor, primaryColor, primaryColor.a);
+  //           } else {
+  //             gl_FragColor = mix(baseColor, primaryColor, primaryColor.a);
+  //           }
+  //         }
+  //       `,
+  //       side: DoubleSide,
+  //     });
+
+  //     modelRef.current.children.forEach((child, index) => {
+  //       if (child.isMesh) {
+  //         const clonedMaterial = material.clone();
+  //         clonedMaterial.uniforms.selectedLayer.value = index === layer ? 1 : 0;
+  //         child.material = clonedMaterial;
+  //       }
+  //     });
+  //   }
+  // }, [primaryTexture, secondaryTexture, layerColor, layer, isDesign]);
+  const loadTexture = (url) => {
+    return new Promise((resolve, reject) => {
+      const loader = new Three.TextureLoader();
+      loader.load(url, resolve, undefined, reject);
+    });
+  };
+
+  useEffect(() => {
+    if (layer !== null && secondaryTextureUrl) {
+      loadTexture(secondaryTextureUrl)
+        .then((texture) => {
+          const textures = [...secondaryTextures];
+          textures[layer] = texture;
+          setSecondaryTextures(textures);
+        })
+        .catch((error) => {
+          //console.error("Failed to load texture", error);
+        });
+    }
+  }, [secondaryTextureUrl, layer]);
+
   useEffect(() => {
     if (modelRef.current && isDesign) {
       // Set up primary texture
@@ -124,53 +210,82 @@ export function Model(props) {
       primaryTexture.encoding = Three.sRGBEncoding;
 
       // Create shader material
-      const material = new ShaderMaterial({
-        uniforms: {
-          primaryTexture: { value: primaryTexture },
-          secondaryTexture: { value: secondaryTexture },
-          hasSecondaryTexture: { value: !!secondaryTexture && layer !== null },
-          defaultColor: { value: new Three.Color(layerColor) },
-          selectedLayer: { value: layer },
-        },
-        vertexShader: `
-        varying vec2 vUv;
-        void main() {
-          vUv = uv;
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-        }
-        `,
-        fragmentShader: `
-          uniform sampler2D primaryTexture;
-          uniform sampler2D secondaryTexture;
-          uniform bool hasSecondaryTexture;
-          uniform vec3 defaultColor;
-          uniform int selectedLayer;
-          varying vec2 vUv;
-
-          void main() {
-            vec4 primaryColor = texture2D(primaryTexture, vUv);
-            vec4 secondaryColor = hasSecondaryTexture ? texture2D(secondaryTexture, vUv) : vec4(defaultColor, 1.0);
-            vec4 baseColor = vec4(defaultColor, 1.0);
-            if (selectedLayer == 1) {
-              // Mix secondary texture only if it's the selected layer
-              gl_FragColor = mix(secondaryColor, primaryColor, primaryColor.a);
-            } else {
-              gl_FragColor = mix(baseColor, primaryColor, primaryColor.a);
+      const createMaterial = (
+        secondaryTexture,
+        secondaryColor,
+        isSelectedLayer
+      ) => {
+        //console.log("secondaryColor>>>>>", secondaryColor);
+        return new ShaderMaterial({
+          uniforms: {
+            primaryTexture: { value: primaryTexture },
+            secondaryTexture: { value: secondaryTexture },
+            secondaryColor: { value: secondaryColor },
+            hasSecondaryTexture: { value: !!secondaryTexture },
+            hasSecondaryColor: { value: !!secondaryColor },
+            defaultColor: { value: new Three.Color(threeJsColor) },
+            selectedLayer: { value: isSelectedLayer },
+          },
+          vertexShader: `
+            varying vec2 vUv;
+            void main() {
+              vUv = uv;
+              gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
             }
-          }
-        `,
-        side: DoubleSide,
-      });
+          `,
+          fragmentShader: `
+            uniform sampler2D primaryTexture;
+            uniform sampler2D secondaryTexture;
+            uniform vec3 secondaryColor;
+            uniform bool hasSecondaryTexture;
+            uniform bool hasSecondaryColor;
+            uniform vec3 defaultColor;
+            uniform int selectedLayer;
+            varying vec2 vUv;
+
+            void main() {
+              vec4 primaryColor = texture2D(primaryTexture, vUv);
+              vec4 secondaryTexColor = hasSecondaryTexture ? texture2D(secondaryTexture, vUv) : vec4(1.0);
+              vec4 secondaryColColor = hasSecondaryColor ? vec4(secondaryColor, 1.0) : vec4(1.0);
+              vec4 secondaryColor = mix(secondaryTexColor, secondaryColColor, secondaryTexColor.a);
+              vec4 baseColor = vec4(defaultColor, 1.0);
+              if (selectedLayer == 1) {
+                // Mix secondary color only if it's the selected layer
+                gl_FragColor = mix(secondaryColor, primaryColor, primaryColor.a);
+              } else {
+                gl_FragColor = mix(baseColor, primaryColor, primaryColor.a);
+              }
+            }
+          `,
+          side: DoubleSide,
+        });
+      };
 
       modelRef.current.children.forEach((child, index) => {
         if (child.isMesh) {
-          const clonedMaterial = material.clone();
-          clonedMaterial.uniforms.selectedLayer.value = index === layer ? 1 : 0;
-          child.material = clonedMaterial;
+          const isSelectedLayer = index === colorIndex;
+          const secondaryTexture = secondaryTextures[index] || null;
+          const secondaryColor =
+            new Three.Color(secondaryColors[index]) ||
+            new Three.Color(threeJsColor);
+          const material = createMaterial(
+            secondaryTexture,
+            secondaryColor,
+            true
+          );
+          child.material = material;
         }
       });
     }
-  }, [primaryTexture, secondaryTexture, layerColor, layer, isDesign]);
+  }, [
+    modelRef,
+    primaryTexture,
+    secondaryTextures,
+    secondaryColors,
+    layerColor,
+    layer,
+    isDesign,
+  ]);
 
   // NUMBER STATES
   const [number1Position, setNumber1Position] = useState([0, 0, 2]);
@@ -706,5 +821,5 @@ export function Model(props) {
   );
 }
 
-// Preload the GLTF model 
+// Preload the GLTF model
 useGLTF.preload("/long-sleeve-jersey.glb");

@@ -22,7 +22,7 @@ const Color = () => {
   const ref = useProductStore((state) => state.ref);
   const children = ref?.current?.children || [];
 
-  const { color, updateColor, updateColorIndex } = useProductStore(
+  const { color, updateColor, updateColorIndex,updateLayer } = useProductStore(
     (state) => state
   );
 
@@ -56,6 +56,7 @@ const Color = () => {
                   style={{ backgroundColor: itemColor }}
                   onClick={() => {
                     updateColorIndex(childIndex);
+                    // updateLayer(childIndex);
                     updateColor({ [childIndex]: itemColor });
                     item.material.color = new ParceColor(itemColor);
                   }}
