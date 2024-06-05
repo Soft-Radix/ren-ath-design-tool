@@ -1,17 +1,13 @@
-import React, { useEffect, useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
-import styles from "./properties.module.scss";
-import { CrossIcon, TickIcon } from "../../../assets/svg/icons";
-import front from "../../../assets/images/products/placement/front.png";
-import back from "../../../assets/images/products/placement/back.png";
-import chest_left from "../../../assets/images/products/placement/chest_left.png";
-import chest_right from "../../../assets/images/products/placement/chest_right.png";
-import { useProductStore } from "../../../store";
 import { motion } from "framer-motion";
+import React, { useState, useEffect } from "react";
+import { CrossIcon, TickIcon } from "../../../assets/svg/icons";
 import ThemeButton from "../../../components/common/ThemeButton";
+import { useProductStore } from "../../../store";
+import styles from "./properties.module.scss";
 
 const Number = () => {
   const {
@@ -25,7 +21,9 @@ const Number = () => {
     updateNumberColor,
     numberOutline,
     updateNumberOutline,
+    id,
   } = useProductStore((state) => state);
+  console.log("🚀 ~ Number ~ id:", id);
 
   const colorList = [
     "#D14E24",
@@ -38,6 +36,37 @@ const Number = () => {
   ];
 
   const [type, setType] = useState(1);
+  const [images, setImages] = useState({
+    front: "",
+    back: "",
+    chest_left: "",
+    chest_right: "",
+  });
+
+  useEffect(() => {
+    const loadImages = async () => {
+      try {
+        const front = (
+          await import(
+            `../../../assets/images/products/placement/${id}/front.png`
+          )
+        ).default;
+        console.log("🚀 ~ loadImages ~ front:", front);
+        const back = (
+          await import(
+            `../../../assets/images/products/placement/${id}/back.png`
+          )
+        ).default;
+        // const chest_left = (await import(`../../../assets/images/products/placement/${id}/chest_left.png`)).default;
+        // const chest_right = (await import(`../../../assets/images/products/placement/${id}/chest_right.png`)).default;
+        const images = { front, back };
+        setImages({ ...images });
+      } catch (error) {
+        console.error("Error loading images:", error);
+      }
+    };
+    loadImages();
+  }, [id]);
 
   return (
     <div className={styles.numberWrap}>
@@ -61,7 +90,7 @@ const Number = () => {
                 }`}
                 onClick={() => updateNumberPosition(1)}
               >
-                <img src={front} alt="" />
+                <img src={images.front} alt="" />
               </div>
               <div
                 className={`${styles.imgWrap} ${
@@ -69,15 +98,15 @@ const Number = () => {
                 }`}
                 onClick={() => updateNumberPosition(2)}
               >
-                <img src={back} alt="" />
+                <img src={images.back} alt="" />
               </div>
-              <div
+              {/* <div
                 className={`${styles.imgWrap} ${
                   numberPosition === 3 ? styles.selected : ""
                 }`}
                 onClick={() => updateNumberPosition(3)}
               >
-                <img src={chest_left} alt="" />
+                <img src={images.chest_left} alt="" />
               </div>
               <div
                 className={`${styles.imgWrap} ${
@@ -85,8 +114,8 @@ const Number = () => {
                 }`}
                 onClick={() => updateNumberPosition(4)}
               >
-                <img src={chest_right} alt="" />
-              </div>
+                <img src={images.chest_right} alt="" />
+              </div> */}
             </div>
           </div>
           <input

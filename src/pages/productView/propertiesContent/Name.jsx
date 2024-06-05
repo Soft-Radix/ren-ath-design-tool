@@ -3,9 +3,9 @@ import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import { motion } from "framer-motion";
-import React, { useState } from "react";
-import back from "../../../assets/images/products/placement/back.png";
-import front from "../../../assets/images/products/placement/front.png";
+import React, { useEffect, useState } from "react";
+import back from "../../../assets/images/products/placement/W1/back.png";
+import front from "../../../assets/images/products/placement/W1/front.png";
 import { CrossIcon, TickIcon } from "../../../assets/svg/icons";
 import ThemeButton from "../../../components/common/ThemeButton";
 import { useProductStore } from "../../../store";
@@ -13,6 +13,7 @@ import styles from "./properties.module.scss";
 
 const Name = () => {
   const {
+    id,
     modelName,
     updateName,
     namePosition,
@@ -36,7 +37,53 @@ const Name = () => {
   ];
 
   const [type, setType] = useState(1);
+  const [images, setImages] = useState({
+    front: "",
+    back: "",
+    chest_left: "",
+    chest_right: "",
+  });
 
+  useEffect(() => {
+    const loadImages = async () => {
+      try {
+        const front = (
+          await import(
+            `../../../assets/images/products/placement/${id}/front.png`
+          )
+        ).default;
+        console.log("🚀 ~ loadImages ~ front:", front);
+        const back = (
+          await import(
+            `../../../assets/images/products/placement/${id}/back.png`
+          )
+        ).default;
+        const chest_left = (
+          await import(
+            `../../../assets/images/products/placement/${id}/leftsleeve.png`
+          )
+        ).default;
+        const chest_right = (
+          await import(
+            `../../../assets/images/products/placement/${id}/rightsleeve.png`
+          )
+        ).default;
+        const images = { front, back, chest_left, chest_right };
+        setImages({ ...images });
+      } catch (error) {
+        console.error("Error loading images:", error);
+      }
+    };
+    loadImages();
+  }, [id]);
+
+  const checkIfName = () => {
+    if (modelName === "") {
+      updateName("Last Name");
+    } else {
+      updateName(modelName);
+    }
+  };
   return (
     <div className={`${styles.numberWrap} ${styles.nameWrap}`}>
       <Accordion>
@@ -50,17 +97,45 @@ const Name = () => {
                 className={`${styles.imgWrap} ${
                   namePosition === 1 ? styles.selected : ""
                 }`}
-                onClick={() => updateNamePosition(1)}
+                onClick={() => {
+                  checkIfName();
+                  updateNamePosition(1);
+                }}
               >
-                <img src={front} alt="" />
+                <img src={images.front} alt="" />
               </div>
               <div
                 className={`${styles.imgWrap} ${
                   namePosition === 2 ? styles.selected : ""
                 }`}
-                onClick={() => updateNamePosition(2)}
+                onClick={() => {
+                  checkIfName();
+                  updateNamePosition(2);
+                }}
               >
-                <img src={back} alt="" />
+                <img src={images.back} alt="" />
+              </div>
+              <div
+                className={`${styles.imgWrap} ${
+                  namePosition === 3 ? styles.selected : ""
+                }`}
+                onClick={() => {
+                  checkIfName();
+                  updateNamePosition(3);
+                }}
+              >
+                <img src={images.chest_left} alt="left sleeve" />
+              </div>
+              <div
+                className={`${styles.imgWrap} ${
+                  namePosition === 4 ? styles.selected : ""
+                }`}
+                onClick={() => {
+                  checkIfName();
+                  updateNamePosition(4);
+                }}
+              >
+                <img src={images.chest_right} alt="right sleeve" />
               </div>
             </div>
           </div>

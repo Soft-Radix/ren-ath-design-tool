@@ -80,8 +80,6 @@ export function Model(props) {
   const primaryTexture = useTexture(designTexture);
   const secondaryTexture = useTexture(secondaryTextureUrl);
 
-  // //console.log("🚀 ~ Model ~ isDesign:", isDesign);
-
   // state to update color of each layer
   const [layerColor, setLayerColor] = useState(threeJsColor);
 
@@ -93,9 +91,14 @@ export function Model(props) {
   useEffect(() => {
     let changeColor;
     const colorsCollection = [...secondaryColors];
-    if (color[colorIndex]) {
+    if (colorIndex !== null) {
       changeColor = color[colorIndex];
-      colorsCollection[colorIndex] = changeColor;
+      if (colorIndex == 0 || colorIndex % 2 == 0) {
+        colorsCollection[colorIndex] = changeColor;
+        colorsCollection[colorIndex + 1] = changeColor;
+      } else {
+        colorsCollection[colorIndex] = changeColor;
+      }
     } else {
       changeColor = threeJsColor;
     }
@@ -114,8 +117,6 @@ export function Model(props) {
     }
   }, [pattern]);
 
-  //console.log("secondaryTextures", secondaryTextures);
-
   // Effect to update primary texture based on designType change
   useEffect(() => {
     if (designType) {
@@ -123,63 +124,6 @@ export function Model(props) {
     }
   }, [designType]);
 
-  // Effects for setting up materials and textures
-  // useEffect(() => {
-  //   if (modelRef.current && isDesign) {
-  //     // Set up primary texture
-  //     primaryTexture.wrapS = primaryTexture.wrapT = Three.RepeatWrapping;
-  //     primaryTexture.repeat.set(1, 1);
-  //     primaryTexture.rotation = 0;
-  //     primaryTexture.encoding = Three.sRGBEncoding;
-
-  //     // Create shader material
-  //     const material = new ShaderMaterial({
-  //       uniforms: {
-  //         primaryTexture: { value: primaryTexture },
-  //         secondaryTexture: { value: secondaryTexture },
-  //         hasSecondaryTexture: { value: !!secondaryTexture && layer !== null },
-  //         defaultColor: { value: new Three.Color(layerColor) },
-  //         selectedLayer: { value: layer },
-  //       },
-  //       vertexShader: `
-  //       varying vec2 vUv;
-  //       void main() {
-  //         vUv = uv;
-  //         gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-  //       }
-  //       `,
-  //       fragmentShader: `
-  //         uniform sampler2D primaryTexture;
-  //         uniform sampler2D secondaryTexture;
-  //         uniform bool hasSecondaryTexture;
-  //         uniform vec3 defaultColor;
-  //         uniform int selectedLayer;
-  //         varying vec2 vUv;
-
-  //         void main() {
-  //           vec4 primaryColor = texture2D(primaryTexture, vUv);
-  //           vec4 secondaryColor = hasSecondaryTexture ? texture2D(secondaryTexture, vUv) : vec4(defaultColor, 1.0);
-  //           vec4 baseColor = vec4(defaultColor, 1.0);
-  //           if (selectedLayer == 1) {
-  //             // Mix secondary texture only if it's the selected layer
-  //             gl_FragColor = mix(secondaryColor, primaryColor, primaryColor.a);
-  //           } else {
-  //             gl_FragColor = mix(baseColor, primaryColor, primaryColor.a);
-  //           }
-  //         }
-  //       `,
-  //       side: DoubleSide,
-  //     });
-
-  //     modelRef.current.children.forEach((child, index) => {
-  //       if (child.isMesh) {
-  //         const clonedMaterial = material.clone();
-  //         clonedMaterial.uniforms.selectedLayer.value = index === layer ? 1 : 0;
-  //         child.material = clonedMaterial;
-  //       }
-  //     });
-  //   }
-  // }, [primaryTexture, secondaryTexture, layerColor, layer, isDesign]);
   const loadTexture = (url) => {
     return new Promise((resolve, reject) => {
       const loader = new Three.TextureLoader();
@@ -316,7 +260,7 @@ export function Model(props) {
 
   // NAME STATES
   const name1Scale = [4.5, 2.5, 10];
-  const [name1FontSize, setName1FontSize] = useState(2);
+  const [name1FontSize, setName1FontSize] = useState(1);
   const [name1Position, setName1Position] = useState([0, 0, 1]);
   const [name1Rotation, setName1Rotation] = useState([0, 0, 0]);
 
@@ -330,6 +274,12 @@ export function Model(props) {
     } else if (namePosition === 2) {
       setName1Rotation([0, degToRad(180), 0]);
       setNumber1Rotation(180);
+    } else if (namePosition === 3) {
+      setName1Rotation([0, degToRad(90), 0]);
+      setNumber1Rotation(90);
+    } else if (namePosition === 4) {
+      setName1Rotation([0, degToRad(270), 0]);
+      setNumber1Rotation(270);
     }
   }, [namePosition]);
 
@@ -348,7 +298,7 @@ export function Model(props) {
       const adjustedFontSize = (adjustedWidth / modelName.length) * 2; // Adjust the factor as needed
       setName1FontSize(adjustedFontSize);
     } else {
-      setName1FontSize(2); // Default font size
+      setName1FontSize(1); // Default font size
     }
   }, [modelName]);
 
@@ -453,7 +403,6 @@ export function Model(props) {
       material.aoMap = secondaryTexture;
       material.aoMapIntensity = 1;
       material.lightMapIntensity = 20;
-
       material.needsUpdate = true;
     }
   }, [secondaryTexture, layer, isDesign]);
@@ -493,20 +442,242 @@ export function Model(props) {
                 />
               </meshStandardMaterial>
             )}
+
+            {modelName && namePosition === 3 && (
+              <Decal
+                {...bind()}
+                onPointerEnter={toggleHovered}
+                onPointerLeave={toggleHovered}
+                position={[0.5, 1.8, 1]}
+                rotation={[90, 90, -90]}
+                scale={name1Scale}
+                origin={[0, 0, 0]}
+              >
+                <meshStandardMaterial
+                  transparent
+                  polygonOffset
+                  polygonOffsetFactor={-5}
+                >
+                  <RenderTexture attach="map">
+                    <PerspectiveCamera
+                      makeDefault
+                      manual
+                      aspect={2}
+                      position={[-0.4, 1.6, 2.9]}
+                    />
+                    {hovered && (
+                      <color attach="background" args={["#279954"]} />
+                    )}
+                    <Text
+                      rotation={[320, 360, -0.2]}
+                      fontSize={0.5}
+                      position={[-0.2, 0.8, -0.9]}
+                      color={nameColor || "black"}
+                      outlineColor={nameOutline || "black"}
+                      outlineWidth={nameOutline ? 0.05 : 0}
+                      font={
+                        nameFont === 1
+                          ? font1
+                          : nameFont === 2
+                          ? font2
+                          : nameFont === 3
+                          ? font3
+                          : font1
+                      }
+                    >
+                      {modelName}
+                    </Text>
+                  </RenderTexture>
+                </meshStandardMaterial>
+              </Decal>
+            )}
           </mesh>
           <mesh
-            geometry={nodes.Dress_1_Group6255_0005_3.geometry}
-            material={materials.lambert2}
-            name="Left Sleeve Inner"
+            geometry={nodes.Dress_1_Group6255_0005_7.geometry}
+            material={materials.blinn4}
+            name="Right Sleeve Upper"
           >
             {gradient[1] && (
               <meshStandardMaterial side={DoubleSide}>
                 <GradientTexture
                   stops={[0, gradientScale[1] || 0.1]} // As many stops as you want
-                  colors={[color[1] || "transparent", gradient[1]]} // Colors need to match the number of stops
+                  colors={[color[1] || "transparent", gradient[6]]} // Colors need to match the number of stops
                   size={1024} // Size is optional, default = 1024
                 />
               </meshStandardMaterial>
+            )}
+            {modelName && namePosition === 4 && (
+              <Decal
+                {...bind()}
+                onPointerEnter={toggleHovered}
+                onPointerLeave={toggleHovered}
+                position={[0.5, -1, 1]}
+                rotation={[180, 180, -20.1]}
+                scale={name1Scale}
+                origin={[0, 0, 0]}
+              >
+                <meshStandardMaterial
+                  transparent
+                  polygonOffset
+                  polygonOffsetFactor={-5}
+                >
+                  <RenderTexture attach="map">
+                    <PerspectiveCamera
+                      makeDefault
+                      manual
+                      aspect={2}
+                      position={[0, 0.1, 2.5]}
+                    />
+                    {hovered && (
+                      <color attach="background" args={["#279954"]} />
+                    )}
+                    <Text
+                      rotation={[320, 360, 0]}
+                      fontSize={0.5}
+                      position={[0, 0, -0.9]}
+                      color={nameColor || "black"}
+                      outlineColor={nameOutline || "black"}
+                      outlineWidth={nameOutline ? 0.05 : 0}
+                      font={
+                        nameFont === 1
+                          ? font1
+                          : nameFont === 2
+                          ? font2
+                          : nameFont === 3
+                          ? font3
+                          : font1
+                      }
+                    >
+                      {modelName}
+                    </Text>
+                  </RenderTexture>
+                </meshStandardMaterial>
+              </Decal>
+            )}
+          </mesh>
+          <mesh
+            geometry={nodes.Dress_1_Group6255_0005_4.geometry}
+            material={materials.blinn3}
+            name="Front Side"
+          >
+            {(numberPosition === 1 ||
+              numberPosition === 3 ||
+              numberPosition === 4) && (
+              <Decal
+                // debug={true}
+                position={[0,1.5,1]}
+                rotation={[0, 0, 0]}
+                scale={number1Scale}
+                origin={[0, 0, 0]}
+                // ref={textDecalRef}
+              >
+                <meshStandardMaterial
+                  transparent
+                  polygonOffset
+                  polygonOffsetFactor={-1}
+                >
+                  <RenderTexture attach="map">
+                    <PerspectiveCamera
+                      makeDefault
+                      manual
+                      aspect={2}
+                      position={[0, 0.1, 2.5]}
+                    />
+
+                    <Text
+                      rotation={[0, 0, 0]}
+                      fontSize={1.2}
+                      color={numberColor || "black"}
+                      outlineColor={numberOutline || "black"}
+                      outlineWidth={numberOutline ? 0.05 : 0}
+                      font={
+                        numberFont === 1
+                          ? font1
+                          : numberFont === 2
+                          ? font2
+                          : numberFont === 3
+                          ? font3
+                          : font1
+                      }
+                    >
+                      {number}
+                    </Text>
+                  </RenderTexture>
+                </meshStandardMaterial>
+              </Decal>
+            )}
+
+            {modelName && namePosition === 1 && (
+              <Decal
+                {...bind()}
+                onPointerEnter={toggleHovered}
+                onPointerLeave={toggleHovered}
+                position={name1Position}
+                rotation={[0, 0, 0]}
+                scale={name1Scale}
+                origin={[0, 0, 0]}
+              >
+                <meshStandardMaterial
+                  transparent
+                  polygonOffset
+                  polygonOffsetFactor={-1}
+                >
+                  <RenderTexture attach="map">
+                    <PerspectiveCamera
+                      makeDefault
+                      manual
+                      aspect={2}
+                      position={[0, 0.1, 2.5]}
+                    />
+                    {hovered && (
+                      <color attach="background" args={["#279954"]} />
+                    )}
+
+                    <Text
+                      rotation={[0, 0, 0]}
+                      fontSize={0.5}
+                      color={nameColor || "black"}
+                      outlineColor={nameOutline || "black"}
+                      outlineWidth={nameOutline ? 0.05 : 0}
+                      font={
+                        nameFont === 1
+                          ? font1
+                          : nameFont === 2
+                          ? font2
+                          : nameFont === 3
+                          ? font3
+                          : font1
+                      }
+                    >
+                      {modelName}
+                    </Text>
+                  </RenderTexture>
+                </meshStandardMaterial>
+              </Decal>
+            )}
+
+            {gradient[2] && (
+              <meshStandardMaterial side={DoubleSide}>
+                <GradientTexture
+                  stops={[0, gradientScale[2] || 0.1]} // As many stops as you want
+                  colors={[color[2] || "transparent", gradient[2]]} // Colors need to match the number of stops
+                  size={1024} // Size is optional, default = 1024
+                />
+              </meshStandardMaterial>
+            )}
+
+            {logo && logoPosition === 1 && (
+              <Decal
+                {...logoBind()}
+                onPointerEnter={toggleHovered}
+                onPointerLeave={toggleHovered}
+                scale={[logoScale * 5, logoScale * 5, 10]}
+                // debug={true}
+                position={modelLogoPosition}
+                rotation={logoRotation}
+                map={logoTexture}
+                origin={[0, 0, 0]}
+              />
             )}
           </mesh>
           <mesh
@@ -514,11 +685,11 @@ export function Model(props) {
             material={materials.blinn1}
             name="Back Side"
           >
-            {gradient[2] && (
+            {gradient[3] && (
               <meshStandardMaterial side={DoubleSide}>
                 <GradientTexture
-                  stops={[0, gradientScale[2] || 0.1]} // As many stops as you want
-                  colors={[color[2] || "transparent", gradient[2]]} // Colors need to match the number of stops
+                  stops={[0, gradientScale[3] || 0.1]} // As many stops as you want
+                  colors={[color[3] || "transparent", gradient[3]]} // Colors need to match the number of stops
                   size={1024} // Size is optional, default = 1024
                 />
               </meshStandardMaterial>
@@ -595,7 +766,7 @@ export function Model(props) {
 
                     <Text
                       rotation={[0, 0, 0]}
-                      fontSize={name1FontSize}
+                      fontSize={0.5}
                       color={nameColor || "black"}
                       outlineColor={nameOutline || "black"}
                       outlineWidth={nameOutline ? 0.05 : 0}
@@ -631,134 +802,9 @@ export function Model(props) {
             )}
           </mesh>
           <mesh
-            geometry={nodes.Dress_1_Group6255_0005_4.geometry}
-            material={materials.blinn3}
-            name="Front Side"
-          >
-            {(numberPosition === 1 ||
-              numberPosition === 3 ||
-              numberPosition === 4) && (
-              <Decal
-                // debug={true}
-                position={number1Position}
-                rotation={[0, 0, 0]}
-                scale={number1Scale}
-                origin={[0, 0, 0]}
-                // ref={textDecalRef}
-              >
-                <meshStandardMaterial
-                  transparent
-                  polygonOffset
-                  polygonOffsetFactor={-1}
-                >
-                  <RenderTexture attach="map">
-                    <PerspectiveCamera
-                      makeDefault
-                      manual
-                      aspect={2}
-                      position={[0, 0.1, 2.5]}
-                    />
-
-                    <Text
-                      rotation={[0, 0, 0]}
-                      fontSize={2}
-                      color={numberColor || "black"}
-                      outlineColor={numberOutline || "black"}
-                      outlineWidth={numberOutline ? 0.05 : 0}
-                      font={
-                        numberFont === 1
-                          ? font1
-                          : numberFont === 2
-                          ? font2
-                          : numberFont === 3
-                          ? font3
-                          : font1
-                      }
-                    >
-                      {number}
-                    </Text>
-                  </RenderTexture>
-                </meshStandardMaterial>
-              </Decal>
-            )}
-
-            {modelName && namePosition === 1 && (
-              <Decal
-                {...bind()}
-                onPointerEnter={toggleHovered}
-                onPointerLeave={toggleHovered}
-                position={name1Position}
-                rotation={[0, 0, 0]}
-                scale={name1Scale}
-                origin={[0, 0, 0]}
-              >
-                <meshStandardMaterial
-                  transparent
-                  polygonOffset
-                  polygonOffsetFactor={-1}
-                >
-                  <RenderTexture attach="map">
-                    <PerspectiveCamera
-                      makeDefault
-                      manual
-                      aspect={2}
-                      position={[0, 0.1, 2.5]}
-                    />
-                    {hovered && (
-                      <color attach="background" args={["#279954"]} />
-                    )}
-
-                    <Text
-                      rotation={[0, 0, 0]}
-                      fontSize={name1FontSize}
-                      color={nameColor || "black"}
-                      outlineColor={nameOutline || "black"}
-                      outlineWidth={nameOutline ? 0.05 : 0}
-                      font={
-                        nameFont === 1
-                          ? font1
-                          : nameFont === 2
-                          ? font2
-                          : nameFont === 3
-                          ? font3
-                          : font1
-                      }
-                    >
-                      {modelName}
-                    </Text>
-                  </RenderTexture>
-                </meshStandardMaterial>
-              </Decal>
-            )}
-
-            {gradient[3] && (
-              <meshStandardMaterial side={DoubleSide}>
-                <GradientTexture
-                  stops={[0, gradientScale[3] || 0.1]} // As many stops as you want
-                  colors={[color[3] || "transparent", gradient[3]]} // Colors need to match the number of stops
-                  size={1024} // Size is optional, default = 1024
-                />
-              </meshStandardMaterial>
-            )}
-
-            {logo && logoPosition === 1 && (
-              <Decal
-                {...logoBind()}
-                onPointerEnter={toggleHovered}
-                onPointerLeave={toggleHovered}
-                scale={[logoScale * 5, logoScale * 5, 10]}
-                // debug={true}
-                position={modelLogoPosition}
-                rotation={logoRotation}
-                map={logoTexture}
-                origin={[0, 0, 0]}
-              />
-            )}
-          </mesh>
-          <mesh
-            geometry={nodes.Dress_1_Group6255_0005_5.geometry}
-            material={materials.blinn5}
-            name="Back Collar"
+            geometry={nodes.Dress_1_Group6255_0005_6.geometry}
+            material={materials.lambert3}
+            name="Front Collar"
           >
             {gradient[4] && (
               <meshStandardMaterial side={DoubleSide}>
@@ -771,9 +817,9 @@ export function Model(props) {
             )}
           </mesh>
           <mesh
-            geometry={nodes.Dress_1_Group6255_0005_6.geometry}
-            material={materials.lambert3}
-            name="Front Collar"
+            geometry={nodes.Dress_1_Group6255_0005_5.geometry}
+            material={materials.blinn5}
+            name="Back Collar"
           >
             {gradient[5] && (
               <meshStandardMaterial side={DoubleSide}>
@@ -785,15 +831,16 @@ export function Model(props) {
               </meshStandardMaterial>
             )}
           </mesh>
+
           <mesh
-            geometry={nodes.Dress_1_Group6255_0005_7.geometry}
-            material={materials.blinn4}
-            name="Right Sleeve Upper"
+            geometry={nodes.Dress_1_Group6255_0005_3.geometry}
+            material={materials.lambert2}
+            name="Left Sleeve Inner"
           >
             {gradient[6] && (
               <meshStandardMaterial side={DoubleSide}>
                 <GradientTexture
-                  stops={[0, gradientScale[6] || 0.1]} // As many stops as you want
+                  stops={[0, gradientScale[6] || 0.6]} // As many stops as you want
                   colors={[color[6] || "transparent", gradient[6]]} // Colors need to match the number of stops
                   size={1024} // Size is optional, default = 1024
                 />
