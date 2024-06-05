@@ -22,7 +22,7 @@ const Color = () => {
   const ref = useProductStore((state) => state.ref);
   const children = ref?.current?.children || [];
 
-  const { color, updateColor, updateColorIndex,updateLayer } = useProductStore(
+  const { color, updateColor, updateColorIndex, updateLayer } = useProductStore(
     (state) => state
   );
 
@@ -43,8 +43,16 @@ const Color = () => {
                 className={styles.colorViewer}
                 style={{ backgroundColor: "transparent" }}
                 onClick={() => {
-                  updateColor({ [childIndex]: null });
-                  item.material.color = new ParceColor(0xffffff);
+                  if (childIndex == 0 || childIndex % 2 === 0) {
+                    item.material.color = new ParceColor(0xffffff);
+                    children[childIndex + 1].material.color = new ParceColor(
+                      0xffffff
+                    );
+                    updateColor({ [childIndex]: null, [childIndex + 1]: null });
+                  } else {
+                    updateColor({ [childIndex]: null });
+                    item.material.color = new ParceColor(0xffffff);
+                  }
                 }}
               >
                 <CrossIcon />
@@ -57,8 +65,22 @@ const Color = () => {
                   onClick={() => {
                     updateColorIndex(childIndex);
                     // updateLayer(childIndex);
-                    updateColor({ [childIndex]: itemColor });
-                    item.material.color = new ParceColor(itemColor);
+                    if (childIndex == 0 || childIndex % 2 === 0) {
+                      console.log("object");
+                      updateColor({
+                        [childIndex]: itemColor,
+                        [childIndex + 1]: itemColor,
+                      });
+                      item.material.color = new ParceColor(itemColor);
+                      children[childIndex + 1].material.color = new ParceColor(
+                        itemColor
+                      );
+                    } else {
+                      updateColor({
+                        [childIndex]: itemColor,
+                      });
+                      item.material.color = new ParceColor(itemColor);
+                    }
                   }}
                 >
                   {color[childIndex] && color[childIndex] === itemColor && (
