@@ -1,4 +1,5 @@
 import womenImg1 from "../../assets/images/products/women/img1.png";
+import cover_up_short from "../../assets/images/products/women/cover_up_short.png";
 import womenImg2 from "../../assets/images/products/women/img2.png";
 import womenImg3 from "../../assets/images/products/women/img3.png";
 import womenImg4 from "../../assets/images/products/women/img4.png";
@@ -12,6 +13,7 @@ import menImg3 from "../../assets/images/products/men/img3.png";
 import menImg4 from "../../assets/images/products/men/img4.png";
 import menImg5 from "../../assets/images/products/men/img5.png";
 import menImg6 from "../../assets/images/products/men/img6.png";
+import menImg7 from "../../assets/images/products/men/img7.png";
 
 export {
   womenImg1,
@@ -28,4 +30,6 @@ export {
   menImg4,
   menImg5,
   menImg6,
+  cover_up_short,
+  menImg7,
 };

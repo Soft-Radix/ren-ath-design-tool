@@ -34,6 +34,7 @@
 }
 
 .productsWrap {
+  padding-top: 60px;
   @include row(22%, 15px, 50px, center);
   @include max($xl) {
     --width: 26%;

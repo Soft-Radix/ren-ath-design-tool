@@ -60,12 +60,12 @@ const Name = () => {
         ).default;
         const chest_left = (
           await import(
-            `../../../assets/images/products/placement/${id}/leftsleeve.png`
+            `../../../assets/images/products/placement/${id}/left.png`
           )
         ).default;
         const chest_right = (
           await import(
-            `../../../assets/images/products/placement/${id}/rightsleeve.png`
+            `../../../assets/images/products/placement/${id}/right.png`
           )
         ).default;
         const images = { front, back, chest_left, chest_right };
