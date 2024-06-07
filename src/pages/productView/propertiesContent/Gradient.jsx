@@ -10,16 +10,7 @@ import styles from "./properties.module.scss";
 import ThemeButton from "../../../components/common/ThemeButton";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
-
-const colorList = [
-  "#D14E24",
-  "#EF7E15",
-  "#E9ED23",
-  "#AED124",
-  "#D1AB24",
-  "#85D124",
-  "#24D169",
-];
+import { colorList } from "../../../components/data/colors";
 
 const Gradient = () => {
   const ref = useProductStore((state) => state.ref);
@@ -32,6 +23,8 @@ const Gradient = () => {
     gradientAngle,
     updateGradientScale,
     updateGradientAngle,
+    updateColorIndex,
+    //updateIsGradient,
   } = useProductStore((state) => state);
 
   const children = ref?.current?.children || [];
@@ -79,13 +72,21 @@ const Gradient = () => {
               </div>
               <div className={styles.buttonWrap}>
                 <ThemeButton
-                  onClick={() => setType(1)}
+                  onClick={() => {
+                    updateGradientScale({ [childIndex]: 0.91 });
+                    setType(1);
+                    //updateIsGradient(true);
+                  }}
                   variant={type === 2 ? "outlined" : "contained"}
                 >
                   Color
                 </ThemeButton>
                 <ThemeButton
-                  onClick={() => setType(2)}
+                  onClick={() => {
+                    updateGradientScale({ [childIndex]: 0.91 });
+                    setType(2);
+                    //updateIsGradient(true);
+                  }}
                   variant={type === 1 ? "outlined" : "contained"}
                 >
                   Gradient
@@ -106,8 +107,10 @@ const Gradient = () => {
                   onClick={() => {
                     if (type === 1) {
                       updateColor({ [childIndex]: null });
-                      item.material.color = new ParceColor(0xffffff);
+                      updateColorIndex(childIndex);
+                      // item.material.color = new ParceColor(0xffffff);
                     } else {
+                      updateColorIndex(childIndex);
                       updateGradient({ [childIndex]: null });
                     }
                   }}
@@ -122,8 +125,10 @@ const Gradient = () => {
                     onClick={() => {
                       if (type === 1) {
                         updateColor({ [childIndex]: itemColor });
-                        item.material.color = new ParceColor(itemColor);
+                        updateColorIndex(childIndex);
+                        // item.material.color = new ParceColor(itemColor);
                       } else {
+                        updateColorIndex(childIndex);
                         updateGradient({ [childIndex]: itemColor });
                       }
                     }}

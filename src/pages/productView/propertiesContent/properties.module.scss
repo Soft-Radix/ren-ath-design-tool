@@ -8,6 +8,30 @@
   font-family: "BebasNeue";
   src: url("/src/assets/fonts/BebasNeue.ttf") format("truetype");
 }
+@font-face {
+  font-family: "BlaakRegular_PERSONAL";
+  src: url("/src/assets/fonts/BlaakRegular_PERSONAL.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Freshman";
+  src: url("/src/assets/fonts/Freshman.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Impact";
+  src: url("/src/assets/fonts/Impact.ttf") format("truetype");
+}
+@font-face {
+  font-family: "MachineRegular";
+  src: url("/src/assets/fonts/MachineRegular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Oswald-VariableFont_wght";
+  src: url("/src/assets/fonts/Oswald-VariableFont_wght.ttf") format("truetype");
+}
+@font-face {
+  font-family: "SawarabiGothic-Regular";
+  src: url("/src/assets/fonts/SawarabiGothic-Regular.ttf") format("truetype");
+}
 
 .colorPalletWrap {
   display: flex;
@@ -87,7 +111,7 @@
         max-height: 90%;
         max-width: 90%;
       }
-      &.selected {   
+      &.selected {
         border: 1px solid $primary;
       }
       &:hover {
@@ -159,6 +183,24 @@
     }
     .fontItem3 {
       font-family: "BebasNeue";
+    }
+    // .fontItem4 {
+    //   font-family: "BlaakRegular_PERSONAL";
+    // }
+    .fontItem5 {
+      font-family: "Freshman";
+    }
+    .fontItem6 {
+      font-family: "Impact";
+    }
+    .fontItem7 {
+      font-family: "MachineRegular";
+    }
+    .fontItem8 {
+      font-family: "Oswald-VariableFont_wght";
+    }
+    .fontItem9 {
+      font-family: "SawarabiGothic-Regular";
     }
   }
 

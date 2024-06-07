@@ -47,6 +47,9 @@ export const useProductStore = create((set) => ({
   logoScale: 0.5,
   logoRotate: 0,
   isDesign: false,
+  modelLoading: true,
+  isGradient: false,
+  setModelLoading: (loading) => set({ modelLoading: loading }),
   updateProduct: (updatedId, updatedName, updatedDesignCount) =>
     set(() => ({
       id: updatedId,
@@ -98,8 +101,8 @@ export const useProductStore = create((set) => ({
       gradient: { ...state.gradient, ...updatedGradient },
     })),
   updateGradientScale: (updatedScale) =>
-    set(() => ({
-      gradientScale: updatedScale,
+    set((state) => ({
+      gradientScale: { ...state.gradientScale, ...updatedScale },
     })),
   updateGradientAngle: (updatedAngle) =>
     set(() => ({
@@ -175,6 +178,11 @@ export const useProductStore = create((set) => ({
   updateIsDesign: (updatedIsDesign) => {
     set(() => ({
       isDesign: updatedIsDesign,
+    }));
+  },
+  updateIsGradient: (updatedIsGradient) => {
+    set(() => ({
+      isGradient: updatedIsGradient,
     }));
   },
 }));

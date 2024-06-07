@@ -170,7 +170,7 @@ const Name = () => {
               onClick={() => updateNameFont(2)}
               whileHover={{ scale: 1.02 }}
             >
-              F1 2345567789
+              F2 2345567789
             </motion.div>
             <motion.div
               className={`${styles.fontItem3} ${
@@ -179,7 +179,61 @@ const Name = () => {
               onClick={() => updateNameFont(3)}
               whileHover={{ scale: 1.02 }}
             >
-              F1 2345567789
+              F3 2345567789
+            </motion.div>
+            <motion.div
+              className={`${styles.fontItem4} ${
+                nameFont === 4 ? styles.selected : ""
+              }`}
+              onClick={() => updateNameFont(4)}
+              whileHover={{ scale: 1.02 }}
+            >
+              F4 2345567789
+            </motion.div>
+            <motion.div
+              className={`${styles.fontItem5} ${
+                nameFont === 5 ? styles.selected : ""
+              }`}
+              onClick={() => updateNameFont(5)}
+              whileHover={{ scale: 1.02 }}
+            >
+              F5 2345567789
+            </motion.div>
+            <motion.div
+              className={`${styles.fontItem6} ${
+                nameFont === 6 ? styles.selected : ""
+              }`}
+              onClick={() => updateNameFont(6)}
+              whileHover={{ scale: 1.02 }}
+            >
+              F6 2345567789
+            </motion.div>
+            <motion.div
+              className={`${styles.fontItem7} ${
+                nameFont === 7 ? styles.selected : ""
+              }`}
+              onClick={() => updateNameFont(7)}
+              whileHover={{ scale: 1.02 }}
+            >
+              F7 2345567789
+            </motion.div>
+            <motion.div
+              className={`${styles.fontItem8} ${
+                nameFont === 8 ? styles.selected : ""
+              }`}
+              onClick={() => updateNameFont(8)}
+              whileHover={{ scale: 1.02 }}
+            >
+              F8 2345567789
+            </motion.div>
+            <motion.div
+              className={`${styles.fontItem9} ${
+                nameFont === 9 ? styles.selected : ""
+              }`}
+              onClick={() => updateNameFont(9)}
+              whileHover={{ scale: 1.02 }}
+            >
+              F9 2345567789
             </motion.div>{" "}
           </div>
         </AccordionDetails>

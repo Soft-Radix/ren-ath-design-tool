@@ -9,17 +9,22 @@ const Sidebar = () => {
     (state) => state.selectedSidebarItem
   );
   const updateSelectedSidebarItem = useProductStore(
-    
     (state) => state.updateSelectedSidebarItem
-
   );
-
+  const updateIsGradient = useProductStore((state) => state.updateIsGradient);
   const renderItem = ({ id, name, Icon }) => {
     return (
       <motion.div
         className={styles.item}
         key={id}
-        onClick={() => updateSelectedSidebarItem(id)}
+        onClick={() => {
+          if (name === "Gradient") {
+            updateIsGradient(true);
+          } else if (name === "Color") {
+            updateIsGradient(false);
+          }
+          updateSelectedSidebarItem(id);
+        }}
         whileHover={{ scale: 1.04, backgroundColor: "#768f99" }}
       >
         <div

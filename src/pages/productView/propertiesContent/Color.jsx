@@ -7,16 +7,19 @@ import { CrossIcon, TickIcon } from "../../../assets/svg/icons";
 import { useProductStore } from "../../../store";
 import { Color as ParceColor } from "three";
 import styles from "./properties.module.scss";
+import { colorList } from "../../../components/data/colors";
 
-const colorList = [
-  "#D14E24",
-  "#EF7E15",
-  "#E9ED23",
-  "#AED124",
-  "#D1AB24",
-  "#85D124",
-  "#24D169",
-];
+// const colorList = [
+//   "#D14E24",
+//   "#EF7E15",
+//   "#E9ED23",
+//   "#AED124",
+//   "#D1AB24",
+//   "#85D124",
+//   "#24D169",
+// ];
+
+
 
 const Color = () => {
   const ref = useProductStore((state) => state.ref);

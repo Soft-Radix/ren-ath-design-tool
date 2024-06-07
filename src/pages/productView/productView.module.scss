@@ -1,6 +1,7 @@
 @import "/src/scss/var";
 
 .mainWrap {
+  width: 100%;
   display: flex;
   align-items: flex-start;
 }
@@ -28,4 +29,13 @@
 .canvasWrap {
   flex-grow: 1;
   background: $canvasBg;
+}
+
+.loadingScreen {
+  min-height: 100vh;
+  display: flex;
+  margin: auto;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
 }

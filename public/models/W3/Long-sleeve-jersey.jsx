@@ -17,8 +17,13 @@ import * as Three from "three";
 import { DoubleSide, ShaderMaterial } from "three";
 import { degToRad } from "three/src/math/MathUtils.js";
 import font3 from "../../../src/assets/fonts/BebasNeue.ttf";
+import font5 from "../../../src/assets/fonts/Freshman.ttf";
+import font6 from "../../../src/assets/fonts/Impact.ttf";
+import font7 from "../../../src/assets/fonts/MachineRegular.ttf";
+import font8 from "../../../src/assets/fonts/Oswald-VariableFont_wght.ttf";
 import font1 from "../../../src/assets/fonts/Roboto.ttf";
-import font2 from "../../../src/assets/fonts/TiltNeon.ttf";
+import font9 from "../../../src/assets/fonts/SawarabiGothic-Regular.ttf";
+import font4 from "../../../src/assets/fonts/TiltNeon.ttf";
 import { useProductStore } from "../../../src/store";
 const hexColor = "#D2D1D3";
 
@@ -38,7 +43,7 @@ export function Model(props) {
     gradientAngle,
 
     pattern,
-
+    isGradient,
     updateRef,
     number,
     numberPosition,
@@ -61,8 +66,7 @@ export function Model(props) {
     layer,
     isDesign,
   } = useProductStore((state) => state);
-  // //console.log("🚀 ~ Model ~ numberPosition:", numberPosition);
-  // //console.log("🚀 ~ Model ~ number:", number);
+  console.log("🚀 ~ Model ~ isGradient:", isGradient);
 
   // SET CAMERA POSITION
   const camera = useThree((state) => state.camera);
@@ -93,7 +97,7 @@ export function Model(props) {
     const colorsCollection = [...secondaryColors];
     if (colorIndex !== null) {
       changeColor = color[colorIndex];
-      if (colorIndex == 0 || colorIndex % 2 == 0) {
+      if ((colorIndex == 0 || colorIndex % 2 == 0) && !isGradient) {
         colorsCollection[colorIndex] = changeColor;
         colorsCollection[colorIndex + 1] = changeColor;
       } else {
@@ -124,10 +128,20 @@ export function Model(props) {
     }
   }, [designType]);
 
+  // Load texture with sRGB encoding
   const loadTexture = (url) => {
     return new Promise((resolve, reject) => {
       const loader = new Three.TextureLoader();
-      loader.load(url, resolve, undefined, reject);
+      loader.load(
+        url,
+        (texture) => {
+          texture.encoding = Three.sRGBEncoding;
+          texture.needsUpdate = true;
+          resolve(texture);
+        },
+        undefined,
+        reject
+      );
     });
   };
 
@@ -154,12 +168,65 @@ export function Model(props) {
       primaryTexture.encoding = Three.sRGBEncoding;
 
       // Create shader material
+      // const createMaterial = (
+      //   secondaryTexture,
+      //   secondaryColor,
+      //   isSelectedLayer
+      // ) => {
+      //   //console.log("secondaryColor>>>>>", secondaryColor);
+      //   return new ShaderMaterial({
+      //     uniforms: {
+      //       primaryTexture: { value: primaryTexture },
+      //       secondaryTexture: { value: secondaryTexture },
+      //       secondaryColor: { value: secondaryColor },
+      //       hasSecondaryTexture: { value: !!secondaryTexture },
+      //       hasSecondaryColor: { value: !!secondaryColor },
+      //       defaultColor: { value: new Three.Color(threeJsColor) },
+      //       selectedLayer: { value: isSelectedLayer },
+      //     },
+      //     vertexShader: `
+      //       varying vec2 vUv;
+      //       void main() {
+      //         vUv = uv;
+      //         gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      //       }
+      //     `,
+      //     fragmentShader: `
+      //       uniform sampler2D primaryTexture;
+      //       uniform sampler2D secondaryTexture;
+      //       uniform vec3 secondaryColor;
+      //       uniform bool hasSecondaryTexture;
+      //       uniform bool hasSecondaryColor;
+      //       uniform vec3 defaultColor;
+      //       uniform int selectedLayer;
+      //       varying vec2 vUv;
+
+      //       void main() {
+      //         vec4 primaryColor = texture2D(primaryTexture, vUv);
+      //         vec4 secondaryTexColor = hasSecondaryTexture ? texture2D(secondaryTexture, vUv) : vec4(1.0);
+      //         vec4 secondaryColColor = hasSecondaryColor ? vec4(secondaryColor, 1.0) : vec4(1.0);
+      //         vec4 secondaryColor = mix(secondaryTexColor, secondaryColColor, secondaryTexColor.a);
+      //         vec4 baseColor = vec4(defaultColor, 1.0);
+      //         if (selectedLayer == 1) {
+      //           // Mix secondary color only if it's the selected layer
+      //           gl_FragColor = mix(secondaryColor, primaryColor, primaryColor.a);
+      //         } else {
+      //           gl_FragColor = mix(baseColor, primaryColor, primaryColor.a);
+      //         }
+      //       }
+      //     `,
+      //     side: DoubleSide,
+      //   });
+      // };
+      // Create shader material
       const createMaterial = (
         secondaryTexture,
         secondaryColor,
-        isSelectedLayer
+        isSelectedLayer,
+        gradientColor1,
+        gradientColor2,
+        isGradient
       ) => {
-        //console.log("secondaryColor>>>>>", secondaryColor);
         return new ShaderMaterial({
           uniforms: {
             primaryTexture: { value: primaryTexture },
@@ -169,38 +236,51 @@ export function Model(props) {
             hasSecondaryColor: { value: !!secondaryColor },
             defaultColor: { value: new Three.Color(threeJsColor) },
             selectedLayer: { value: isSelectedLayer },
+            gradientColor1: { value: gradientColor1 },
+            gradientColor2: { value: gradientColor2 },
+            isGradient: { value: isGradient },
           },
           vertexShader: `
-            varying vec2 vUv;
-            void main() {
-              vUv = uv;
-              gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-            }
-          `,
+      varying vec2 vUv;
+      void main() {
+        vUv = uv;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
           fragmentShader: `
-            uniform sampler2D primaryTexture;
-            uniform sampler2D secondaryTexture;
-            uniform vec3 secondaryColor;
-            uniform bool hasSecondaryTexture;
-            uniform bool hasSecondaryColor;
-            uniform vec3 defaultColor;
-            uniform int selectedLayer;
-            varying vec2 vUv;
+      uniform sampler2D primaryTexture;
+      uniform sampler2D secondaryTexture;
+      uniform vec3 secondaryColor;
+      uniform bool hasSecondaryTexture;
+      uniform bool hasSecondaryColor;
+      uniform vec3 defaultColor;
+      uniform int selectedLayer;
+      uniform vec3 gradientColor1;
+      uniform vec3 gradientColor2;
+      uniform bool isGradient;
+      varying vec2 vUv;
 
-            void main() {
-              vec4 primaryColor = texture2D(primaryTexture, vUv);
-              vec4 secondaryTexColor = hasSecondaryTexture ? texture2D(secondaryTexture, vUv) : vec4(1.0);
-              vec4 secondaryColColor = hasSecondaryColor ? vec4(secondaryColor, 1.0) : vec4(1.0);
-              vec4 secondaryColor = mix(secondaryTexColor, secondaryColColor, secondaryTexColor.a);
-              vec4 baseColor = vec4(defaultColor, 1.0);
-              if (selectedLayer == 1) {
-                // Mix secondary color only if it's the selected layer
-                gl_FragColor = mix(secondaryColor, primaryColor, primaryColor.a);
-              } else {
-                gl_FragColor = mix(baseColor, primaryColor, primaryColor.a);
-              }
-            }
-          `,
+      void main() {
+        vec4 primaryColor = texture2D(primaryTexture, vUv);
+        vec4 secondaryTexColor = hasSecondaryTexture ? texture2D(secondaryTexture, vUv) : vec4(1.0);
+        vec4 secondaryColColor = hasSecondaryColor ? vec4(secondaryColor, 1.0) : vec4(1.0);
+        vec4 secondaryColor = mix(secondaryTexColor, secondaryColColor, secondaryTexColor.a);
+        vec4 baseColor = vec4(defaultColor, 1.0);
+        if (selectedLayer == 1) {
+          if (isGradient) {
+            // Calculate gradient based on vUv.y (vertical position)
+            vec3 gradientColor = mix(gradientColor1, gradientColor2, vUv.y);
+            // Mix secondary color only if it's the selected layer
+            gl_FragColor = mix(vec4(gradientColor, 1.0), primaryColor, primaryColor.a);
+          } else {
+            // Mix secondary color only if it's the selected layer
+            gl_FragColor = mix(secondaryColor, primaryColor, primaryColor.a);
+          }
+        } else {
+          gl_FragColor = mix(baseColor, primaryColor, primaryColor.a);
+        }
+      }
+    `,
           side: DoubleSide,
         });
       };
@@ -212,10 +292,15 @@ export function Model(props) {
           const secondaryColor =
             new Three.Color(secondaryColors[index]) ||
             new Three.Color(threeJsColor);
+          const gradientColor1 = new Three.Color(color[index]);
+          const gradientColor2 = new Three.Color(gradient[index]);
           const material = createMaterial(
             secondaryTexture,
             secondaryColor,
-            true
+            true,
+            gradientColor1,
+            gradientColor2,
+            isGradient
           );
           child.material = material;
         }
@@ -407,6 +492,11 @@ export function Model(props) {
     }
   }, [secondaryTexture, layer, isDesign]);
 
+  console.log("gradient[2]", gradient[2]);
+  console.log("gradient[3]", gradient[3]);
+  console.log("color", color);
+  console.log("gradientScale", gradientScale);
+
   return (
     <>
       {/* Ambient light and orbit controls */}
@@ -433,10 +523,10 @@ export function Model(props) {
             material={materials.blinn2}
             name="Left Sleeve Upper"
           >
-            {gradient[0] && (
+            {gradient[0] && !isDesign && (
               <meshStandardMaterial side={DoubleSide}>
                 <GradientTexture
-                  stops={[0, gradientScale[0] || 0.1]} // As many stops as you want
+                  stops={[0.5, gradientScale[0] || 0.1]} // As many stops as you want
                   colors={[color[0] || "transparent", gradient[0]]} // Colors need to match the number of stops
                   size={1024} // Size is optional, default = 1024
                 />
@@ -479,9 +569,21 @@ export function Model(props) {
                         nameFont === 1
                           ? font1
                           : nameFont === 2
-                          ? font2
+                          ? font3
                           : nameFont === 3
                           ? font3
+                          : nameFont === 4
+                          ? font4
+                          : nameFont === 5
+                          ? font5
+                          : nameFont === 6
+                          ? font6
+                          : nameFont === 7
+                          ? font7
+                          : nameFont === 8
+                          ? font8
+                          : nameFont === 9
+                          ? font9
                           : font1
                       }
                     >
@@ -497,11 +599,11 @@ export function Model(props) {
             material={materials.blinn4}
             name="Right Sleeve Upper"
           >
-            {gradient[1] && (
+            {gradient[1] && !isDesign && (
               <meshStandardMaterial side={DoubleSide}>
                 <GradientTexture
-                  stops={[0, gradientScale[1] || 0.1]} // As many stops as you want
-                  colors={[color[1] || "transparent", gradient[6]]} // Colors need to match the number of stops
+                  stops={[0.5, gradientScale[1] || 0.1]} // As many stops as you want
+                  colors={[color[1] || "transparent", gradient[1]]} // Colors need to match the number of stops
                   size={1024} // Size is optional, default = 1024
                 />
               </meshStandardMaterial>
@@ -542,9 +644,21 @@ export function Model(props) {
                         nameFont === 1
                           ? font1
                           : nameFont === 2
-                          ? font2
+                          ? font8
                           : nameFont === 3
                           ? font3
+                          : nameFont === 4
+                          ? font4
+                          : nameFont === 5
+                          ? font5
+                          : nameFont === 6
+                          ? font6
+                          : nameFont === 7
+                          ? font7
+                          : nameFont === 8
+                          ? font8
+                          : nameFont === 9
+                          ? font9
                           : font1
                       }
                     >
@@ -565,7 +679,7 @@ export function Model(props) {
               numberPosition === 4) && (
               <Decal
                 // debug={true}
-                position={[0,1.5,1]}
+                position={[0, 1.5, 1]}
                 rotation={[0, 0, 0]}
                 scale={number1Scale}
                 origin={[0, 0, 0]}
@@ -594,9 +708,21 @@ export function Model(props) {
                         numberFont === 1
                           ? font1
                           : numberFont === 2
-                          ? font2
+                          ? font8
                           : numberFont === 3
                           ? font3
+                          : numberFont === 4
+                          ? font4
+                          : numberFont === 5
+                          ? font5
+                          : numberFont === 6
+                          ? font6
+                          : numberFont === 7
+                          ? font7
+                          : numberFont === 8
+                          ? font8
+                          : numberFont === 9
+                          ? font9
                           : font1
                       }
                     >
@@ -643,9 +769,21 @@ export function Model(props) {
                         nameFont === 1
                           ? font1
                           : nameFont === 2
-                          ? font2
+                          ? font8
                           : nameFont === 3
                           ? font3
+                          : nameFont === 4
+                          ? font4
+                          : nameFont === 5
+                          ? font5
+                          : nameFont === 6
+                          ? font6
+                          : nameFont === 7
+                          ? font7
+                          : nameFont === 8
+                          ? font8
+                          : nameFont === 9
+                          ? font9
                           : font1
                       }
                     >
@@ -656,10 +794,10 @@ export function Model(props) {
               </Decal>
             )}
 
-            {gradient[2] && (
+            {gradient[2] && !isDesign && (
               <meshStandardMaterial side={DoubleSide}>
                 <GradientTexture
-                  stops={[0, gradientScale[2] || 0.1]} // As many stops as you want
+                  stops={[0.5, gradientScale[2] || 0.1]} // As many stops as you want
                   colors={[color[2] || "transparent", gradient[2]]} // Colors need to match the number of stops
                   size={1024} // Size is optional, default = 1024
                 />
@@ -685,10 +823,10 @@ export function Model(props) {
             material={materials.blinn1}
             name="Back Side"
           >
-            {gradient[3] && (
+            {gradient[3] && !isDesign && (
               <meshStandardMaterial side={DoubleSide}>
                 <GradientTexture
-                  stops={[0, gradientScale[3] || 0.1]} // As many stops as you want
+                  stops={[0.5, gradientScale[3] || 0.1]} // As many stops as you want
                   colors={[color[3] || "transparent", gradient[3]]} // Colors need to match the number of stops
                   size={1024} // Size is optional, default = 1024
                 />
@@ -725,9 +863,21 @@ export function Model(props) {
                         numberFont === 1
                           ? font1
                           : numberFont === 2
-                          ? font2
+                          ? font8
                           : numberFont === 3
                           ? font3
+                          : numberFont === 4
+                          ? font4
+                          : numberFont === 5
+                          ? font5
+                          : numberFont === 6
+                          ? font6
+                          : numberFont === 7
+                          ? font7
+                          : numberFont === 8
+                          ? font8
+                          : numberFont === 9
+                          ? font9
                           : font1
                       }
                     >
@@ -774,9 +924,21 @@ export function Model(props) {
                         nameFont === 1
                           ? font1
                           : nameFont === 2
-                          ? font2
+                          ? font8
                           : nameFont === 3
                           ? font3
+                          : nameFont === 4
+                          ? font4
+                          : nameFont === 5
+                          ? font5
+                          : nameFont === 6
+                          ? font6
+                          : nameFont === 7
+                          ? font7
+                          : nameFont === 8
+                          ? font8
+                          : nameFont === 9
+                          ? font9
                           : font1
                       }
                     >
@@ -806,10 +968,10 @@ export function Model(props) {
             material={materials.lambert3}
             name="Front Collar"
           >
-            {gradient[4] && (
+            {gradient[4] && !isDesign && (
               <meshStandardMaterial side={DoubleSide}>
                 <GradientTexture
-                  stops={[0, gradientScale[4] || 0.1]} // As many stops as you want
+                  stops={[0.5, gradientScale[4] || 0.1]} // As many stops as you want
                   colors={[color[4] || "transparent", gradient[4]]} // Colors need to match the number of stops
                   size={1024} // Size is optional, default = 1024
                 />
@@ -821,10 +983,10 @@ export function Model(props) {
             material={materials.blinn5}
             name="Back Collar"
           >
-            {gradient[5] && (
+            {gradient[5] && !isDesign && (
               <meshStandardMaterial side={DoubleSide}>
                 <GradientTexture
-                  stops={[0, gradientScale[5] || 0.1]} // As many stops as you want
+                  stops={[0.5, gradientScale[5] || 0.1]} // As many stops as you want
                   colors={[color[5] || "transparent", gradient[5]]} // Colors need to match the number of stops
                   size={1024} // Size is optional, default = 1024
                 />
@@ -837,10 +999,10 @@ export function Model(props) {
             material={materials.lambert2}
             name="Left Sleeve Inner"
           >
-            {gradient[6] && (
+            {gradient[6] && !isDesign && (
               <meshStandardMaterial side={DoubleSide}>
                 <GradientTexture
-                  stops={[0, gradientScale[6] || 0.6]} // As many stops as you want
+                  stops={[0.5, gradientScale[6] || 0.6]} // As many stops as you want
                   colors={[color[6] || "transparent", gradient[6]]} // Colors need to match the number of stops
                   size={1024} // Size is optional, default = 1024
                 />
@@ -852,10 +1014,10 @@ export function Model(props) {
             material={materials.Dress_1_Gr}
             name="Right Sleeve Inner"
           >
-            {gradient[7] && (
+            {gradient[7] && !isDesign && (
               <meshStandardMaterial side={DoubleSide}>
                 <GradientTexture
-                  stops={[0, gradientScale[7] || 0.1]} // As many stops as you want
+                  stops={[0.5, gradientScale[7] || 0.1]} // As many stops as you want
                   colors={[color[7] || "transparent", gradient[7]]} // Colors need to match the number of stops
                   size={1024} // Size is optional, default = 1024
                 />

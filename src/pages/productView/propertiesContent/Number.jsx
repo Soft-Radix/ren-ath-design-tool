@@ -8,7 +8,7 @@ import { CrossIcon, TickIcon } from "../../../assets/svg/icons";
 import ThemeButton from "../../../components/common/ThemeButton";
 import { useProductStore } from "../../../store";
 import styles from "./properties.module.scss";
-
+import { colorList } from "../../../components/data/colors";
 const Number = () => {
   const {
     number,
@@ -25,15 +25,15 @@ const Number = () => {
   } = useProductStore((state) => state);
   console.log("🚀 ~ Number ~ id:", id);
 
-  const colorList = [
-    "#D14E24",
-    "#EF7E15",
-    "#E9ED23",
-    "#AED124",
-    "#D1AB24",
-    "#85D124",
-    "#24D169",
-  ];
+  // const colorList = [
+  //   "#D14E24",
+  //   "#EF7E15",
+  //   "#E9ED23",
+  //   "#AED124",
+  //   "#D1AB24",
+  //   "#85D124",
+  //   "#24D169",
+  // ];
 
   const [type, setType] = useState(1);
   const [images, setImages] = useState({
@@ -144,7 +144,7 @@ const Number = () => {
               onClick={() => updateNumberFont(1)}
               whileHover={{ scale: 1.02 }}
             >
-              F1 2345567789
+              F1 0123456789
             </motion.div>
             <motion.div
               className={`${styles.fontItem2} ${
@@ -153,7 +153,7 @@ const Number = () => {
               onClick={() => updateNumberFont(2)}
               whileHover={{ scale: 1.02 }}
             >
-              F1 2345567789
+              F2 0123456789
             </motion.div>
             <motion.div
               className={`${styles.fontItem3} ${
@@ -162,7 +162,61 @@ const Number = () => {
               onClick={() => updateNumberFont(3)}
               whileHover={{ scale: 1.02 }}
             >
-              F1 2345567789
+              F3 0123456789
+            </motion.div>
+            <motion.div
+              className={`${styles.fontItem4} ${
+                numberFont === 4 ? styles.selected : ""
+              }`}
+              onClick={() => updateNumberFont(4)}
+              whileHover={{ scale: 1.02 }}
+            >
+              F4 0123456789
+            </motion.div>{" "}
+            <motion.div
+              className={`${styles.fontItem5} ${
+                numberFont === 5 ? styles.selected : ""
+              }`}
+              onClick={() => updateNumberFont(5)}
+              whileHover={{ scale: 1.02 }}
+            >
+              F5 0123456789
+            </motion.div>{" "}
+            <motion.div
+              className={`${styles.fontItem6} ${
+                numberFont === 6 ? styles.selected : ""
+              }`}
+              onClick={() => updateNumberFont(6)}
+              whileHover={{ scale: 1.02 }}
+            >
+              F6 0123456789
+            </motion.div>{" "}
+            <motion.div
+              className={`${styles.fontItem7} ${
+                numberFont === 7 ? styles.selected : ""
+              }`}
+              onClick={() => updateNumberFont(7)}
+              whileHover={{ scale: 1.02 }}
+            >
+              F7 0123456789
+            </motion.div>{" "}
+            <motion.div
+              className={`${styles.fontItem8} ${
+                numberFont === 8 ? styles.selected : ""
+              }`}
+              onClick={() => updateNumberFont(8)}
+              whileHover={{ scale: 1.02 }}
+            >
+              F8 0123456789
+            </motion.div>
+            <motion.div
+              className={`${styles.fontItem9} ${
+                numberFont === 9 ? styles.selected : ""
+              }`}
+              onClick={() => updateNumberFont(9)}
+              whileHover={{ scale: 1.02 }}
+            >
+              F9 0123456789
             </motion.div>{" "}
           </div>
         </AccordionDetails>
