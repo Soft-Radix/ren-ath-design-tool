@@ -10,6 +10,7 @@ import { CrossIcon, TickIcon } from "../../../assets/svg/icons";
 import ThemeButton from "../../../components/common/ThemeButton";
 import { useProductStore } from "../../../store";
 import styles from "./properties.module.scss";
+import { colorList } from "../../../components/data/colors";
 
 const Name = () => {
   const {
@@ -24,17 +25,11 @@ const Name = () => {
     updateNameColor,
     nameOutline,
     updateNameOutline,
+    nameGradientColor,
+    isNameGradientColor,
+    updateNameGradient,
+    updateIsNameGradient,
   } = useProductStore((state) => state);
-
-  const colorList = [
-    "#D14E24",
-    "#EF7E15",
-    "#E9ED23",
-    "#AED124",
-    "#D1AB24",
-    "#85D124",
-    "#24D169",
-  ];
 
   const [type, setType] = useState(1);
   const [images, setImages] = useState({
@@ -52,7 +47,7 @@ const Name = () => {
             `../../../assets/images/products/placement/${id}/front.png`
           )
         ).default;
-        console.log("🚀 ~ loadImages ~ front:", front);
+        //console.log("🚀 ~ loadImages ~ front:", front);
         const back = (
           await import(
             `../../../assets/images/products/placement/${id}/back.png`
@@ -71,7 +66,7 @@ const Name = () => {
         const images = { front, back, chest_left, chest_right };
         setImages({ ...images });
       } catch (error) {
-        console.error("Error loading images:", error);
+        //console.error("Error loading images:", error);
       }
     };
     loadImages();
@@ -248,25 +243,52 @@ const Name = () => {
             <div className={styles.buttonWrap}>
               <ThemeButton
                 onClick={() => setType(1)}
-                variant={type === 2 ? "outlined" : "contained"}
+                variant={type !== 1 ? "outlined" : "contained"}
               >
                 Color
               </ThemeButton>
               <ThemeButton
+                onClick={() => setType(3)}
+                variant={type !== 3 ? "outlined" : "contained"}
+              >
+                Gradient
+              </ThemeButton>
+              <ThemeButton
                 onClick={() => setType(2)}
-                variant={type === 1 ? "outlined" : "contained"}
+                variant={type !== 2 ? "outlined" : "contained"}
               >
                 Outline
               </ThemeButton>
+              <div
+                className={styles.gradientViewer}
+                style={{
+                  background: isNameGradientColor
+                    ? `linear-gradient(0deg, ${nameColor || "transparent"}, ${
+                        nameGradientColor || "transparent"
+                      })`
+                    : nameColor,
+                  height: 35,
+                  width: 50,
+                }}
+                variant={"outlined"}
+              ></div>
             </div>
 
             <div className={styles.colorPalletWrap}>
               <div
                 className={styles.colorViewer}
                 style={{ backgroundColor: "transparent" }}
-                onClick={() =>
-                  type === 1 ? updateNameColor("") : updateNameOutline("")
-                }
+                onClick={() => {
+                  type === 1
+                    ? updateNameColor("")
+                    : type === 3
+                    ? updateNameGradient("")
+                    : updateNameOutline("");
+
+                  if (type === 3) {
+                    updateIsNameGradient(false);
+                  }
+                }}
               >
                 <CrossIcon />
               </div>
@@ -275,14 +297,21 @@ const Name = () => {
                   key={index}
                   className={styles.colorViewer}
                   style={{ backgroundColor: itemColor }}
-                  onClick={() =>
+                  onClick={() => {
+                    if (type === 3) {
+                      updateIsNameGradient(true);
+                    }
                     type === 1
                       ? updateNameColor(itemColor)
-                      : updateNameOutline(itemColor)
-                  }
+                      : type === 3
+                      ? updateNameGradient(itemColor)
+                      : updateNameOutline(itemColor);
+                  }}
                 >
                   {type === 1
                     ? nameColor === itemColor && <TickIcon />
+                    : type === 3
+                    ? nameGradientColor === itemColor && <TickIcon />
                     : nameOutline === itemColor && <TickIcon />}
                 </div>
               ))}

@@ -22,6 +22,10 @@ const Number = () => {
     numberOutline,
     updateNumberOutline,
     id,
+    numberGradientColor,
+    updateNumberGradient,
+    updateIsNumberGradient,
+    isNumberGradientColor,
   } = useProductStore((state) => state);
 
   // const colorList = [
@@ -230,25 +234,54 @@ const Number = () => {
             <div className={styles.buttonWrap}>
               <ThemeButton
                 onClick={() => setType(1)}
-                variant={type === 2 ? "outlined" : "contained"}
+                variant={type !== 1 ? "outlined" : "contained"}
               >
                 Color
               </ThemeButton>
               <ThemeButton
+                onClick={() => setType(3)}
+                variant={type !== 3 ? "outlined" : "contained"}
+              >
+                Gradient
+              </ThemeButton>
+              <ThemeButton
                 onClick={() => setType(2)}
-                variant={type === 1 ? "outlined" : "contained"}
+                variant={type !== 2 ? "outlined" : "contained"}
               >
                 Outline
               </ThemeButton>
+              {isNumberGradientColor && (
+                <div
+                  className={styles.gradientViewer}
+                  style={{
+                    background: isNumberGradientColor
+                      ? `linear-gradient(0deg, ${
+                          numberColor || "transparent"
+                        }, ${numberGradientColor || "transparent"})`
+                      : numberColor,
+                    height: 35,
+                    width: 50,
+                  }}
+                  variant={"outlined"}
+                ></div>
+              )}
             </div>
 
             <div className={styles.colorPalletWrap}>
               <div
                 className={styles.colorViewer}
                 style={{ backgroundColor: "transparent" }}
-                onClick={() =>
-                  type === 1 ? updateNumberColor("") : updateNumberOutline("")
-                }
+                onClick={() => {
+                  type === 1
+                    ? updateNumberColor("")
+                    : type === 3
+                    ? updateNumberGradient("")
+                    : updateNumberOutline("");
+
+                  if (type === 3) {
+                    updateIsNumberGradient(false);
+                  }
+                }}
               >
                 <CrossIcon />
               </div>
@@ -257,14 +290,21 @@ const Number = () => {
                   key={index}
                   className={styles.colorViewer}
                   style={{ backgroundColor: itemColor }}
-                  onClick={() =>
+                  onClick={() => {
+                    if (type === 3) {
+                      updateIsNumberGradient(true);
+                    }
                     type === 1
                       ? updateNumberColor(itemColor)
-                      : updateNumberOutline(itemColor)
-                  }
+                      : type === 3
+                      ? updateNumberGradient(itemColor)
+                      : updateNumberOutline(itemColor);
+                  }}
                 >
                   {type === 1
                     ? numberColor === itemColor && <TickIcon />
+                    : type === 3
+                    ? numberGradientColor === itemColor && <TickIcon />
                     : numberOutline === itemColor && <TickIcon />}
                 </div>
               ))}

@@ -20,8 +20,6 @@ export const useProductStore = create((set) => ({
   designCount: designCount,
   designType: 0,
   color: {},
-  gradientColor1: {},
-  gradientColor2: {},
   colorIndex: null,
   gradient: {},
   gradientScale: {},
@@ -37,12 +35,15 @@ export const useProductStore = create((set) => ({
   numberFont: 1,
   numberColor: "",
   numberOutline: "",
-
+  numberGradientColor: "",
+  isNumberGradientColor: false,
   modelName: "",
   namePosition: 1,
   nameFont: 1,
   nameColor: "",
   nameOutline: "",
+  nameGradientColor: "",
+  isNameGradientColor: false,
 
   logo: null,
   logoPosition: 1,
@@ -143,6 +144,24 @@ export const useProductStore = create((set) => ({
     set(() => ({
       numberColor: color,
     })),
+  updateNumberGradient: (color) =>
+    set(() => ({
+      numberGradientColor: color,
+    })),
+  updateIsNumberGradient: (isValue) =>
+    set(() => ({
+      isNumberGradientColor: isValue,
+    })),
+
+  updateNameGradient: (color) =>
+    set(() => ({
+      nameGradientColor: color,
+    })),
+  updateIsNameGradient: (isValue) =>
+    set(() => ({
+      isNameGradientColor: isValue,
+    })),
+
   updateNumberOutline: (color) =>
     set(() => ({
       numberOutline: color,

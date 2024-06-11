@@ -51,12 +51,15 @@ export function Model(props) {
     numberFont,
     numberColor,
     numberOutline,
-
+    numberGradientColor,
     modelName,
     namePosition,
     nameFont,
     nameColor,
     nameOutline,
+    isNumberGradientColor,
+    nameGradientColor,
+    isNameGradientColor,
 
     logo,
     logoPosition,
@@ -520,13 +523,14 @@ export function Model(props) {
                     {hovered && (
                       <color attach="background" args={["#279954"]} />
                     )}
-                    <Text
+                    <GradientText
+                      color1={nameColor}
+                      color2={nameGradientColor}
+                      outlineColor={nameOutline}
+                      isNumberGradientColor={isNameGradientColor}
                       rotation={[320, 360, -0.2]}
                       fontSize={0.5}
                       position={[-0.2, 0.8, -0.9]}
-                      color={nameColor || "black"}
-                      outlineColor={nameOutline || "black"}
-                      outlineWidth={nameOutline ? 0.05 : 0}
                       font={
                         nameFont === 1
                           ? font1
@@ -550,7 +554,7 @@ export function Model(props) {
                       }
                     >
                       {modelName}
-                    </Text>
+                    </GradientText>
                   </RenderTexture>
                 </meshStandardMaterial>
               </Decal>
@@ -595,13 +599,14 @@ export function Model(props) {
                     {hovered && (
                       <color attach="background" args={["#279954"]} />
                     )}
-                    <Text
+                    <GradientText
+                      color1={nameColor}
+                      color2={nameGradientColor}
+                      outlineColor={nameOutline}
+                      isNumberGradientColor={isNameGradientColor}
                       rotation={[320, 360, 0]}
                       fontSize={0.5}
                       position={[0, 0, -0.9]}
-                      color={nameColor || "black"}
-                      outlineColor={nameOutline || "black"}
-                      outlineWidth={nameOutline ? 0.05 : 0}
                       font={
                         nameFont === 1
                           ? font1
@@ -625,7 +630,7 @@ export function Model(props) {
                       }
                     >
                       {modelName}
-                    </Text>
+                    </GradientText>
                   </RenderTexture>
                 </meshStandardMaterial>
               </Decal>
@@ -663,11 +668,10 @@ export function Model(props) {
                     <GradientText
                       rotation={[0, 0, 0]}
                       fontSize={1.2}
-                      color={numberColor || "black"}
-                      outlineColor={numberOutline || "black"}
-                      outlineWidth={numberOutline ? 0.05 : 0}
                       color1={numberColor}
-                      color2={numberOutline}
+                      color2={numberGradientColor}
+                      outlineColor={numberOutline}
+                      isNumberGradientColor={isNumberGradientColor}
                       font={
                         numberFont === 1
                           ? font1
@@ -723,12 +727,13 @@ export function Model(props) {
                       <color attach="background" args={["#279954"]} />
                     )}
 
-                    <Text
+                    <GradientText
                       rotation={[0, 0, 0]}
                       fontSize={0.5}
-                      color={nameColor || "black"}
-                      outlineColor={nameOutline || "black"}
-                      outlineWidth={nameOutline ? 0.05 : 0}
+                      color1={nameColor}
+                      color2={nameGradientColor}
+                      outlineColor={nameOutline}
+                      isNumberGradientColor={isNameGradientColor}
                       font={
                         nameFont === 1
                           ? font1
@@ -752,7 +757,7 @@ export function Model(props) {
                       }
                     >
                       {modelName}
-                    </Text>
+                    </GradientText>
                   </RenderTexture>
                 </meshStandardMaterial>
               </Decal>
@@ -815,14 +820,15 @@ export function Model(props) {
                       makeDefault
                       manual
                       aspect={2}
-                      position={[0, 0.2, 2]}
+                      position={[0, 0.1, 2.3]}
                     />
-                    <Text
+                    <GradientText
                       rotation={[0, 0, 0]}
-                      fontSize={2}
-                      color={numberColor || "black"}
-                      outlineColor={numberOutline || "black"}
-                      outlineWidth={numberOutline ? 0.05 : 0}
+                      fontSize={1.8}
+                      color1={numberColor}
+                      color2={numberGradientColor}
+                      outlineColor={numberOutline}
+                      isNumberGradientColor={isNumberGradientColor}
                       font={
                         numberFont === 1
                           ? font1
@@ -846,7 +852,7 @@ export function Model(props) {
                       }
                     >
                       {number}
-                    </Text>
+                    </GradientText>
                   </RenderTexture>
                 </meshStandardMaterial>
               </Decal>
@@ -878,12 +884,13 @@ export function Model(props) {
                       <color attach="background" args={["#279954"]} />
                     )}
 
-                    <Text
+                    <GradientText
+                      color1={nameColor}
+                      color2={nameGradientColor}
+                      outlineColor={nameOutline}
+                      isNumberGradientColor={isNameGradientColor}
                       rotation={[0, 0, 0]}
                       fontSize={0.5}
-                      color={nameColor || "black"}
-                      outlineColor={nameOutline || "black"}
-                      outlineWidth={nameOutline ? 0.05 : 0}
                       font={
                         nameFont === 1
                           ? font1
@@ -907,7 +914,7 @@ export function Model(props) {
                       }
                     >
                       {modelName}
-                    </Text>
+                    </GradientText>
                   </RenderTexture>
                 </meshStandardMaterial>
               </Decal>
