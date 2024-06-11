@@ -23,7 +23,6 @@ const Number = () => {
     updateNumberOutline,
     id,
   } = useProductStore((state) => state);
-  console.log("🚀 ~ Number ~ id:", id);
 
   // const colorList = [
   //   "#D14E24",

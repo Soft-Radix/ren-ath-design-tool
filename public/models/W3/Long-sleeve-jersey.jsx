@@ -25,6 +25,7 @@ import font1 from "../../../src/assets/fonts/Roboto.ttf";
 import font9 from "../../../src/assets/fonts/SawarabiGothic-Regular.ttf";
 import font4 from "../../../src/assets/fonts/TiltNeon.ttf";
 import { useProductStore } from "../../../src/store";
+import GradientText from "../../../src/components/common/gradientText/GradientText";
 const hexColor = "#D2D1D3";
 
 // Extract RGB components from the hexadecimal color
@@ -247,7 +248,6 @@ export function Model(props) {
           side: DoubleSide,
         });
       };
-      
 
       modelRef.current.children.forEach((child, index) => {
         if (child.isMesh) {
@@ -283,7 +283,6 @@ export function Model(props) {
     gradientScale,
   ]);
 
-  
   // NUMBER STATES
   const [number1Position, setNumber1Position] = useState([0, 0, 2]);
   const [number1Scale, setNumber1Scale] = useState([4.5, 2.5, 2]);
@@ -435,7 +434,7 @@ export function Model(props) {
   }, []);
 
   useEffect(() => {
-    if (!isDesign && layer !=null) {
+    if (!isDesign && layer != null) {
       secondaryTexture.wrapS = secondaryTexture.wrapT = Three.RepeatWrapping;
       secondaryTexture.repeat.set(1, 1);
       secondaryTexture.rotation = 0;
@@ -661,12 +660,14 @@ export function Model(props) {
                       position={[0, 0.1, 2.5]}
                     />
 
-                    <Text
+                    <GradientText
                       rotation={[0, 0, 0]}
                       fontSize={1.2}
                       color={numberColor || "black"}
                       outlineColor={numberOutline || "black"}
                       outlineWidth={numberOutline ? 0.05 : 0}
+                      color1={numberColor}
+                      color2={numberOutline}
                       font={
                         numberFont === 1
                           ? font1
@@ -690,7 +691,7 @@ export function Model(props) {
                       }
                     >
                       {number}
-                    </Text>
+                    </GradientText>
                   </RenderTexture>
                 </meshStandardMaterial>
               </Decal>
