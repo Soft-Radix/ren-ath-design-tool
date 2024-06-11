@@ -66,7 +66,7 @@ export function Model(props) {
     layer,
     isDesign,
   } = useProductStore((state) => state);
-  console.log("🚀 ~ Model ~ isGradient:", isGradient);
+  // console.log("🚀 ~ Model ~ isGradient:", isGradient);
 
   // SET CAMERA POSITION
   const camera = useThree((state) => state.camera);
@@ -76,7 +76,7 @@ export function Model(props) {
 
   // State for primary texture URL (for dynamic texture changes)
   const [designTexture, setDesignTexture] = useState(
-    "./model-designs/W3/design3.png"
+    "./model-designs/W3/design6.png"
   );
   const [secondaryTextureUrl, setSecondaryTextureUrl] = useState(
     "./textures/pattern2.png"
@@ -160,72 +160,20 @@ export function Model(props) {
   }, [secondaryTextureUrl, layer]);
 
   useEffect(() => {
-    if (modelRef.current && isDesign) {
+    if (modelRef.current) {
       // Set up primary texture
       primaryTexture.wrapS = primaryTexture.wrapT = Three.RepeatWrapping;
       primaryTexture.repeat.set(1, 1);
       primaryTexture.rotation = 0;
       primaryTexture.encoding = Three.sRGBEncoding;
-
-      // Create shader material
-      // const createMaterial = (
-      //   secondaryTexture,
-      //   secondaryColor,
-      //   isSelectedLayer
-      // ) => {
-      //   //console.log("secondaryColor>>>>>", secondaryColor);
-      //   return new ShaderMaterial({
-      //     uniforms: {
-      //       primaryTexture: { value: primaryTexture },
-      //       secondaryTexture: { value: secondaryTexture },
-      //       secondaryColor: { value: secondaryColor },
-      //       hasSecondaryTexture: { value: !!secondaryTexture },
-      //       hasSecondaryColor: { value: !!secondaryColor },
-      //       defaultColor: { value: new Three.Color(threeJsColor) },
-      //       selectedLayer: { value: isSelectedLayer },
-      //     },
-      //     vertexShader: `
-      //       varying vec2 vUv;
-      //       void main() {
-      //         vUv = uv;
-      //         gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-      //       }
-      //     `,
-      //     fragmentShader: `
-      //       uniform sampler2D primaryTexture;
-      //       uniform sampler2D secondaryTexture;
-      //       uniform vec3 secondaryColor;
-      //       uniform bool hasSecondaryTexture;
-      //       uniform bool hasSecondaryColor;
-      //       uniform vec3 defaultColor;
-      //       uniform int selectedLayer;
-      //       varying vec2 vUv;
-
-      //       void main() {
-      //         vec4 primaryColor = texture2D(primaryTexture, vUv);
-      //         vec4 secondaryTexColor = hasSecondaryTexture ? texture2D(secondaryTexture, vUv) : vec4(1.0);
-      //         vec4 secondaryColColor = hasSecondaryColor ? vec4(secondaryColor, 1.0) : vec4(1.0);
-      //         vec4 secondaryColor = mix(secondaryTexColor, secondaryColColor, secondaryTexColor.a);
-      //         vec4 baseColor = vec4(defaultColor, 1.0);
-      //         if (selectedLayer == 1) {
-      //           // Mix secondary color only if it's the selected layer
-      //           gl_FragColor = mix(secondaryColor, primaryColor, primaryColor.a);
-      //         } else {
-      //           gl_FragColor = mix(baseColor, primaryColor, primaryColor.a);
-      //         }
-      //       }
-      //     `,
-      //     side: DoubleSide,
-      //   });
-      // };
-      // Create shader material
       const createMaterial = (
         secondaryTexture,
         secondaryColor,
         isSelectedLayer,
         gradientColor1,
         gradientColor2,
-        isGradient
+        isGradient,
+        gradientScale // Add gradient scale as a parameter
       ) => {
         return new ShaderMaterial({
           uniforms: {
@@ -239,51 +187,67 @@ export function Model(props) {
             gradientColor1: { value: gradientColor1 },
             gradientColor2: { value: gradientColor2 },
             isGradient: { value: isGradient },
+            gradientScale: { value: gradientScale ?? 0.8 }, // Pass gradient scale as a uniform
           },
           vertexShader: `
-      varying vec2 vUv;
-      void main() {
-        vUv = uv;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-      }
-    `,
+                varying vec2 vUv;
+                void main() {
+                    vUv = uv;
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                }
+            `,
           fragmentShader: `
-      uniform sampler2D primaryTexture;
-      uniform sampler2D secondaryTexture;
-      uniform vec3 secondaryColor;
-      uniform bool hasSecondaryTexture;
-      uniform bool hasSecondaryColor;
-      uniform vec3 defaultColor;
-      uniform int selectedLayer;
-      uniform vec3 gradientColor1;
-      uniform vec3 gradientColor2;
-      uniform bool isGradient;
-      varying vec2 vUv;
-
-      void main() {
-        vec4 primaryColor = texture2D(primaryTexture, vUv);
-        vec4 secondaryTexColor = hasSecondaryTexture ? texture2D(secondaryTexture, vUv) : vec4(1.0);
-        vec4 secondaryColColor = hasSecondaryColor ? vec4(secondaryColor, 1.0) : vec4(1.0);
-        vec4 secondaryColor = mix(secondaryTexColor, secondaryColColor, secondaryTexColor.a);
-        vec4 baseColor = vec4(defaultColor, 1.0);
-        if (selectedLayer == 1) {
-          if (isGradient) {
-            // Calculate gradient based on vUv.y (vertical position)
-            vec3 gradientColor = mix(gradientColor1, gradientColor2, vUv.y);
-            // Mix secondary color only if it's the selected layer
-            gl_FragColor = mix(vec4(gradientColor, 1.0), primaryColor, primaryColor.a);
-          } else {
-            // Mix secondary color only if it's the selected layer
-            gl_FragColor = mix(secondaryColor, primaryColor, primaryColor.a);
-          }
-        } else {
-          gl_FragColor = mix(baseColor, primaryColor, primaryColor.a);
-        }
-      }
-    `,
+                uniform sampler2D primaryTexture;
+                uniform sampler2D secondaryTexture;
+                uniform vec3 secondaryColor;
+                uniform bool hasSecondaryTexture;
+                uniform bool hasSecondaryColor;
+                uniform vec3 defaultColor;
+                uniform int selectedLayer;
+                uniform vec3 gradientColor1;
+                uniform vec3 gradientColor2;
+                uniform bool isGradient;
+                uniform float gradientScale; // Declare gradient scale uniform
+                varying vec2 vUv;
+      
+                void main() {
+                    vec4 primaryColor = texture2D(primaryTexture, vUv);
+                    vec4 secondaryTexColor = hasSecondaryTexture ? texture2D(secondaryTexture, vUv) : vec4(1.0);
+                    vec4 secondaryColColor = hasSecondaryColor ? vec4(secondaryColor, 1.0) : vec4(1.0);
+                    vec4 secondaryColor = mix(secondaryTexColor, secondaryColColor, secondaryTexColor.a);
+                    vec4 baseColor = vec4(defaultColor, 1.0);
+      
+                    if (selectedLayer == 1) {
+                        if (isGradient) {
+                            // Calculate gradient based on vUv.y (vertical position)
+                            float gradientPosition = smoothstep(0.15 * gradientScale, 0.75 * gradientScale, vUv.y);
+                            vec3 gradientColor = mix(gradientColor1, gradientColor2, gradientPosition);
+      
+                            if (hasSecondaryTexture) {
+                                // Blend gradient color where secondary texture is transparent
+                                vec4 gradientColorWithAlpha = vec4(gradientColor, 1.0);
+                                vec4 blendedColor = mix(secondaryColor, gradientColorWithAlpha, 1.0 - secondaryTexColor.a);
+      
+                                // Mix with primary color
+                                gl_FragColor = mix(blendedColor, primaryColor, primaryColor.a);
+                            } else {
+                                // Use gradient directly with primary texture if no secondary texture
+                                vec4 gradientColorWithAlpha = vec4(gradientColor, 1.0);
+                                gl_FragColor = mix(gradientColorWithAlpha, primaryColor, primaryColor.a);
+                            }
+                        } else {
+                            // Mix secondary color only if it's the selected layer
+                            gl_FragColor = mix(secondaryColor, primaryColor, primaryColor.a);
+                        }
+                    } else {
+                        gl_FragColor = mix(baseColor, primaryColor, primaryColor.a);
+                    }
+                }
+            `,
           side: DoubleSide,
         });
       };
+      
 
       modelRef.current.children.forEach((child, index) => {
         if (child.isMesh) {
@@ -300,7 +264,8 @@ export function Model(props) {
             true,
             gradientColor1,
             gradientColor2,
-            isGradient
+            isGradient,
+            gradientScale[index]
           );
           child.material = material;
         }
@@ -314,8 +279,11 @@ export function Model(props) {
     layerColor,
     layer,
     isDesign,
+    gradient,
+    gradientScale,
   ]);
 
+  
   // NUMBER STATES
   const [number1Position, setNumber1Position] = useState([0, 0, 2]);
   const [number1Scale, setNumber1Scale] = useState([4.5, 2.5, 2]);
@@ -467,7 +435,7 @@ export function Model(props) {
   }, []);
 
   useEffect(() => {
-    if (!isDesign && layer) {
+    if (!isDesign && layer !=null) {
       secondaryTexture.wrapS = secondaryTexture.wrapT = Three.RepeatWrapping;
       secondaryTexture.repeat.set(1, 1);
       secondaryTexture.rotation = 0;
@@ -485,17 +453,12 @@ export function Model(props) {
       // material.alphaTest = 0.5; // Adjust as needed to handle transparency cutoff
 
       // Set other properties
-      material.aoMap = secondaryTexture;
+      // material.aoMap = secondaryTexture;
       material.aoMapIntensity = 1;
       material.lightMapIntensity = 20;
       material.needsUpdate = true;
     }
   }, [secondaryTexture, layer, isDesign]);
-
-  console.log("gradient[2]", gradient[2]);
-  console.log("gradient[3]", gradient[3]);
-  console.log("color", color);
-  console.log("gradientScale", gradientScale);
 
   return (
     <>

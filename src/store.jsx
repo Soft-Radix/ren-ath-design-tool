@@ -20,6 +20,8 @@ export const useProductStore = create((set) => ({
   designCount: designCount,
   designType: 0,
   color: {},
+  gradientColor1: {},
+  gradientColor2: {},
   colorIndex: null,
   gradient: {},
   gradientScale: {},
@@ -91,6 +93,14 @@ export const useProductStore = create((set) => ({
   updateColor: (updatedColor) =>
     set((state) => ({
       color: { ...state.color, ...updatedColor },
+    })),
+  updateGradientColor1: (updateGradientColor1) =>
+    set((state) => ({
+      gradientColor1: { ...state.gradientColor1, ...updateGradientColor1 },
+    })),
+  updateGradientColor2: (updateGradientColor2) =>
+    set((state) => ({
+      gradientColor2: { ...state.gradientColor2, ...updateGradientColor2 },
     })),
   updateColorIndex: (newIndex) =>
     set(() => ({

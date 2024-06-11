@@ -94,7 +94,7 @@ const Gradient = () => {
                 <div
                   className={styles.gradientViewer}
                   style={{
-                    background: `linear-gradient(90deg, ${
+                    background: `linear-gradient(110deg, ${
                       color[childIndex] || "transparent"
                     }, ${gradient[childIndex] || "transparent"})`,
                   }}
