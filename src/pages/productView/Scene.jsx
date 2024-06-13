@@ -26,11 +26,7 @@ const Scene = () => {
 
   return (
     <Suspense fallback={<Loader />}>
-      <Canvas
-        style={{
-          backgroundColor: "#f0eeed",
-        }}
-      >
+      <Canvas>
         {productId === "W1" || productId === "M2" ? (
           <W1 />
         ) : productId === "W2" || productId === "M3" ? (

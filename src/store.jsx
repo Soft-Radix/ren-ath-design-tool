@@ -16,6 +16,8 @@ export const useProductStore = create((set) => ({
   selectedSidebarItem: 0.9,
   selectedSidebarItemName: "Design",
   ref: null,
+  orbitalRef: null,
+  modelRotation: 0,
 
   designCount: designCount,
   designType: 0,
@@ -52,6 +54,10 @@ export const useProductStore = create((set) => ({
   isDesign: false,
   modelLoading: true,
   isGradient: false,
+  handleModelRotation: (rotation) =>
+    set(() => ({
+      modelRotation: rotation,
+    })),
   setModelLoading: (loading) => set({ modelLoading: loading }),
   updateProduct: (updatedId, updatedName, updatedDesignCount) =>
     set(() => ({
@@ -84,6 +90,10 @@ export const useProductStore = create((set) => ({
   updateRef: (updatedRef) =>
     set(() => ({
       ref: updatedRef,
+    })),
+  updateOrbitalRef: (updatedOrbitalRef) =>
+    set(() => ({
+      orbitalRef: updatedOrbitalRef,
     })),
 
   updateDesignType: (type) =>

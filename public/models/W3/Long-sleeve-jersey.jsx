@@ -1,10 +1,8 @@
 import {
   Decal,
   GradientTexture,
-  OrbitControls,
   PerspectiveCamera,
   RenderTexture,
-  Text,
   useCursor,
   useGLTF,
   useTexture,
@@ -24,8 +22,8 @@ import font8 from "../../../src/assets/fonts/Oswald-VariableFont_wght.ttf";
 import font1 from "../../../src/assets/fonts/Roboto.ttf";
 import font9 from "../../../src/assets/fonts/SawarabiGothic-Regular.ttf";
 import font4 from "../../../src/assets/fonts/TiltNeon.ttf";
-import { useProductStore } from "../../../src/store";
 import GradientText from "../../../src/components/common/gradientText/GradientText";
+import { useProductStore } from "../../../src/store";
 const hexColor = "#D2D1D3";
 
 // Extract RGB components from the hexadecimal color
@@ -69,6 +67,8 @@ export function Model(props) {
     designType,
     layer,
     isDesign,
+    orbitalRef,
+    modelRotation,
   } = useProductStore((state) => state);
   // console.log("🚀 ~ Model ~ isGradient:", isGradient);
 
@@ -192,63 +192,94 @@ export function Model(props) {
             gradientColor2: { value: gradientColor2 },
             isGradient: { value: isGradient },
             gradientScale: { value: gradientScale ?? 0.8 }, // Pass gradient scale as a uniform
+            // Add lighting uniforms
+            ambientLightColor: { value: new Three.Color(0xF3F3F3) },
+            directionalLightColor: { value: new Three.Color(0xF3F3F3) },
+            directionalLightDirection: {
+              value: new Three.Vector3(1, -1, 0.5),
+            },
           },
           vertexShader: `
-                varying vec2 vUv;
-                void main() {
-                    vUv = uv;
-                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-                }
-            `,
+            varying vec2 vUv;
+            varying vec3 vNormal;
+            varying vec3 vViewPosition;
+      
+            void main() {
+              vUv = uv;
+              vNormal = normalize(normalMatrix * normal);
+              vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+              vViewPosition = -mvPosition.xyz;
+              gl_Position = projectionMatrix * mvPosition;
+            }
+          `,
           fragmentShader: `
-                uniform sampler2D primaryTexture;
-                uniform sampler2D secondaryTexture;
-                uniform vec3 secondaryColor;
-                uniform bool hasSecondaryTexture;
-                uniform bool hasSecondaryColor;
-                uniform vec3 defaultColor;
-                uniform int selectedLayer;
-                uniform vec3 gradientColor1;
-                uniform vec3 gradientColor2;
-                uniform bool isGradient;
-                uniform float gradientScale; // Declare gradient scale uniform
-                varying vec2 vUv;
+            uniform sampler2D primaryTexture;
+            uniform sampler2D secondaryTexture;
+            uniform vec3 secondaryColor;
+            uniform bool hasSecondaryTexture;
+            uniform bool hasSecondaryColor;
+            uniform vec3 defaultColor;
+            uniform int selectedLayer;
+            uniform vec3 gradientColor1;
+            uniform vec3 gradientColor2;
+            uniform bool isGradient;
+            uniform float gradientScale; // Declare gradient scale uniform
+            uniform vec3 ambientLightColor;
+            uniform vec3 directionalLightColor;
+            uniform vec3 directionalLightDirection;
       
-                void main() {
-                    vec4 primaryColor = texture2D(primaryTexture, vUv);
-                    vec4 secondaryTexColor = hasSecondaryTexture ? texture2D(secondaryTexture, vUv) : vec4(1.0);
-                    vec4 secondaryColColor = hasSecondaryColor ? vec4(secondaryColor, 1.0) : vec4(1.0);
-                    vec4 secondaryColor = mix(secondaryTexColor, secondaryColColor, secondaryTexColor.a);
-                    vec4 baseColor = vec4(defaultColor, 1.0);
+            varying vec2 vUv;
+            varying vec3 vNormal;
+            varying vec3 vViewPosition;
       
-                    if (selectedLayer == 1) {
-                        if (isGradient) {
-                            // Calculate gradient based on vUv.y (vertical position)
-                            float gradientPosition = smoothstep(0.15 * gradientScale, 0.75 * gradientScale, vUv.y);
-                            vec3 gradientColor = mix(gradientColor1, gradientColor2, gradientPosition);
+            void main() {
+              vec4 primaryColor = texture2D(primaryTexture, vUv);
+              vec4 secondaryTexColor = hasSecondaryTexture ? texture2D(secondaryTexture, vUv) : vec4(1.0);
+              vec4 secondaryColColor = hasSecondaryColor ? vec4(secondaryColor, 1.0) : vec4(1.0);
+              vec4 secondaryColor = mix(secondaryTexColor, secondaryColColor, secondaryTexColor.a);
+              vec4 baseColor = vec4(defaultColor, 1.0);
       
-                            if (hasSecondaryTexture) {
-                                // Blend gradient color where secondary texture is transparent
-                                vec4 gradientColorWithAlpha = vec4(gradientColor, 1.0);
-                                vec4 blendedColor = mix(secondaryColor, gradientColorWithAlpha, 1.0 - secondaryTexColor.a);
+              // Lighting calculations
+              vec3 normal = normalize(vNormal);
+              vec3 lightDir = normalize(directionalLightDirection);
+              float diff = max(dot(normal, lightDir), 0.0);
+              vec3 diffuse = diff * directionalLightColor;
+              vec3 ambient = ambientLightColor;
       
-                                // Mix with primary color
-                                gl_FragColor = mix(blendedColor, primaryColor, primaryColor.a);
-                            } else {
-                                // Use gradient directly with primary texture if no secondary texture
-                                vec4 gradientColorWithAlpha = vec4(gradientColor, 1.0);
-                                gl_FragColor = mix(gradientColorWithAlpha, primaryColor, primaryColor.a);
-                            }
-                        } else {
-                            // Mix secondary color only if it's the selected layer
-                            gl_FragColor = mix(secondaryColor, primaryColor, primaryColor.a);
-                        }
-                    } else {
-                        gl_FragColor = mix(baseColor, primaryColor, primaryColor.a);
-                    }
+              vec3 lighting = ambient + diffuse;
+      
+              vec4 finalColor = baseColor;
+      
+              if (selectedLayer == 1) {
+                if (isGradient) {
+                  // Calculate gradient based on vUv.y (vertical position)
+                  float gradientPosition = smoothstep(0.15 * gradientScale, 0.75 * gradientScale, vUv.y);
+                  vec3 gradientColor = mix(gradientColor1, gradientColor2, gradientPosition);
+      
+                  if (hasSecondaryTexture) {
+                    // Blend gradient color where secondary texture is transparent
+                    vec4 gradientColorWithAlpha = vec4(gradientColor, 1.0);
+                    vec4 blendedColor = mix(secondaryColor, gradientColorWithAlpha, 1.0 - secondaryTexColor.a);
+      
+                    // Mix with primary color
+                    finalColor = vec4(mix(blendedColor.rgb, primaryColor.rgb, primaryColor.a), 1.0);
+                  } else {
+                    // Use gradient directly with primary texture if no secondary texture
+                    vec4 gradientColorWithAlpha = vec4(gradientColor, 1.0);
+                    finalColor = vec4(mix(gradientColorWithAlpha.rgb, primaryColor.rgb, primaryColor.a), 1.0);
+                  }
+                } else {
+                  // Mix secondary color only if it's the selected layer
+                  finalColor = vec4(mix(secondaryColor.rgb, primaryColor.rgb, primaryColor.a), 1.0);
                 }
-            `,
-          side: DoubleSide,
+              } else {
+                finalColor = vec4(mix(baseColor.rgb, primaryColor.rgb, primaryColor.a), 1.0);
+              }
+      
+              gl_FragColor = vec4(finalColor.rgb * lighting, finalColor.a);
+            }
+          `,
+          side: Three.DoubleSide,
         });
       };
 
@@ -256,9 +287,9 @@ export function Model(props) {
         if (child.isMesh) {
           const isSelectedLayer = index === colorIndex;
           const secondaryTexture = secondaryTextures[index] || null;
-          const secondaryColor =
-            new Three.Color(secondaryColors[index]) ||
-            new Three.Color(threeJsColor);
+          const secondaryColor = new Three.Color(
+            secondaryColors[index] ?? threeJsColor
+          );
           const gradientColor1 = new Three.Color(color[index]);
           const gradientColor2 = new Three.Color(gradient[index]);
           const material = createMaterial(
@@ -360,8 +391,8 @@ export function Model(props) {
   // HANDLE TEXT DRAG ON FIRST LAYER
   const bind = useDrag(
     ({ offset: [x, y], down }) => {
-      orbitRef.current.enabled = !down;
-      orbitRef.current.cursor = "pointer";
+      orbitalRef.current.enabled = !down;
+      orbitalRef.current.cursor = "pointer";
 
       const xPos = namePosition === 1 ? x * 0.02 : -(x * 0.02);
       const yPos = -(y * 0.03);
@@ -385,8 +416,8 @@ export function Model(props) {
   // HANDLE TEXT DRAG ON FIRST LAYER
   const logoBind = useDrag(
     ({ offset: [x, y], down }) => {
-      orbitRef.current.enabled = !down;
-      orbitRef.current.cursor = "pointer";
+      orbitalRef.current.enabled = !down;
+      orbitalRef.current.cursor = "pointer";
 
       const xPos = logoPosition === 1 ? x * 0.02 : -(x * 0.02);
       const yPos = -(y * 0.03);
@@ -430,7 +461,6 @@ export function Model(props) {
       modelRef.current.children.forEach((element) => {
         element.material.side = DoubleSide;
       });
-
       // Update reference in the store
       updateRef(modelRef);
     }
@@ -462,25 +492,29 @@ export function Model(props) {
     }
   }, [secondaryTexture, layer, isDesign]);
 
+  useEffect(() => {
+    setNumber1Rotation(modelRotation);
+  }, [modelRotation]);
   return (
     <>
       {/* Ambient light and orbit controls */}
       <ambientLight intensity={6} />
-      <OrbitControls
+      {/* <OrbitControls
         ref={orbitRef}
         minPolarAngle={Math.PI * 0.35}
         maxPolarAngle={Math.PI * 0.55}
-      />
+      /> */}
 
       {/* Model group */}
       <group {...props} dispose={null}>
         <motion.group
-          scale={1}
+          scale={1.2}
           ref={modelRef}
           animate={{
             rotateY: degToRad(number1Rotation),
-            transition: { duration: 0.5 },
+            transition: { duration: 0.7, ease: "easeOut" },
           }}
+          transition={{ ease: "easeIn", duration: 0.7 }}
         >
           {/* Individual meshes of the model */}
           <mesh
