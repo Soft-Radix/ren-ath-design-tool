@@ -34,8 +34,8 @@ const Design = () => {
           {loading && (
             <Skeleton
               variant="rounded"
-              width={130}
-              height={110}
+              width={180}
+              height={200}
               animation="wave"
             />
           )}

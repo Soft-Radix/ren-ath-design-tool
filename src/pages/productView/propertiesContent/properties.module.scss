@@ -54,27 +54,37 @@
 .designWrap {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
+  overflow: auto;
+  max-height: 82vh;
   padding: 10px;
+  scrollbar-width: thin;
+  scroll-behavior: smooth;
+  scrollbar-color: #888 #f1f1f1;
+
   .imgWrap {
     cursor: pointer;
     border-radius: 4px;
-    width: 120px;
-    height: 120px;
+    width: 185px;
+    height: 200px;
     display: flex;
     align-items: center;
     justify-content: center;
     border: 1px solid rgba(118, 143, 153, 0.2);
     img {
-      max-height: 90%;
-      max-width: 90%;
+      max-height: 100%;
+      max-width: 100%;
+      object-fit: cover;
     }
     &.selected {
       border: 1px solid $primary;
     }
   }
 }
-
+.designWrap::-webkit-scrollbar-thumb:vertical {
+  background-color: #888;
+  border-radius: 10px; /* Change the radius value to your preference */
+}
 // Color component styles
 .colorWrap {
   .mainColorViewer {
@@ -207,6 +217,7 @@
   .fontColorWrap {
     .buttonWrap {
       display: flex;
+      flex-wrap: wrap;
       gap: 15px;
       :global {
         .btn {

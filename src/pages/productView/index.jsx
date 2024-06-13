@@ -1,5 +1,9 @@
-import { Canvas } from "@react-three/fiber";
-import { Suspense } from "react";
+import { ThreeSixty, ZoomIn, ZoomOut } from "@mui/icons-material";
+import { Button, ButtonGroup } from "@mui/material";
+
+import { OrbitControls } from "@react-three/drei";
+import { Canvas, useThree } from "@react-three/fiber";
+import { Suspense, useEffect, useRef } from "react";
 import { Model as M1 } from "../../../public/models/M1/Flex-custom-board-shorts";
 import { Model as M6 } from "../../../public/models/M6/Sleeveless-jersey";
 import { Model as W1 } from "../../../public/models/W1/Long-sleeve-hitting-tees-with-hood";
@@ -11,6 +15,7 @@ import { Model as W7 } from "../../../public/models/W7/Sleeveless-jersey-without
 import { Model as W8 } from "../../../public/models/W8/Sleeve-only";
 import loaderGif from "../../assets/gif/loader.gif";
 import { useProductStore } from "../../store";
+import { handleZoomIn, handleZoomOut } from "../../utils/funtions";
 import Header from "./header";
 import styles from "./productView.module.scss";
 import Color from "./propertiesContent/Color";
@@ -22,11 +27,14 @@ import Number from "./propertiesContent/Number";
 import Pattern from "./propertiesContent/Pattern";
 import Sidebar from "./sidebar";
 const ProductView = () => {
+  const orbitalRef = useRef();
+
   const { selectedSidebarItem, selectedSidebarItemName } = useProductStore(
     (state) => state
   );
-  const productId = useProductStore((state) => state.id);
-  
+  const { id, updateOrbitalRef, modelRotation, handleModelRotation } =
+    useProductStore((state) => state);
+
   const Loader = () => {
     return (
       <div className="modelLoader">
@@ -34,6 +42,10 @@ const ProductView = () => {
       </div>
     );
   };
+
+  useEffect(() => {
+    updateOrbitalRef(orbitalRef);
+  }, []);
 
   return (
     <div className={styles.loadingScreen}>
@@ -69,38 +81,67 @@ const ProductView = () => {
                     backgroundColor: "#f0eeed",
                   }}
                 >
-                  {productId === "W1" || productId === "M2" ? (
+                  {id === "W1" || id === "M2" ? (
                     <W1 />
-                  ) : productId === "W2" || productId === "M3" ? (
+                  ) : id === "W2" || id === "M3" ? (
                     <W2 />
-                  ) : productId === "W4" || productId === "M4" ? (
+                  ) : id === "W4" || id === "M4" ? (
                     <W4 />
-                  ) : productId === "W6" ? (
+                  ) : id === "W6" ? (
                     <W6 />
-                  ) : productId === "W7" ? (
+                  ) : id === "W7" ? (
                     <W7 />
-                  ) : productId === "W8" ? (
+                  ) : id === "W8" ? (
                     <W8 />
-                  ) : productId === "M1" ? (
+                  ) : id === "M1" ? (
                     <M1 />
-                  ) : productId === "M6" ? (
+                  ) : id === "M6" ? (
                     <M6 />
-                  ) : productId === "W3" ? (
+                  ) : id === "W3" ? (
                     <W3 />
                   ) : null}
-
                   {/* <Grid position={[0, -0.01, 0]} args={[15, 15]} />
         <axesHelper args={[8]} /> */}
-
-                  {/* <ambientLight intensity={6} />
-        <OrbitControls
-          minPolarAngle={Math.PI * 0.35}
-          maxPolarAngle={Math.PI * 0.55}
-          enableZoom={false}
-          /> */}
+                  <ambientLight intensity={6} />
+                  //{" "}
+                  <OrbitControls
+                    ref={orbitalRef}
+                    minPolarAngle={Math.PI * 0.35}
+                    maxPolarAngle={Math.PI * 0.55}
+                    enableZoom={true}
+                  />
                 </Canvas>
                 {/* <Scene /> */}
               </div>
+              <ButtonGroup
+                orientation="vertical"
+                id="modelControls"
+                aria-label="Vertical button group"
+              >
+                <Button
+                  key="rotate"
+                  className="btn1"
+                  onClick={() => {
+                    handleModelRotation(modelRotation + 20);
+                  }}
+                >
+                  <ThreeSixty fontSize="large" />
+                </Button>
+                <Button
+                  key="one"
+                  className="btn2"
+                  onClick={() => handleZoomIn( orbitalRef)}
+                >
+                  <ZoomIn fontSize="large" />
+                </Button>
+
+                <Button
+                  key="three"
+                  onClick={() => handleZoomOut( orbitalRef)}
+                >
+                  <ZoomOut fontSize="large" />
+                </Button>
+              </ButtonGroup>
             </div>
           </div>
         </div>

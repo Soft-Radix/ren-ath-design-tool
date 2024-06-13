@@ -32,11 +32,6 @@ import pattern23 from "../../../../public/textures/pattern23.png";
 import pattern24 from "../../../../public/textures/pattern24.png";
 import pattern25 from "../../../../public/textures/pattern25.png";
 import pattern26 from "../../../../public/textures/pattern26.png";
-import pattern27 from "../../../../public/textures/pattern27.png";
-import pattern28 from "../../../../public/textures/pattern28.png";
-import pattern29 from "../../../../public/textures/pattern29.png";
-import pattern30 from "../../../../public/textures/pattern30.png";
-import pattern31 from "../../../../public/textures/pattern31.png";
 const Pattern = () => {
   const ref = useProductStore((state) => state.ref);
   const children = ref?.current?.children || [];
@@ -72,11 +67,6 @@ const Pattern = () => {
     pattern24,
     pattern25,
     pattern26,
-    pattern27,
-    pattern28,
-    pattern29,
-    pattern30,
-    pattern31
   ];
 
   // console.log("patterns", patterns);
