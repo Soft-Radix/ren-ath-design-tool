@@ -19,15 +19,18 @@ import { colorList } from "../../../components/data/colors";
 //   "#24D169",
 // ];
 
-
-
 const Color = () => {
   const ref = useProductStore((state) => state.ref);
   const children = ref?.current?.children || [];
 
-  const { color, updateColor, updateColorIndex, updateLayer } = useProductStore(
-    (state) => state
-  );
+  const {
+    color,
+    updateColor,
+    updateColorIndex,
+    updateLayer,
+    handleDesignColor,
+    designColor,
+  } = useProductStore((state) => state);
 
   return (
     <div className={styles.colorWrap}>
@@ -95,6 +98,40 @@ const Color = () => {
           </AccordionDetails>
         </Accordion>
       ))}
+      <Accordion>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <div
+            className={`${styles.colorViewer} ${styles.mainColorViewer}`}
+            style={{ backgroundColor: "" }}
+          />
+          Design Colors
+        </AccordionSummary>
+        <AccordionDetails>
+          <div className={styles.colorPalletWrap}>
+            {/* <div
+              className={styles.colorViewer}
+              style={{ backgroundColor: "transparent" }}
+              onClick={() => {
+                handleDesignColor(null);
+              }}
+            >
+              <CrossIcon />
+            </div> */}
+            {colorList.map((itemColor, index) => (
+              <div
+                key={index}
+                className={styles.colorViewer}
+                style={{ backgroundColor: itemColor }}
+                onClick={() => {
+                  handleDesignColor(itemColor);
+                }}
+              >
+                {designColor && designColor === itemColor && <TickIcon />}
+              </div>
+            ))}
+          </div>
+        </AccordionDetails>
+      </Accordion>
     </div>
   );
 };
