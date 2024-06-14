@@ -21,7 +21,7 @@ const Color = () => {
     handleDesignColor,
     designColor,
     patternColor,
-    handlePatternColor,
+    handlePatternColor,handleIsDesignGradientEnabled
   } = useProductStore((state) => state);
 
   return (
@@ -149,6 +149,7 @@ const Color = () => {
                 style={{ backgroundColor: itemColor }}
                 onClick={() => {
                   handleDesignColor(itemColor);
+                  handleIsDesignGradientEnabled(false);
                 }}
               >
                 {designColor && designColor === itemColor && <TickIcon />}

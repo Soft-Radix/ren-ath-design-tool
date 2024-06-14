@@ -25,10 +25,15 @@ const Gradient = () => {
     updateGradientAngle,
     updateColorIndex,
     updateIsGradient,
+    handleDesignGradient1,
+    handleDesignGradient2,
+    handleIsDesignGradientEnabled,
+    designGradient1,
+    designGradient2,
   } = useProductStore((state) => state);
 
   const children = ref?.current?.children || [];
-
+  const [designType, setDesignType] = useState(1);
   return (
     <div className={`${styles.colorWrap} ${styles.gradientWrap}`}>
       {children?.map((item, childIndex) => {
@@ -148,6 +153,80 @@ const Gradient = () => {
           </Accordion>
         );
       })}
+      <Accordion>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <div
+            className={`${styles.colorViewer} ${styles.mainColorViewer}`}
+            style={{
+              background: `linear-gradient(110deg, ${
+                designGradient1 || "transparent"
+              }, ${designGradient2 || "transparent"})`,
+            }}
+          />
+          Design Gradient
+        </AccordionSummary>
+        <AccordionDetails>
+          <div className={styles.buttonWrap}>
+            <ThemeButton
+              onClick={() => {
+                // updateGradientScale({ [childIndex]: 0.91 });
+                setDesignType(1);
+                //updateIsGradient(true);
+              }}
+              variant={designType === 2 ? "outlined" : "contained"}
+            >
+              Color
+            </ThemeButton>
+            <ThemeButton
+              onClick={() => {
+                // updateGradientScale({ [childIndex]: 0.91 });
+                setDesignType(2);
+                //updateIsGradient(true);
+              }}
+              variant={designType === 1 ? "outlined" : "contained"}
+            >
+              Gradient
+            </ThemeButton>
+            <div
+              className={styles.gradientViewer}
+              style={{
+                background: `linear-gradient(110deg, ${
+                  designGradient1 || "transparent"
+                }, ${designGradient2 || "transparent"})`,
+              }}
+            />
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 10,
+            }}
+          >
+            {colorList.map((itemColor, index) => (
+              <div
+                className={styles.colorViewer}
+                style={{ backgroundColor: itemColor }}
+                onClick={() => {
+                  if (designType === 1) {
+                    handleDesignGradient1(itemColor);
+                  } else {
+                    handleDesignGradient2(itemColor);
+                  }
+                  handleIsDesignGradientEnabled(true);
+                }}
+              >
+                {designType === 1 &&
+                  designGradient1 &&
+                  designGradient1 === itemColor && <TickIcon />}
+                {designType === 2 &&
+                  designGradient2 &&
+                  designGradient2 === itemColor && <TickIcon />}
+              </div>
+            ))}
+          </div>
+        </AccordionDetails>
+      </Accordion>
     </div>
   );
 };
