@@ -18,6 +18,7 @@ export const useProductStore = create((set) => ({
   ref: null,
   orbitalRef: null,
   modelRotation: 0,
+  designColor: null,
 
   designCount: designCount,
   designType: 0,
@@ -54,6 +55,10 @@ export const useProductStore = create((set) => ({
   isDesign: false,
   modelLoading: true,
   isGradient: false,
+  handleDesignColor: (color) =>
+    set(() => ({
+      designColor: color,
+    })),
   handleModelRotation: (rotation) =>
     set(() => ({
       modelRotation: rotation,
@@ -222,6 +227,11 @@ export const useProductStore = create((set) => ({
   updateIsGradient: (updatedIsGradient) => {
     set(() => ({
       isGradient: updatedIsGradient,
+    }));
+  },
+  updatePatternScale: (patternScale) => {
+    set(() => ({
+      patternScale: patternScale,
     }));
   },
 }));

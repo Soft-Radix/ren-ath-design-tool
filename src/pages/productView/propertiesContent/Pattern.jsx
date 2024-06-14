@@ -32,12 +32,17 @@ import pattern23 from "../../../../public/textures/pattern23.png";
 import pattern24 from "../../../../public/textures/pattern24.png";
 import pattern25 from "../../../../public/textures/pattern25.png";
 import pattern26 from "../../../../public/textures/pattern26.png";
+import Slider from "rc-slider";
 const Pattern = () => {
   const ref = useProductStore((state) => state.ref);
   const children = ref?.current?.children || [];
-  const { color, updatePattern, updateLayer } = useProductStore(
-    (state) => state
-  );
+  const {
+    color,
+    updatePattern,
+    updateLayer,
+    patternScale,
+    updatePatternScale,
+  } = useProductStore((state) => state);
   // state to store all imported images
 
   const patterns = [
@@ -82,6 +87,19 @@ const Pattern = () => {
             {item.name}
           </AccordionSummary>
           <AccordionDetails>
+            <div className={styles.sliderWrapper}>
+              <h6>Scale</h6>
+              <div className={styles.patternSlider}>
+                <Slider
+                  min={0}
+                  max={10}
+                  step={1}
+                  value={patternScale[childIndex]}
+                  onChange={(e) => updatePatternScale({ [childIndex]: e })}
+                />
+                <span>{patternScale[childIndex]}</span>
+              </div>
+            </div>
             <div className={styles.contentWrap}>
               {patterns?.map((pattern, index) => (
                 <div

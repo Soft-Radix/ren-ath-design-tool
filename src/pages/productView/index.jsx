@@ -106,7 +106,7 @@ const ProductView = () => {
                   //{" "}
                   <OrbitControls
                     ref={orbitalRef}
-                    minPolarAngle={Math.PI * 0.35}
+                    minPolarAngle={Math.PI * 0.05}
                     maxPolarAngle={Math.PI * 0.55}
                     enableZoom={true}
                   />
