@@ -9,16 +9,6 @@ import { Color as ParceColor } from "three";
 import styles from "./properties.module.scss";
 import { colorList } from "../../../components/data/colors";
 
-// const colorList = [
-//   "#D14E24",
-//   "#EF7E15",
-//   "#E9ED23",
-//   "#AED124",
-//   "#D1AB24",
-//   "#85D124",
-//   "#24D169",
-// ];
-
 const Color = () => {
   const ref = useProductStore((state) => state.ref);
   const children = ref?.current?.children || [];
@@ -30,6 +20,8 @@ const Color = () => {
     updateLayer,
     handleDesignColor,
     designColor,
+    patternColor,
+    handlePatternColor,handleIsDesignGradientEnabled
   } = useProductStore((state) => state);
 
   return (
@@ -94,6 +86,39 @@ const Color = () => {
                   )}
                 </div>
               ))}
+              <div>
+                <h4>Pattern Colors</h4>
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: 10,
+                  }}
+                >
+                  {/* <div
+                    className={styles.colorViewer}
+                    style={{ backgroundColor: "transparent" }}
+                    onClick={() => {
+                      handlePatternColor({ [childIndex]: null });
+                    }}
+                  >
+                    <CrossIcon />
+                  </div> */}
+                  {colorList.map((itemColor, index) => (
+                    <div
+                      key={index}
+                      className={styles.colorViewer}
+                      style={{ backgroundColor: itemColor }}
+                      onClick={() => {
+                        handlePatternColor({ [childIndex]: itemColor });
+                      }}
+                    >
+                      {patternColor[childIndex] &&
+                        patternColor[childIndex] === itemColor && <TickIcon />}
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </AccordionDetails>
         </Accordion>
@@ -124,6 +149,7 @@ const Color = () => {
                 style={{ backgroundColor: itemColor }}
                 onClick={() => {
                   handleDesignColor(itemColor);
+                  handleIsDesignGradientEnabled(false);
                 }}
               >
                 {designColor && designColor === itemColor && <TickIcon />}
