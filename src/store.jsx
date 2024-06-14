@@ -54,7 +54,7 @@ export const useProductStore = create((set) => ({
   logoRotate: 0,
   isDesign: false,
   modelLoading: true,
-  isGradient: false,
+  isGradient: null,
   handleDesignColor: (color) =>
     set(() => ({
       designColor: color,
@@ -225,8 +225,8 @@ export const useProductStore = create((set) => ({
     }));
   },
   updateIsGradient: (updatedIsGradient) => {
-    set(() => ({
-      isGradient: updatedIsGradient,
+    set((state) => ({
+      isGradient: { ...state.isGradient, ...updatedIsGradient },
     }));
   },
   updatePatternScale: (patternScale) => {

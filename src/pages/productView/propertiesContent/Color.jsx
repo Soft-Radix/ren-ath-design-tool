@@ -9,15 +9,6 @@ import { Color as ParceColor } from "three";
 import styles from "./properties.module.scss";
 import { colorList } from "../../../components/data/colors";
 
-// const colorList = [
-//   "#D14E24",
-//   "#EF7E15",
-//   "#E9ED23",
-//   "#AED124",
-//   "#D1AB24",
-//   "#85D124",
-//   "#24D169",
-// ];
 
 const Color = () => {
   const ref = useProductStore((state) => state.ref);
@@ -105,6 +96,40 @@ const Color = () => {
             style={{ backgroundColor: "" }}
           />
           Design Colors
+        </AccordionSummary>
+        <AccordionDetails>
+          <div className={styles.colorPalletWrap}>
+            {/* <div
+              className={styles.colorViewer}
+              style={{ backgroundColor: "transparent" }}
+              onClick={() => {
+                handleDesignColor(null);
+              }}
+            >
+              <CrossIcon />
+            </div> */}
+            {colorList.map((itemColor, index) => (
+              <div
+                key={index}
+                className={styles.colorViewer}
+                style={{ backgroundColor: itemColor }}
+                onClick={() => {
+                  handleDesignColor(itemColor);
+                }}
+              >
+                {designColor && designColor === itemColor && <TickIcon />}
+              </div>
+            ))}
+          </div>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <div
+            className={`${styles.colorViewer} ${styles.mainColorViewer}`}
+            style={{ backgroundColor: "" }}
+          />
+          Pattern Colors
         </AccordionSummary>
         <AccordionDetails>
           <div className={styles.colorPalletWrap}>

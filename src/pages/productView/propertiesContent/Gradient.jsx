@@ -24,7 +24,7 @@ const Gradient = () => {
     updateGradientScale,
     updateGradientAngle,
     updateColorIndex,
-    //updateIsGradient,
+    updateIsGradient,
   } = useProductStore((state) => state);
 
   const children = ref?.current?.children || [];
@@ -113,6 +113,7 @@ const Gradient = () => {
                       updateColorIndex(childIndex);
                       updateGradient({ [childIndex]: null });
                     }
+                    updateIsGradient({ [childIndex]: false });
                   }}
                 >
                   <CrossIcon />
@@ -131,6 +132,7 @@ const Gradient = () => {
                         updateColorIndex(childIndex);
                         updateGradient({ [childIndex]: itemColor });
                       }
+                      updateIsGradient({ [childIndex]: true });
                     }}
                   >
                     {type === 1 &&

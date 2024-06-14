@@ -103,7 +103,7 @@ export function Model(props) {
     const colorsCollection = [...secondaryColors];
     if (colorIndex !== null) {
       changeColor = color[colorIndex];
-      if ((colorIndex == 0 || colorIndex % 2 == 0) && !isGradient) {
+      if (colorIndex == 0 || colorIndex % 2 == 0) {
         colorsCollection[colorIndex] = changeColor;
         colorsCollection[colorIndex + 1] = changeColor;
       } else {
@@ -172,7 +172,7 @@ export function Model(props) {
       primaryTexture.repeat.set(1, 1);
       primaryTexture.rotation = 0;
       primaryTexture.encoding = Three.sRGBEncoding;
-  
+
       const createMaterial = (
         secondaryTexture,
         secondaryColor,
@@ -201,18 +201,22 @@ export function Model(props) {
           directionalLightDirection: { value: new Three.Vector3(1, -1, 0.5) },
           patternScale: { value: patternScale || 1 }, // Default to 5 if patternScale is not provided
         };
-  
+
         // Conditionally add primaryColor to uniforms
         if (primaryColor) {
           uniforms.primaryColor = { value: new Three.Color(primaryColor) };
         }
-  
+
         // Set up secondary texture repeat dynamically based on patternScale
         if (secondaryTexture) {
-          secondaryTexture.wrapS = secondaryTexture.wrapT = Three.RepeatWrapping;
-          secondaryTexture.repeat.set(uniforms.patternScale.value, uniforms.patternScale.value);
+          secondaryTexture.wrapS = secondaryTexture.wrapT =
+            Three.RepeatWrapping;
+          secondaryTexture.repeat.set(
+            uniforms.patternScale.value,
+            uniforms.patternScale.value
+          );
         }
-  
+
         return new ShaderMaterial({
           uniforms,
           vertexShader: `
@@ -304,7 +308,7 @@ export function Model(props) {
           side: Three.DoubleSide,
         });
       };
-  
+
       modelRef.current.children.forEach((child, index) => {
         if (child.isMesh) {
           const isSelectedLayer = index === colorIndex;
@@ -314,13 +318,14 @@ export function Model(props) {
           );
           const gradientColor1 = new Three.Color(color[index]);
           const gradientColor2 = new Three.Color(gradient[index]);
+          const gradientBool = isGradient ? isGradient[index] : false;
           const material = createMaterial(
             secondaryTexture,
             secondaryColor,
             true,
             gradientColor1,
             gradientColor2,
-            isGradient,
+            gradientBool,
             gradientScale[index],
             designColor, // Pass designColor as primary color
             patternScale[index] // Pass patternScale as an argument
@@ -342,7 +347,6 @@ export function Model(props) {
     designColor,
     patternScale, // Add patternScale to dependency array
   ]);
-  
 
   // NUMBER STATES
   const [number1Position, setNumber1Position] = useState([0, 0, 2]);

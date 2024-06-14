@@ -19,9 +19,9 @@ const Sidebar = () => {
         key={id}
         onClick={() => {
           if (name === "Gradient") {
-            updateIsGradient(true);
+            // updateIsGradient(true);
           } else if (name === "Color") {
-            updateIsGradient(false);
+            // updateIsGradient(false);
           }
           updateSelectedSidebarItem(id);
         }}
