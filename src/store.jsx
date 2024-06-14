@@ -19,6 +19,7 @@ export const useProductStore = create((set) => ({
   orbitalRef: null,
   modelRotation: 0,
   designColor: null,
+  patternColor: {},
 
   designCount: designCount,
   designType: 0,
@@ -58,6 +59,10 @@ export const useProductStore = create((set) => ({
   handleDesignColor: (color) =>
     set(() => ({
       designColor: color,
+    })),
+  handlePatternColor: (color) =>
+    set((state) => ({
+      patternColor: { ...state.patternColor, ...color },
     })),
   handleModelRotation: (rotation) =>
     set(() => ({
