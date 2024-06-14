@@ -86,7 +86,7 @@ const Color = () => {
                   )}
                 </div>
               ))}
-              <div>
+             { (childIndex !== 4 &&  childIndex !== 5) &&<div>
                 <h4>Pattern Colors</h4>
                 <div
                   style={{
@@ -118,7 +118,7 @@ const Color = () => {
                     </div>
                   ))}
                 </div>
-              </div>
+              </div>}
             </div>
           </AccordionDetails>
         </Accordion>

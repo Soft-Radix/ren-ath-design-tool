@@ -77,46 +77,50 @@ const Pattern = () => {
   // console.log("patterns", patterns);
   return (
     <div className={`${styles.colorWrap} ${styles.patternWrap}`}>
-      {children?.map((item, childIndex) => (
-        <Accordion key={item.uuid}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            {/* <div
+      {children?.map((item, childIndex) => {
+        if (childIndex !== 4 &&  childIndex !== 5) {
+          return (
+            <Accordion key={item.uuid}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                {/* <div
               className={`${styles.colorViewer} ${styles.mainColorViewer}`}
               style={{ backgroundColor: color[childIndex] }}
             /> */}
-            {item.name}
-          </AccordionSummary>
-          <AccordionDetails>
-            <div className={styles.sliderWrapper}>
-              <h6>Scale</h6>
-              <div className={styles.patternSlider}>
-                <Slider
-                  min={0}
-                  max={10}
-                  step={1}
-                  value={patternScale[childIndex]}
-                  onChange={(e) => updatePatternScale({ [childIndex]: e })}
-                />
-                <span>{patternScale[childIndex]}</span>
-              </div>
-            </div>
-            <div className={styles.contentWrap}>
-              {patterns?.map((pattern, index) => (
-                <div
-                  key={index + 1}
-                  className={`${styles.imgWrap}`}
-                  onClick={() => {
-                    updatePattern(index + 1);
-                    updateLayer(childIndex);
-                  }}
-                >
-                  <img src={pattern} alt={`pattern${index + 1}`} />
+                {item.name}
+              </AccordionSummary>
+              <AccordionDetails>
+                <div className={styles.sliderWrapper}>
+                  <h6>Scale</h6>
+                  <div className={styles.patternSlider}>
+                    <Slider
+                      min={0}
+                      max={10}
+                      step={1}
+                      value={patternScale[childIndex]}
+                      onChange={(e) => updatePatternScale({ [childIndex]: e })}
+                    />
+                    <span>{patternScale[childIndex]}</span>
+                  </div>
                 </div>
-              ))}
-            </div>
-          </AccordionDetails>
-        </Accordion>
-      ))}
+                <div className={styles.contentWrap}>
+                  {patterns?.map((pattern, index) => (
+                    <div
+                      key={index + 1}
+                      className={`${styles.imgWrap}`}
+                      onClick={() => {
+                        updatePattern(index + 1);
+                        updateLayer(childIndex);
+                      }}
+                    >
+                      <img src={pattern} alt={`pattern${index + 1}`} />
+                    </div>
+                  ))}
+                </div>
+              </AccordionDetails>
+            </Accordion>
+          );
+        }
+      })}
     </div>
   );
 };
