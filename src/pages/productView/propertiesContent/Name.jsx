@@ -30,7 +30,11 @@ const Name = () => {
     updateNameGradient,
     updateIsNameGradient,
   } = useProductStore((state) => state);
+  const [expanded, setExpanded] = React.useState(false > false);
 
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
   const [type, setType] = useState(1);
   const [images, setImages] = useState({
     front: "",
@@ -81,7 +85,7 @@ const Name = () => {
   };
   return (
     <div className={`${styles.numberWrap} ${styles.nameWrap}`}>
-      <Accordion>
+      <Accordion onChange={handleChange("tab1")} expanded={expanded === "tab1"}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           + Add Name
         </AccordionSummary>
@@ -143,7 +147,7 @@ const Name = () => {
         </AccordionDetails>
       </Accordion>
 
-      <Accordion>
+      <Accordion onChange={handleChange("tab2")} expanded={expanded === "tab2"}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           Change Font
         </AccordionSummary>
@@ -234,7 +238,7 @@ const Name = () => {
         </AccordionDetails>
       </Accordion>
 
-      <Accordion>
+      <Accordion onChange={handleChange("tab3")} expanded={expanded === "tab3"}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           Color & Outline
         </AccordionSummary>

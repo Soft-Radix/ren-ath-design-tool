@@ -34,14 +34,24 @@ const Gradient = () => {
 
   const children = ref?.current?.children || [];
   const [designType, setDesignType] = useState(1);
+  const [expanded, setExpanded] = React.useState(false > false);
+
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
+  
   return (
     <div className={`${styles.colorWrap} ${styles.gradientWrap}`}>
       {children?.map((item, childIndex) => {
         const [type, setType] = useState(1);
 
-        if (childIndex !== 4 && childIndex !==5) {
+        if (childIndex !== 4 && childIndex !== 5) {
           return (
-            <Accordion key={item.uuid}>
+            <Accordion
+              key={item.uuid}
+              onChange={handleChange(item?.uuid)}
+              expanded={expanded === item?.uuid}
+            >
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <div
                   className={`${styles.colorViewer} ${styles.mainColorViewer}`}
