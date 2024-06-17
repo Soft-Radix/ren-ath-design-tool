@@ -137,7 +137,10 @@ const Color = () => {
           </AccordionDetails>
         </Accordion>
       ))}
-      <Accordion>
+      <Accordion
+        onChange={handleChange("design")}
+        expanded={expanded === "design"}
+      >
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <div
             className={`${styles.colorViewer} ${styles.mainColorViewer}`}
