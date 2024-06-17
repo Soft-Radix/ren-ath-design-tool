@@ -64,7 +64,7 @@ export const useProductStore = create((set) => ({
     set(() => ({
       designGradient1: color,
     })),
-    handleDesignGradient2: (color) =>
+  handleDesignGradient2: (color) =>
     set(() => ({
       designGradient2: color,
     })),
@@ -251,8 +251,8 @@ export const useProductStore = create((set) => ({
     }));
   },
   updatePatternScale: (patternScale) => {
-    set(() => ({
-      patternScale: patternScale,
+    set((state) => ({
+      patternScale: { ...state.patternScale, ...patternScale },
     }));
   },
 }));

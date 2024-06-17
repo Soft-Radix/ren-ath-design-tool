@@ -27,7 +27,11 @@ const Number = () => {
     updateIsNumberGradient,
     isNumberGradientColor,
   } = useProductStore((state) => state);
+  const [expanded, setExpanded] = React.useState(false > false);
 
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
   // const colorList = [
   //   "#D14E24",
   //   "#EF7E15",
@@ -73,7 +77,7 @@ const Number = () => {
 
   return (
     <div className={styles.numberWrap}>
-      <Accordion>
+      <Accordion onChange={handleChange("tab1")} expanded={expanded === "tab1"}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           + Add Number
         </AccordionSummary>
@@ -134,7 +138,7 @@ const Number = () => {
         </AccordionDetails>
       </Accordion>
 
-      <Accordion>
+      <Accordion onChange={handleChange("tab2")} expanded={expanded === "tab2"}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           Change Font
         </AccordionSummary>
@@ -225,7 +229,7 @@ const Number = () => {
         </AccordionDetails>
       </Accordion>
 
-      <Accordion>
+      <Accordion onChange={handleChange("tab3")} expanded={expanded === "tab3"}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           Color & Outline
         </AccordionSummary>
