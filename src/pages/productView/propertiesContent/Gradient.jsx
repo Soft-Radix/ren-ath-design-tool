@@ -39,7 +39,7 @@ const Gradient = () => {
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-  
+
   return (
     <div className={`${styles.colorWrap} ${styles.gradientWrap}`}>
       {children?.map((item, childIndex) => {
@@ -165,7 +165,10 @@ const Gradient = () => {
           );
         }
       })}
-      <Accordion>
+      <Accordion
+        onChange={handleChange('design_gradient')}
+        expanded={expanded === 'design_gradient'}
+      >
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <div
             className={`${styles.colorViewer} ${styles.mainColorViewer}`}
