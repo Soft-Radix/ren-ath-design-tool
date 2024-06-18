@@ -76,6 +76,7 @@ export function Model(props) {
     designGradient2,
     isDesignGradientEnabled,
   } = useProductStore((state) => state);
+  console.log("🚀 ~ Model ~ logo:", logo);
   // console.log("🚀 ~ Model ~ isGradient:", isGradient);
 
   // SET CAMERA POSITION
@@ -168,7 +169,7 @@ export function Model(props) {
         });
     }
   }, [secondaryTextureUrl, layer]);
-  
+
   useEffect(() => {
     if (modelRef.current) {
       // Set up primary texture
@@ -484,9 +485,13 @@ export function Model(props) {
   );
 
   // HANDLE LOGO STATES
-  const logoTexture = useTexture(logo || "./textures/pattern7.png");
+  const logoLeft = useTexture(logo[0] || "./textures/pattern7.png");
+  const logoRight = useTexture(logo[1] || "./textures/pattern7.png");
+  const logoFront = useTexture(logo[2] || "./textures/pattern7.png");
+  const logoBack = useTexture(logo[3] || "./textures/pattern7.png");
   const [modelLogoPosition, setModelLogoPosition] = useState([0, 0, 1]);
   const [logoRotation, setLogoRotation] = useState([0, 0, 0]);
+  console.log("🚀 ~ Model ~ logoRotation:", logoRotation);
 
   // HANDLE TEXT DRAG ON FIRST LAYER
   const logoBind = useDrag(
@@ -517,8 +522,8 @@ export function Model(props) {
   }, [logoAngle, logoPosition]);
 
   useEffect(() => {
-    camera.position.set(0, 2, 8);
-    camera.lookAt(0, 0, 0);
+    // camera.position.set(0, 2, 8);
+    // camera.lookAt(0, 0, 0);
 
     if (logoPosition === 1) {
       setLogoRotation([0, 0, 0]);
@@ -526,6 +531,12 @@ export function Model(props) {
     } else if (logoPosition === 2) {
       setLogoRotation([0, degToRad(180), 0]);
       setNumber1Rotation(180);
+    } else if (logoPosition === 3) {
+      setLogoRotation([0, degToRad(90), 0]);
+      setNumber1Rotation(90);
+    } else if (logoPosition === 4) {
+      setLogoRotation([0, degToRad(270), 0]);
+      setNumber1Rotation(270);
     }
   }, [logoPosition]);
 
@@ -570,7 +581,7 @@ export function Model(props) {
   useEffect(() => {
     setNumber1Rotation(modelRotation);
   }, [modelRotation]);
-
+console.log('modelLogoPosition',modelLogoPosition)
   return (
     <>
       {/* Ambient light and orbit controls */}
@@ -598,6 +609,20 @@ export function Model(props) {
             material={materials.blinn2}
             name="Left Sleeve Upper"
           >
+            {logo[0] && (
+              <Decal
+                // {...logoBind()}
+                onPointerEnter={toggleHovered}
+                onPointerLeave={toggleHovered}
+                scale={[logoScale[3] * 2, logoScale[3] * 2, 5]}
+                // debug={true}
+                
+                position={[0,1,0.3333333]}
+                rotation={[0,1.5,0]}
+                map={logoLeft}
+                origin={[0, 0, 0]}
+              />
+            )}
             {gradient[0] && !isDesign && (
               <meshStandardMaterial side={DoubleSide}>
                 <GradientTexture
@@ -675,6 +700,19 @@ export function Model(props) {
             material={materials.blinn4}
             name="Right Sleeve Upper"
           >
+            {logo[1] && (
+              <Decal
+                // {...logoBind()}
+                onPointerEnter={toggleHovered}
+                onPointerLeave={toggleHovered}
+                scale={[logoScale[4] * 2, logoScale[4] * 2, 5]}
+                // // debug={true}
+                position={[1,1,0.411111111]}
+                rotation={[0, 4.999999999999, 0.2]}
+                map={logoRight}
+                origin={[0, 0, 0]}
+              />
+            )}
             {gradient[1] && !isDesign && (
               <meshStandardMaterial side={DoubleSide}>
                 <GradientTexture
@@ -883,16 +921,16 @@ export function Model(props) {
               </meshStandardMaterial>
             )}
 
-            {logo && logoPosition === 1 && (
+            {logo[2] && (
               <Decal
-                {...logoBind()}
+                // {...logoBind()}
                 onPointerEnter={toggleHovered}
                 onPointerLeave={toggleHovered}
-                scale={[logoScale * 5, logoScale * 5, 10]}
+                scale={[logoScale[1] * 5, logoScale[1] * 5, 10]}
                 // debug={true}
                 position={modelLogoPosition}
-                rotation={logoRotation}
-                map={logoTexture}
+                rotation={[0, 0, 0]}
+                map={logoFront}
                 origin={[0, 0, 0]}
               />
             )}
@@ -1030,16 +1068,16 @@ export function Model(props) {
               </Decal>
             )}
 
-            {logo && logoPosition === 2 && (
+            {logo[3] && (
               <Decal
-                {...logoBind()}
+                // {...logoBind()}
                 onPointerEnter={toggleHovered}
                 onPointerLeave={toggleHovered}
-                scale={[logoScale * 5, logoScale * 5, 10]}
+                scale={[logoScale[2] * 5, logoScale[2] * 5, 10]}
                 // debug={true}
                 position={modelLogoPosition}
-                rotation={logoRotation}
-                map={logoTexture}
+                rotation={[0, Math.PI, 0]}
+                map={logoBack}
                 origin={[0, 0, 0]}
               />
             )}

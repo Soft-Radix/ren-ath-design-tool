@@ -52,14 +52,20 @@ export const useProductStore = create((set) => ({
   nameGradientColor: "",
   isNameGradientColor: false,
 
-  logo: null,
-  logoPosition: 1,
-  logoScale: 0.5,
+  logo: {},
+  logoPosition: {},
+  logoPositionIndex: null,
+  logoScale: { 1: 0.5, 2: 0.5, 3: 0.5, 4: 0.5 },
+  logoAngle: { 1: 0, 2: 0, 3: 0, 4: 0 },
+  logos: [],
   logoRotate: 0,
   isDesign: false,
   modelLoading: true,
   isGradient: null,
-
+  setLogos: (logos) =>
+    set((state) => ({
+      logos,
+    })),
   handleDesignGradient1: (color) =>
     set(() => ({
       designGradient1: color,
@@ -225,20 +231,27 @@ export const useProductStore = create((set) => ({
     })),
 
   updateLogo: (imageFile) =>
-    set(() => ({
-      logo: imageFile ? URL.createObjectURL(imageFile) : null,
+    set((state) => ({
+      logo: {
+        ...state.logo,
+        ...imageFile,
+      },
     })),
   updateLogoPosition: (position) =>
+    set((state) => ({
+      logoPosition: { ...state.logoPosition, ...position },
+    })),
+  updateLogoPositionIndex: (positionIndex) =>
     set(() => ({
-      logoPosition: position,
+      logoPositionIndex: positionIndex,
     })),
   updateLogoScale: (updatedScale) =>
-    set(() => ({
-      logoScale: updatedScale,
+    set((state) => ({
+      logoScale: { ...state.logoScale, ...updatedScale },
     })),
   updateLogoAngle: (updatedAngle) =>
-    set(() => ({
-      logoAngle: updatedAngle,
+    set((state) => ({
+      logoAngle: { ...state.logoAngle, ...updatedAngle },
     })),
   updateIsDesign: (updatedIsDesign) => {
     set(() => ({
