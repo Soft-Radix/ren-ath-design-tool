@@ -75,8 +75,9 @@ export function Model(props) {
     designGradient1,
     designGradient2,
     isDesignGradientEnabled,
+
+    updatedLogos,
   } = useProductStore((state) => state);
-  // console.log("🚀 ~ Model ~ isGradient:", isGradient);
 
   // SET CAMERA POSITION
   const camera = useThree((state) => state.camera);
@@ -93,8 +94,11 @@ export function Model(props) {
   );
   const primaryTexture = useTexture(designTexture);
   const secondaryTexture = useTexture(secondaryTextureUrl);
-
-  // state to update color of each layer
+  const [combinedLogos, setCombinedLogos] = useState({});
+  const [decalPositions, setDecalPositions] = useState(
+    combinedLogos?.[1]?.map(() => [0, 0, 0]) // Initialize positions array with default values
+  );
+   // state to update color of each layer
   const [layerColor, setLayerColor] = useState(threeJsColor);
 
   // References
@@ -168,7 +172,7 @@ export function Model(props) {
         });
     }
   }, [secondaryTextureUrl, layer]);
-  
+
   useEffect(() => {
     if (modelRef.current) {
       // Set up primary texture
@@ -482,10 +486,22 @@ export function Model(props) {
     },
     { pointerEvents: true }
   );
-
+  const logoTexture = useTexture(combinedLogos[1] || "./textures/pattern2.png");
   // HANDLE LOGO STATES
-  const logoTexture = useTexture(logo || "./textures/pattern7.png");
+  const logoTexture1 = useTexture(
+    combinedLogos[1] || "./textures/pattern2.png"
+  );
+  const logoTexture2 = useTexture(
+    combinedLogos[2] || "./textures/pattern2.png"
+  );
+  const logoTexture3 = useTexture(
+    combinedLogos[3] || "./textures/pattern2.png"
+  );
+  const logoTexture4 = useTexture(
+    combinedLogos[4] || "./textures/pattern2.png"
+  );
   const [modelLogoPosition, setModelLogoPosition] = useState([0, 0, 1]);
+  const [modelLogoPosition2, setModelLogoPosition2] = useState([0, 1, 1]);
   const [logoRotation, setLogoRotation] = useState([0, 0, 0]);
 
   // HANDLE TEXT DRAG ON FIRST LAYER
@@ -571,6 +587,23 @@ export function Model(props) {
     setNumber1Rotation(modelRotation);
   }, [modelRotation]);
 
+  const combineKeys = (logosObject) => {
+    const combined = { 1: [], 2: [], 3: [], 4: [] };
+
+    Object.values(logosObject).forEach((image) => {
+      Object.keys(combined).forEach((key) => {
+        combined[key] = [...combined[key], ...image[key]];
+      });
+    });
+
+    return combined;
+  };
+
+  useEffect(() => {
+    const result = combineKeys(updatedLogos);
+    setCombinedLogos(result);
+  }, [updatedLogos]);
+
   return (
     <>
       {/* Ambient light and orbit controls */}
@@ -607,7 +640,22 @@ export function Model(props) {
                 />
               </meshStandardMaterial>
             )}
-
+            {combinedLogos?.[3]?.length > 0 &&
+              combinedLogos?.[3]?.map((item, index) => {
+                return (
+                  <Decal
+                    {...logoBind()}
+                    onPointerEnter={toggleHovered}
+                    onPointerLeave={toggleHovered}
+                    scale={[logoScale * 2, logoScale * 5, 5]}
+                    // debug={true}
+                    position={modelLogoPosition}
+                    rotation={logoRotation}
+                    map={logoTexture3[index]}
+                    origin={[0, 0, 0]}
+                  />
+                );
+              })}
             {modelName && namePosition === 3 && (
               <Decal
                 {...bind()}
@@ -675,6 +723,22 @@ export function Model(props) {
             material={materials.blinn4}
             name="Right Sleeve Upper"
           >
+            {combinedLogos?.[4]?.length > 0 &&
+              combinedLogos?.[4]?.map((item, index) => {
+                return (
+                  <Decal
+                    {...logoBind(index)}
+                    onPointerEnter={toggleHovered}
+                    onPointerLeave={toggleHovered}
+                    scale={[logoScale * 2, logoScale * 5, 5]}
+                    // debug={true}
+                    position={modelLogoPosition}
+                    rotation={logoRotation}
+                    map={logoTexture4[index]}
+                    origin={[0, 0, 0]}
+                  />
+                );
+              })}
             {gradient[1] && !isDesign && (
               <meshStandardMaterial side={DoubleSide}>
                 <GradientTexture
@@ -774,7 +838,6 @@ export function Model(props) {
                       aspect={2}
                       position={[0, 0.1, 2.5]}
                     />
-
                     <GradientText
                       rotation={[0, 0, 0]}
                       fontSize={1.2}
@@ -882,20 +945,35 @@ export function Model(props) {
                 />
               </meshStandardMaterial>
             )}
-
-            {logo && logoPosition === 1 && (
+            {combinedLogos?.[1]?.length > 0 &&
+              combinedLogos?.[1]?.map((item, index) => {
+                return (
+                  <Decal
+                    {...logoBind()}
+                    onPointerEnter={toggleHovered}
+                    onPointerLeave={toggleHovered}
+                    scale={[logoScale * 2, logoScale * 5, 5]}
+                    // debug={true}
+                    position={modelLogoPosition}
+                    rotation={logoRotation}
+                    map={logoTexture1[index]}
+                    origin={[0, 0, 0]}
+                  />
+                );
+              })}
+            {/* {logo && logoPosition === 1 && (
               <Decal
                 {...logoBind()}
                 onPointerEnter={toggleHovered}
                 onPointerLeave={toggleHovered}
-                scale={[logoScale * 5, logoScale * 5, 10]}
+                scale={[logoScale * 2, logoScale * 5, 5]}
                 // debug={true}
                 position={modelLogoPosition}
                 rotation={logoRotation}
                 map={logoTexture}
                 origin={[0, 0, 0]}
               />
-            )}
+            )} */}
           </mesh>
           <mesh
             geometry={nodes.Dress_1_Group6255_0005_2.geometry}
@@ -1030,19 +1108,22 @@ export function Model(props) {
               </Decal>
             )}
 
-            {logo && logoPosition === 2 && (
-              <Decal
-                {...logoBind()}
-                onPointerEnter={toggleHovered}
-                onPointerLeave={toggleHovered}
-                scale={[logoScale * 5, logoScale * 5, 10]}
-                // debug={true}
-                position={modelLogoPosition}
-                rotation={logoRotation}
-                map={logoTexture}
-                origin={[0, 0, 0]}
-              />
-            )}
+            {combinedLogos?.[2]?.length > 0 &&
+              combinedLogos?.[2]?.map((item, index) => {
+                return (
+                  <Decal
+                    {...logoBind()}
+                    onPointerEnter={toggleHovered}
+                    onPointerLeave={toggleHovered}
+                    scale={[logoScale * 2, logoScale * 5, 5]}
+                    // debug={true}
+                    position={modelLogoPosition}
+                    rotation={logoRotation}
+                    map={logoTexture2[index]}
+                    origin={[0, 0, 0]}
+                  />
+                );
+              })}
           </mesh>
           <mesh
             geometry={nodes.Dress_1_Group6255_0005_6.geometry}

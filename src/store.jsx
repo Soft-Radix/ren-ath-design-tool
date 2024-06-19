@@ -59,7 +59,11 @@ export const useProductStore = create((set) => ({
   isDesign: false,
   modelLoading: true,
   isGradient: null,
-
+  updatedLogos: {},
+  setUpdatedLogos: (updatedLogos) =>
+    set(() => ({
+      updatedLogos: updatedLogos,
+    })),
   handleDesignGradient1: (color) =>
     set(() => ({
       designGradient1: color,
