@@ -9,16 +9,28 @@ import { useDropzone } from "react-dropzone";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import { UploadIcon } from "../../../assets/svg/icons";
+import { IconButton } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const Logo = () => {
-  const { updateLogo, id, updatedLogos, setUpdatedLogos } = useProductStore(
-    (state) => state
-  );
+  const {
+    updateLogo,
+    id,
+    updatedLogos,
+    setUpdatedLogos,
+    logoScale,
+    updateLogoScale,
+  } = useProductStore((state) => state);
 
   const [logos, setLogos] = useState([]);
-  // const [updatedLogos, setUpdatedLogos] = useState({});
+  const [expanded, setExpanded] = React.useState(false);
+
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
   const [logoPositions, setLogoPositions] = useState({});
-  const [logoScales, setLogoScales] = useState({});
+
+  console.log("🚀 ~ Logo ~ logoScale:", logoScale);
   const [logoAngles, setLogoAngles] = useState({});
   const [images, setImages] = useState({
     front: "",
@@ -69,7 +81,7 @@ const Logo = () => {
       [logoKey]: { 1: [], 2: [], 3: [], 4: [] },
     });
     setLogoPositions({ ...logoPositions, [logoKey]: null });
-    setLogoScales({ ...logoScales, [logoKey]: 1 });
+    updateLogoScale({ ...logoScale, [logoKey]: 1 });
     setLogoAngles({ ...logoAngles, [logoKey]: 0 });
   };
 
@@ -145,30 +157,63 @@ const Logo = () => {
     setLogoPositions(newLogoPositions);
   };
 
-  const updateLogoScale = (logoKey, scale) => {
-    setLogoScales({ ...logoScales, [logoKey]: scale });
+  const updateLogoScales = (logoKey, scale) => {
+    updateLogoScale({ ...logoScale, [logoKey]: scale });
   };
 
   const updateLogoAngle = (logoKey, angle) => {
     setLogoAngles({ ...logoAngles, [logoKey]: angle });
   };
 
+  const handleDeleteLogo = (logoKey) => {
+    const newLogos = logos.filter((logo) => logo !== logoKey);
+    const { [logoKey]: _, ...remainingUpdatedLogos } = updatedLogos;
+    const { [logoKey]: __, ...remainingLogoPositions } = logoPositions;
+    const { [logoKey]: ___, ...remainingLogoScales } = logoScale;
+    const { [logoKey]: ____, ...remainingLogoAngles } = logoAngles;
+
+    setLogos(newLogos);
+    setUpdatedLogos(remainingUpdatedLogos);
+    setLogoPositions(remainingLogoPositions);
+    updateLogoScale(remainingLogoScales);
+    setLogoAngles(remainingLogoAngles);
+  };
+
   return (
     <div className={`${styles.numberWrap} ${styles.logoWrap}`}>
       {logos?.map((logo, index) => {
-        const logoKey = `image${index + 1}`;
+        const logoKey = logo;
 
         return (
-          <Accordion key={index + 1}>
+          <Accordion
+            key={index + 1}
+            onChange={handleChange(index + 1)}
+            expanded={expanded === index + 1}
+          >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <img
-                src={logo}
-                alt={`${index}-${logo}`}
+              <div
                 style={{
-                  width: 40,
-                  height: 40,
+                  display: "flex",
+                  justifyContent: "space-between",
+                  width: "100%",
                 }}
-              />
+              >
+                <img
+                  src={logo}
+                  alt={`${index}-${logo}`}
+                  style={{
+                    width: 40,
+                    height: 40,
+                  }}
+                />
+                <IconButton
+                  aria-label="delete"
+                  color="error"
+                  onClick={() => handleDeleteLogo(logoKey)}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </div>
             </AccordionSummary>
             <AccordionDetails>
               <div
@@ -223,8 +268,9 @@ const Logo = () => {
                   min={0.3}
                   max={1.2}
                   step={0.01}
-                  value={logoScales[logoKey]}
-                  onChange={(e) => updateLogoScale(logoKey, e)}
+                  value={logoScale[logoKey]}
+                  defaultValue={0.5}
+                  onChange={(e) => updateLogoScales(logoKey, e)}
                 />
               </div>
               <h3>Angle</h3>

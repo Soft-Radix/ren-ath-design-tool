@@ -98,7 +98,7 @@ export function Model(props) {
   const [decalPositions, setDecalPositions] = useState(
     combinedLogos?.[1]?.map(() => [0, 0, 0]) // Initialize positions array with default values
   );
-   // state to update color of each layer
+  // state to update color of each layer
   const [layerColor, setLayerColor] = useState(threeJsColor);
 
   // References
@@ -644,13 +644,19 @@ export function Model(props) {
               combinedLogos?.[3]?.map((item, index) => {
                 return (
                   <Decal
-                    {...logoBind()}
+                    // {...logoBind()}
                     onPointerEnter={toggleHovered}
                     onPointerLeave={toggleHovered}
-                    scale={[logoScale * 2, logoScale * 5, 5]}
+                    scale={[
+                      (logoScale[item] || 0.5) * 2,
+                      (logoScale[item] || 0.5) * 5,
+                      5,
+                    ]}
                     // debug={true}
-                    position={modelLogoPosition}
-                    rotation={logoRotation}
+                    position={[0, 0.9 + index, 0.3333333]}
+                    rotation={[0, 1.5, 0]}
+                    // position={modelLogoPosition}
+                    // rotation={logoRotation}
                     map={logoTexture3[index]}
                     origin={[0, 0, 0]}
                   />
@@ -727,13 +733,19 @@ export function Model(props) {
               combinedLogos?.[4]?.map((item, index) => {
                 return (
                   <Decal
-                    {...logoBind(index)}
+                    // {...logoBind(index)}
                     onPointerEnter={toggleHovered}
                     onPointerLeave={toggleHovered}
-                    scale={[logoScale * 2, logoScale * 5, 5]}
+                    scale={[
+                      (logoScale[item] || 0.5) * 2,
+                      (logoScale[item] || 0.5) * 5,
+                      5,
+                    ]}
                     // debug={true}
-                    position={modelLogoPosition}
-                    rotation={logoRotation}
+                    position={[1, 1, 0.411111111]}
+                    rotation={[0, 4.999999999999, 0.2]}
+                    // position={modelLogoPosition}
+                    // rotation={logoRotation}
                     map={logoTexture4[index]}
                     origin={[0, 0, 0]}
                   />
@@ -952,7 +964,11 @@ export function Model(props) {
                     {...logoBind()}
                     onPointerEnter={toggleHovered}
                     onPointerLeave={toggleHovered}
-                    scale={[logoScale * 2, logoScale * 5, 5]}
+                    scale={[
+                      (logoScale[item] || 0.5) * 2,
+                      (logoScale[item] || 0.5) * 5,
+                      5,
+                    ]}
                     // debug={true}
                     position={modelLogoPosition}
                     rotation={logoRotation}
@@ -1115,7 +1131,11 @@ export function Model(props) {
                     {...logoBind()}
                     onPointerEnter={toggleHovered}
                     onPointerLeave={toggleHovered}
-                    scale={[logoScale * 2, logoScale * 5, 5]}
+                    scale={[
+                      (logoScale[item] || 0.5) * 2,
+                      (logoScale[item] || 0.5) * 5,
+                      5,
+                    ]}
                     // debug={true}
                     position={modelLogoPosition}
                     rotation={logoRotation}
