@@ -168,7 +168,7 @@ export function Model(props) {
         });
     }
   }, [secondaryTextureUrl, layer]);
-  
+
   useEffect(() => {
     if (modelRef.current) {
       // Set up primary texture
@@ -206,7 +206,7 @@ export function Model(props) {
           gradientScale: { value: gradientScale ?? 0.8 },
           ambientLightColor: { value: new Three.Color(0xf3f3f3) },
           directionalLightColor: { value: new Three.Color(0xf3f3f3) },
-          directionalLightDirection: { value: new Three.Vector3(1, -1, 0.5) },
+          directionalLightDirection: { value: new Three.Vector3(-9, 9, 11) },
           patternScale: { value: patternScale || 1 },
           isPrimaryGradient: { value: isPrimaryGradient },
           primaryGradientColor1: { value: primaryGradientColor1 },
@@ -314,8 +314,8 @@ export function Model(props) {
                 vec3 normal = normalize(vNormal);
                 vec3 lightDir = normalize(directionalLightDirection);
                 float diff = max(dot(normal, lightDir), 0.0);
-                vec3 diffuse = diff * directionalLightColor;
-                vec3 ambient = ambientLightColor;
+                vec3 diffuse = diff * directionalLightColor * 0.7;
+                vec3 ambient = ambientLightColor * 0.7;
   
                 vec3 lighting = ambient + diffuse;
   

@@ -32,7 +32,14 @@ import pattern23 from "../../../../public/textures/pattern23.png";
 import pattern24 from "../../../../public/textures/pattern24.png";
 import pattern25 from "../../../../public/textures/pattern25.png";
 import pattern26 from "../../../../public/textures/pattern26.png";
+import pattern27 from "../../../../public/textures/pattern27.png";
+import pattern28 from "../../../../public/textures/pattern28.png";
+import pattern29 from "../../../../public/textures/pattern29.png";
+import pattern30 from "../../../../public/textures/pattern30.png";
+// import pattern31 from "../../../../public/textures/pattern31.png";
+import resetIcon from "../../../assets/svg/reset.svg";
 import Slider from "rc-slider";
+import { IconButton, Tooltip } from "@mui/material";
 const Pattern = () => {
   const ref = useProductStore((state) => state.ref);
   const children = ref?.current?.children || [];
@@ -72,6 +79,11 @@ const Pattern = () => {
     pattern24,
     pattern25,
     pattern26,
+    pattern27,
+    pattern28,
+    pattern29,
+    pattern30,
+    // pattern31,
   ];
 
   const [expanded, setExpanded] = React.useState(false > false);
@@ -95,7 +107,27 @@ const Pattern = () => {
               className={`${styles.colorViewer} ${styles.mainColorViewer}`}
               style={{ backgroundColor: color[childIndex] }}
             /> */}
-                {item.name}
+                <div
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  {item.name}
+                  <Tooltip title="Reset Pattern" placement="right-start">
+                    <IconButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        updatePattern(6);
+                        updateLayer(childIndex);
+                      }}
+                    >
+                      <img src={resetIcon} alt="" />
+                    </IconButton>
+                  </Tooltip>
+                </div>
               </AccordionSummary>
               <AccordionDetails>
                 <div className={styles.sliderWrapper}>
