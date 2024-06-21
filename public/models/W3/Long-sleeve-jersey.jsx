@@ -24,6 +24,7 @@ import font9 from "../../../src/assets/fonts/SawarabiGothic-Regular.ttf";
 import font4 from "../../../src/assets/fonts/TiltNeon.ttf";
 import GradientText from "../../../src/components/common/gradientText/GradientText";
 import { useProductStore } from "../../../src/store";
+import LogoDecal from "../../../src/components/common/logoDecal";
 const hexColor = "#D2D1D3";
 
 // Extract RGB components from the hexadecimal color
@@ -95,8 +96,17 @@ export function Model(props) {
   const primaryTexture = useTexture(designTexture);
   const secondaryTexture = useTexture(secondaryTextureUrl);
   const [combinedLogos, setCombinedLogos] = useState({});
-  const [decalPositions, setDecalPositions] = useState(
-    combinedLogos?.[1]?.map(() => [0, 0, 0]) // Initialize positions array with default values
+  const [decalPositions1, setDecalPositions1] = useState(
+    [[0, 0, 1]] // Initialize positions array with default values
+  );
+  const [decalPositions2, setDecalPositions2] = useState(
+    [[0, 0, 1]] // Initialize positions array with default values
+  );
+  const [decalPositions3, setDecalPositions3] = useState(
+    [[0, 0, 1]] // Initialize positions array with default values
+  );
+  const [decalPositions4, setDecalPositions4] = useState(
+    [[0, 0, 1]] // Initialize positions array with default values
   );
   // state to update color of each layer
   const [layerColor, setLayerColor] = useState(threeJsColor);
@@ -602,8 +612,17 @@ export function Model(props) {
   useEffect(() => {
     const result = combineKeys(updatedLogos);
     setCombinedLogos(result);
+    const positions1 = result?.[1]?.map(() => [0, 0, 1]);
+    const positions2 = result?.[2]?.map(() => [0, 0, 1]);
+    const positions3 = result?.[3]?.map(() => [0, 0, 1]);
+    const positions4 = result?.[4]?.map(() => [0, 0, 1]);
+    setDecalPositions1(positions1);
+    setDecalPositions2(positions2);
+    setDecalPositions3(positions3);
+    setDecalPositions4(positions4);
   }, [updatedLogos]);
 
+  console.log("combinedLogos", combinedLogos);
   return (
     <>
       {/* Ambient light and orbit controls */}
@@ -649,7 +668,7 @@ export function Model(props) {
                     onPointerLeave={toggleHovered}
                     scale={[
                       (logoScale[item] || 0.5) * 2,
-                      (logoScale[item] || 0.5) * 5,
+                      (logoScale[item] || 0.5) * 2,
                       5,
                     ]}
                     // debug={true}
@@ -660,6 +679,22 @@ export function Model(props) {
                     map={logoTexture3[index]}
                     origin={[0, 0, 0]}
                   />
+                  // <LogoDecal
+                  //   index={index}
+                  //   key={index + item}
+                  //   logoScale={logoScale}
+                  //   toggleHovered={toggleHovered}
+                  //   logoTexture={logoTexture3}
+                  //   modelLogoPosition={decalPositions3}
+                  //   item={item}
+                  //   orbitalRef={orbitalRef}
+                  //   logoPosition={3}
+                  //   setModelLogoPosition={(position) => {
+                  //     const newPositions = [...decalPositions3];
+                  //     newPositions[index] = position;
+                  //     setDecalPositions3(newPositions);
+                  //   }}
+                  // />
                 );
               })}
             {modelName && namePosition === 3 && (
@@ -732,22 +767,38 @@ export function Model(props) {
             {combinedLogos?.[4]?.length > 0 &&
               combinedLogos?.[4]?.map((item, index) => {
                 return (
-                  <Decal
-                    // {...logoBind(index)}
-                    onPointerEnter={toggleHovered}
-                    onPointerLeave={toggleHovered}
-                    scale={[
-                      (logoScale[item] || 0.5) * 2,
-                      (logoScale[item] || 0.5) * 5,
-                      5,
-                    ]}
-                    // debug={true}
-                    position={[1, 1, 0.411111111]}
-                    rotation={[0, 4.999999999999, 0.2]}
-                    // position={modelLogoPosition}
-                    // rotation={logoRotation}
-                    map={logoTexture4[index]}
-                    origin={[0, 0, 0]}
+                  // <Decal
+                  //   // {...logoBind(index)}
+                  //   onPointerEnter={toggleHovered}
+                  //   onPointerLeave={toggleHovered}
+                  //   scale={[
+                  //     (logoScale[item] || 0.5) * 2,
+                  //     (logoScale[item] || 0.5) * 5,
+                  //     5,
+                  //   ]}
+                  //   // debug={true}
+                  //   position={[1, 1, 0.411111111]}
+                  //   rotation={[0, 4.999999999999, 0.2]}
+                  //   // position={modelLogoPosition}
+                  //   // rotation={logoRotation}
+                  //   map={logoTexture4[index]}
+                  //   origin={[0, 0, 0]}
+                  // />
+                  <LogoDecal
+                    index={index}
+                    key={index + item}
+                    logoScale={logoScale}
+                    toggleHovered={toggleHovered}
+                    logoTexture={logoTexture4}
+                    modelLogoPosition={decalPositions4}
+                    item={item}
+                    orbitalRef={orbitalRef}
+                    logoPosition={4}
+                    setModelLogoPosition={(position) => {
+                      const newPositions = [...decalPositions4];
+                      newPositions[index] = position;
+                      setDecalPositions4(newPositions);
+                    }}
                   />
                 );
               })}
@@ -960,20 +1011,22 @@ export function Model(props) {
             {combinedLogos?.[1]?.length > 0 &&
               combinedLogos?.[1]?.map((item, index) => {
                 return (
-                  <Decal
-                    {...logoBind()}
-                    onPointerEnter={toggleHovered}
-                    onPointerLeave={toggleHovered}
-                    scale={[
-                      (logoScale[item] || 0.5) * 2,
-                      (logoScale[item] || 0.5) * 5,
-                      5,
-                    ]}
-                    // debug={true}
-                    position={modelLogoPosition}
-                    rotation={logoRotation}
-                    map={logoTexture1[index]}
-                    origin={[0, 0, 0]}
+                  <LogoDecal
+                    index={index}
+                    key={index + item}
+                    logoScale={logoScale}
+                    toggleHovered={toggleHovered}
+                    logoTexture={logoTexture1}
+                    modelLogoPosition={decalPositions1}
+                    item={item}
+                    orbitalRef={orbitalRef}
+                    logoPosition={1}
+                    logoRotation={[0.1, 0, 0]}
+                    setModelLogoPosition={(position) => {
+                      const newPositions = [...decalPositions1];
+                      newPositions[index] = position;
+                      setDecalPositions1(newPositions);
+                    }}
                   />
                 );
               })}
@@ -1127,20 +1180,18 @@ export function Model(props) {
             {combinedLogos?.[2]?.length > 0 &&
               combinedLogos?.[2]?.map((item, index) => {
                 return (
-                  <Decal
-                    {...logoBind()}
-                    onPointerEnter={toggleHovered}
-                    onPointerLeave={toggleHovered}
-                    scale={[
-                      (logoScale[item] || 0.5) * 2,
-                      (logoScale[item] || 0.5) * 5,
-                      5,
-                    ]}
-                    // debug={true}
-                    position={modelLogoPosition}
-                    rotation={logoRotation}
-                    map={logoTexture2[index]}
-                    origin={[0, 0, 0]}
+                  <LogoDecal
+                    index={index}
+                    key={index + item}
+                    logoScale={logoScale}
+                    toggleHovered={toggleHovered}
+                    logoTexture={logoTexture2}
+                    modelLogoPosition={decalPositions2}
+                    item={item}
+                    orbitalRef={orbitalRef}
+                    setModelLogoPosition={setDecalPositions2}
+                    logoPosition={2}
+                    logoRotation={[0, Math.PI, 0]}
                   />
                 );
               })}

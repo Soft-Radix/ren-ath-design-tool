@@ -266,15 +266,15 @@ const Logo = () => {
               <div className={styles.sliderWrap}>
                 <Slider
                   min={0.3}
-                  max={1.2}
+                  max={0.8}
                   step={0.01}
                   value={logoScale[logoKey]}
-                  defaultValue={0.5}
+                  defaultValue={0.3}
                   onChange={(e) => updateLogoScales(logoKey, e)}
                 />
               </div>
-              <h3>Angle</h3>
-              <div className={styles.sliderWrap}>
+              {/* <h3>Angle</h3> */}
+              {/* <div className={styles.sliderWrap}>
                 <Slider
                   min={0}
                   max={360}
@@ -286,7 +286,7 @@ const Logo = () => {
                   {logoAngles[logoKey] || 0}
                   <sup>°</sup>
                 </span>
-              </div>
+              </div> */}
             </AccordionDetails>
           </Accordion>
         );
