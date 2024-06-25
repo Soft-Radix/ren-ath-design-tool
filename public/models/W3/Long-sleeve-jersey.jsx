@@ -93,6 +93,7 @@ export function Model(props) {
   );
   const primaryTexture = useTexture(designTexture);
   const secondaryTexture = useTexture(secondaryTextureUrl);
+  const normal = useTexture("./model-designs/W3/normal.png");
 
   // state to update color of each layer
   const [layerColor, setLayerColor] = useState(threeJsColor);
@@ -176,7 +177,7 @@ export function Model(props) {
       primaryTexture.repeat.set(1, 1);
       primaryTexture.rotation = 0;
       primaryTexture.encoding = Three.sRGBEncoding;
-
+  
       const createMaterial = (
         secondaryTexture,
         secondaryColor,
@@ -190,7 +191,8 @@ export function Model(props) {
         newColor,
         primaryGradientColor1,
         primaryGradientColor2,
-        isPrimaryGradient
+        isPrimaryGradient,
+        normalMap
       ) => {
         const uniforms = {
           primaryTexture: { value: primaryTexture },
@@ -211,29 +213,36 @@ export function Model(props) {
           isPrimaryGradient: { value: isPrimaryGradient },
           primaryGradientColor1: { value: primaryGradientColor1 },
           primaryGradientColor2: { value: primaryGradientColor2 },
+          normalMap: { value: normalMap },
         };
-      
+  
         if (primaryColor) {
           uniforms.primaryColor = { value: new Three.Color(primaryColor) };
         }
         if (newColor) {
           uniforms.newColor = { value: new Three.Color(newColor) };
         }
-      
+  
         if (secondaryTexture) {
           secondaryTexture.wrapS = secondaryTexture.wrapT = Three.ClampToEdgeWrapping; // Use ClampToEdgeWrapping to avoid repeating
         }
-      
+  
         return new ShaderMaterial({
           uniforms,
           vertexShader: `
             varying vec2 vUv;
             varying vec3 vNormal;
             varying vec3 vViewPosition;
-      
+            varying vec3 vTangent;
+            varying vec3 vBitangent;
+          
+            attribute vec4 tangent;
+          
             void main() {
               vUv = uv;
               vNormal = normalize(normalMatrix * normal);
+              vTangent = normalize(normalMatrix * tangent.xyz);
+              vBitangent = normalize(cross(vNormal, vTangent) * tangent.w);
               vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
               vViewPosition = -mvPosition.xyz;
               gl_Position = projectionMatrix * mvPosition;
@@ -260,58 +269,68 @@ export function Model(props) {
             uniform bool isPrimaryGradient;
             uniform vec3 primaryGradientColor1;
             uniform vec3 primaryGradientColor2;
-      
+            uniform sampler2D normalMap;
+  
             varying vec2 vUv;
             varying vec3 vNormal;
             varying vec3 vViewPosition;
-      
+            varying vec3 vTangent;
+            varying vec3 vBitangent;
+  
             void main() {
               vec4 primaryTexColor = texture2D(primaryTexture, vUv);
-      
+  
               vec4 coloredPrimaryTexColor = primaryTexColor;
               if (primaryColor != vec3(0.0)) {
                 vec4 primaryColColor = vec4(primaryColor, 1.0);
                 coloredPrimaryTexColor = vec4(mix(primaryTexColor.rgb, primaryColColor.rgb, primaryTexColor.a), primaryTexColor.a);
               }
-      
+  
               if (isPrimaryGradient) {
                 float gradientPosition = smoothstep(0.15 * gradientScale, 0.75 * gradientScale, vUv.y);
                 vec3 gradientColor = mix(primaryGradientColor1, primaryGradientColor2, gradientPosition);
                 vec4 gradientColorWithAlpha = vec4(gradientColor, 1.0);
                 coloredPrimaryTexColor = mix(coloredPrimaryTexColor, gradientColorWithAlpha, coloredPrimaryTexColor.a);
               }
-      
+  
               // Scale the UV coordinates for the secondary texture
               vec2 scaledUv = vUv / patternScale;
               vec4 secondaryTexColor = hasSecondaryTexture ? texture2D(secondaryTexture, scaledUv) : vec4(1.0);
               secondaryTexColor.a = 1.0 - secondaryTexColor.a;
-      
+  
               vec4 coloredSecondaryTexColor = secondaryTexColor;
               if (newColor != vec3(0.0)) {
                 vec4 newColColor = vec4(newColor, 1.0);
                 coloredSecondaryTexColor = vec4(mix(secondaryTexColor.rgb, newColColor.rgb, secondaryTexColor.a), secondaryTexColor.a);
               }
-      
+  
               vec4 secondaryColColor = hasSecondaryColor ? vec4(secondaryColor, 1.0) : vec4(1.0);
               vec4 finalSecondaryColor = mix(secondaryColColor, coloredSecondaryTexColor, coloredSecondaryTexColor.a);
-      
+  
               vec4 baseColor = vec4(defaultColor, 1.0);
-      
+  
+              // Normal Map perturbation
               vec3 normal = normalize(vNormal);
+              vec3 tangent = normalize(vTangent);
+              vec3 bitangent = normalize(vBitangent);
+              mat3 tbnMatrix = mat3(tangent, bitangent, normal);
+              vec3 perturbedNormal = texture2D(normalMap, vUv).rgb * 2.0 - 1.0;
+              perturbedNormal = normalize(tbnMatrix * perturbedNormal);
+  
               vec3 lightDir = normalize(directionalLightDirection);
-              float diff = max(dot(normal, lightDir), 0.0);
+              float diff = max(dot(perturbedNormal, lightDir), 0.0);
               vec3 diffuse = diff * directionalLightColor * 0.7;
               vec3 ambient = ambientLightColor * 0.7;
-      
+  
               vec3 lighting = ambient + diffuse;
-      
+  
               vec4 finalColor = baseColor;
-      
+  
               if (selectedLayer == 1) {
                 if (isGradient) {
                   float gradientPosition = smoothstep(0.15 * gradientScale, 0.75 * gradientScale, vUv.y);
                   vec3 gradientColor = mix(gradientColor1, gradientColor2, gradientPosition);
-      
+  
                   vec4 gradientColorWithAlpha = vec4(gradientColor, 1.0);
                   vec4 blendedColor = mix(finalSecondaryColor, gradientColorWithAlpha, 1.0 - coloredSecondaryTexColor.a);
                   finalColor = vec4(mix(blendedColor.rgb, coloredPrimaryTexColor.rgb, coloredPrimaryTexColor.a), 1.0);
@@ -321,15 +340,15 @@ export function Model(props) {
               } else {
                 finalColor = vec4(mix(finalSecondaryColor.rgb, coloredPrimaryTexColor.rgb, coloredPrimaryTexColor.a), 1.0);
               }
-      
+  
               gl_FragColor = vec4(finalColor.rgb * lighting, finalColor.a);
             }
           `,
           side: Three.DoubleSide,
         });
       };
-      
-      // In your useEffect hook or wherever createMaterial is called:
+  
+      // Loop through each child of modelRef.current and apply the material
       modelRef.current.children.forEach((child, index) => {
         if (child.isMesh) {
           const isSelectedLayer = index === colorIndex;
@@ -343,7 +362,7 @@ export function Model(props) {
           const material = createMaterial(
             secondaryTexture,
             secondaryColor,
-            true,
+            isSelectedLayer,
             gradientColor1,
             gradientColor2,
             gradientBool,
@@ -353,40 +372,8 @@ export function Model(props) {
             patternColor[index],
             primaryGradientColor1,
             primaryGradientColor2,
-            isDesignGradientEnabled
-          );
-          child.material = material;
-        }
-      });
-      
-      
-
-      modelRef.current.children.forEach((child, index) => {
-        if (child.isMesh) {
-          const isSelectedLayer = index === colorIndex;
-          const secondaryTexture = secondaryTextures[index] || null;
-          const secondaryColor = new Three.Color(
-            secondaryColors[index] ?? threeJsColor
-          );
-          const gradientColor1 = new Three.Color(color[index]);
-          const gradientColor2 = new Three.Color(gradient[index]);
-          const gradientBool = isGradient ? isGradient[index] : false;
-          const primaryGradientColor1 = new Three.Color(designGradient1); // Example for getting gradient color 1
-          const primaryGradientColor2 = new Three.Color(designGradient2); // Example for getting gradient color 2
-          const material = createMaterial(
-            secondaryTexture,
-            secondaryColor,
-            true,
-            gradientColor1,
-            gradientColor2,
-            gradientBool,
-            gradientScale[index],
-            designColor, // Pass designColor as primary color
-            patternScale[index], // Pass patternScale as an argument
-            patternColor[index], // Pass newColor as an argument
-            primaryGradientColor1, // Pass primary gradient color 1
-            primaryGradientColor2, // Pass primary gradient color 2
-            isDesignGradientEnabled // Pass flag for primary gradient
+            isDesignGradientEnabled,
+            normal // Pass the normal map as an argument
           );
           child.material = material;
         }
@@ -404,11 +391,13 @@ export function Model(props) {
     gradientScale,
     designColor,
     patternScale,
-    patternColor, // Add patternScale to dependency array
+    patternColor,
     designGradient1,
     designGradient2,
     isDesignGradientEnabled,
+    normal // Add normal to dependency array
   ]);
+  
 
   // NUMBER STATES
   const [number1Position, setNumber1Position] = useState([0, 0, 2]);
