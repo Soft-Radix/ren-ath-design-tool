@@ -15,10 +15,10 @@ import { colorList } from "../../../components/data/colors";
 const Gradient = () => {
   const ref = useProductStore((state) => state.ref);
   const {
-    color,
-    updateColor,
     gradient,
+    gradient2,
     updateGradient,
+    updateGradient2,
     gradientScale,
     gradientAngle,
     updateGradientScale,
@@ -30,6 +30,8 @@ const Gradient = () => {
     handleIsDesignGradientEnabled,
     designGradient1,
     designGradient2,
+    designScale,
+    handleDesignScale,
   } = useProductStore((state) => state);
 
   const children = ref?.current?.children || [];
@@ -39,7 +41,83 @@ const Gradient = () => {
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-
+  const DesignGradient = ({ childIndex }) => {
+    return (
+      <>
+        <div className={styles.scaleAngleWrap}>
+          <div className={styles.sliderWrap}>
+            <span>Scale</span>
+            <Slider
+              min={0.1}
+              max={1}
+              step={0.01}
+              value={designScale[childIndex]}
+              onChange={(e) => handleDesignScale({ [childIndex]: e })}
+            />
+          </div>
+        </div>
+        <div className={styles.buttonWrap}>
+          <ThemeButton
+            onClick={() => {
+              // updateGradientScale({ [childIndex]: 0.91 });
+              setDesignType(1);
+              //updateIsGradient(true);
+            }}
+            variant={designType === 2 ? "outlined" : "contained"}
+          >
+            Color
+          </ThemeButton>
+          <ThemeButton
+            onClick={() => {
+              // updateGradientScale({ [childIndex]: 0.91 });
+              setDesignType(2);
+              //updateIsGradient(true);
+            }}
+            variant={designType === 1 ? "outlined" : "contained"}
+          >
+            Gradient
+          </ThemeButton>
+          <div
+            className={styles.gradientViewer}
+            style={{
+              background: `linear-gradient(110deg, ${
+                designGradient1[childIndex] || "transparent"
+              }, ${designGradient2[childIndex] || "transparent"})`,
+            }}
+          />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 10,
+          }}
+        >
+          {colorList.map((itemColor, index) => (
+            <div
+              className={styles.colorViewer}
+              style={{ backgroundColor: itemColor }}
+              onClick={() => {
+                if (designType === 1) {
+                  handleDesignGradient1({ [childIndex]: itemColor });
+                } else {
+                  handleDesignGradient2({ [childIndex]: itemColor });
+                }
+                handleIsDesignGradientEnabled(true);
+              }}
+            >
+              {designType === 1 &&
+                designGradient1[childIndex] &&
+                designGradient1[childIndex] === itemColor && <TickIcon />}
+              {designType === 2 &&
+                designGradient2[childIndex] &&
+                designGradient2[childIndex] === itemColor && <TickIcon />}
+            </div>
+          ))}
+        </div>
+      </>
+    );
+  };
   return (
     <div className={`${styles.colorWrap} ${styles.gradientWrap}`}>
       {children?.map((item, childIndex) => {
@@ -57,13 +135,14 @@ const Gradient = () => {
                   className={`${styles.colorViewer} ${styles.mainColorViewer}`}
                   style={{
                     background: `linear-gradient(90deg, ${
-                      color[childIndex] || "transparent"
+                      gradient2[childIndex] || "transparent"
                     }, ${gradient[childIndex] || "transparent"})`,
                   }}
                 />
                 {item.name}
               </AccordionSummary>
               <AccordionDetails>
+                <h3>Normal Gradient</h3>
                 <div className={styles.scaleAngleWrap}>
                   <div className={styles.sliderWrap}>
                     <span>Scale</span>
@@ -75,16 +154,16 @@ const Gradient = () => {
                       onChange={(e) => updateGradientScale({ [childIndex]: e })}
                     />
                   </div>
-                  {/* <div className={styles.sliderWrap}>
-                  <span>Angle</span>
-                  <Slider
-                    min={0}
-                    max={360}
-                    step={1}
-                    value={gradientAngle[childIndex]}
-                    onChange={(e) => updateGradientAngle({ [childIndex]: e })}
-                  />
-                </div> */}
+                  <div className={styles.sliderWrap}>
+                    <span>Rotate</span>
+                    <Slider
+                      min={0}
+                      max={180}
+                      step={5}
+                      value={gradientAngle[childIndex]}
+                      onChange={(e) => updateGradientAngle({ [childIndex]: e })}
+                    />
+                  </div>
                 </div>
                 <div className={styles.buttonWrap}>
                   <ThemeButton
@@ -111,7 +190,7 @@ const Gradient = () => {
                     className={styles.gradientViewer}
                     style={{
                       background: `linear-gradient(110deg, ${
-                        color[childIndex] || "transparent"
+                        gradient2[childIndex] || "transparent"
                       }, ${gradient[childIndex] || "transparent"})`,
                     }}
                   />
@@ -122,7 +201,7 @@ const Gradient = () => {
                     style={{ backgroundColor: "transparent" }}
                     onClick={() => {
                       if (type === 1) {
-                        updateColor({ [childIndex]: null });
+                        updateGradient2({ [childIndex]: null });
                         updateColorIndex(childIndex);
                         // item.material.color = new ParceColor(0xffffff);
                       } else {
@@ -140,8 +219,9 @@ const Gradient = () => {
                       className={styles.colorViewer}
                       style={{ backgroundColor: itemColor }}
                       onClick={() => {
+                        console.log("child", childIndex);
                         if (type === 1) {
-                          updateColor({ [childIndex]: itemColor });
+                          updateGradient2({ [childIndex]: itemColor });
                           updateColorIndex(childIndex);
                           // item.material.color = new ParceColor(itemColor);
                         } else {
@@ -152,22 +232,28 @@ const Gradient = () => {
                       }}
                     >
                       {type === 1 &&
-                        color[childIndex] &&
-                        color[childIndex] === itemColor && <TickIcon />}
+                        gradient2[childIndex] &&
+                        gradient2[childIndex] === itemColor && <TickIcon />}
                       {type === 2 &&
                         gradient[childIndex] &&
                         gradient[childIndex] === itemColor && <TickIcon />}
                     </div>
                   ))}
                 </div>
+                {childIndex !== 6 && childIndex !== 7 && (
+                  <>
+                    <h3>Design Gradient</h3>
+                    <DesignGradient key={childIndex} childIndex={childIndex} />
+                  </>
+                )}
               </AccordionDetails>
             </Accordion>
           );
         }
       })}
       <Accordion
-        onChange={handleChange('design_gradient')}
-        expanded={expanded === 'design_gradient'}
+        onChange={handleChange("design_gradient")}
+        expanded={expanded === "design_gradient"}
       >
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <div
@@ -181,6 +267,18 @@ const Gradient = () => {
           Design Gradient
         </AccordionSummary>
         <AccordionDetails>
+          <div className={styles.scaleAngleWrap}>
+            <div className={styles.sliderWrap}>
+              <span>Scale</span>
+              <Slider
+                min={0.1}
+                max={1}
+                step={0.01}
+                value={designScale}
+                onChange={(e) => handleDesignScale(e)}
+              />
+            </div>
+          </div>
           <div className={styles.buttonWrap}>
             <ThemeButton
               onClick={() => {
