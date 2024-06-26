@@ -251,7 +251,7 @@ const Gradient = () => {
           );
         }
       })}
-      <Accordion
+      {/* <Accordion
         onChange={handleChange("design_gradient")}
         expanded={expanded === "design_gradient"}
       >
@@ -339,7 +339,7 @@ const Gradient = () => {
             ))}
           </div>
         </AccordionDetails>
-      </Accordion>
+      </Accordion> */}
     </div>
   );
 };
