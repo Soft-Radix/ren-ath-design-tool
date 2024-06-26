@@ -9,6 +9,8 @@ import ThemeButton from "../../../components/common/ThemeButton";
 import { useProductStore } from "../../../store";
 import styles from "./properties.module.scss";
 import { colorList } from "../../../components/data/colors";
+import { TextField } from "@mui/material";
+import Slider from "rc-slider";
 const Number = () => {
   const {
     number,
@@ -26,23 +28,24 @@ const Number = () => {
     updateNumberGradient,
     updateIsNumberGradient,
     isNumberGradientColor,
+    numberScale,
+    updateNumberScale,
+    updateNumberAngle,
+    numberAngle,
   } = useProductStore((state) => state);
+  const ref = useProductStore((state) => state.ref);
+
   const [expanded, setExpanded] = React.useState(false > false);
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-  // const colorList = [
-  //   "#D14E24",
-  //   "#EF7E15",
-  //   "#E9ED23",
-  //   "#AED124",
-  //   "#D1AB24",
-  //   "#85D124",
-  //   "#24D169",
-  // ];
 
-  const [type, setType] = useState(1);
+  const children = ref?.current?.children || [];
+  const [type, setType] = useState({
+    2: 1,
+    3: 1,
+  });
   const [images, setImages] = useState({
     front: "",
     back: "",
@@ -77,7 +80,236 @@ const Number = () => {
 
   return (
     <div className={styles.numberWrap}>
-      <Accordion onChange={handleChange("tab1")} expanded={expanded === "tab1"}>
+      {children?.map((child, childIndex) => {
+        if (childIndex === 2 || childIndex === 3) {
+          return (
+            <Accordion
+              key={child.uuid}
+              onChange={handleChange(child?.uuid)}
+              expanded={expanded === child?.uuid}
+            >
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                {child.name}
+              </AccordionSummary>
+              <AccordionDetails>
+                <h3>Enter Number</h3>
+                <TextField
+                  type="number"
+                  variant="outlined"
+                  placeholder="Enter a number"
+                  value={number[childIndex]}
+                  size="small"
+                  onChange={(e) =>
+                    e.target.value.length < 4 &&
+                    updateNumber({ [childIndex]: e.target.value })
+                  }
+                />
+
+                <h3>Change Fonts</h3>
+                <div className={styles.fontWrap}>
+                  <motion.div
+                    className={`${styles.fontItem1} ${
+                      numberFont[childIndex] == 1 ? styles.selected : ""
+                    }`}
+                    onClick={() => updateNumberFont({ [childIndex]: 1 })}
+                    whileHover={{ scale: 1.02 }}
+                  >
+                    F1 0123456789
+                  </motion.div>
+                  <motion.div
+                    className={`${styles.fontItem2} ${
+                      numberFont[childIndex] == 2 ? styles.selected : ""
+                    }`}
+                    onClick={() => updateNumberFont({ [childIndex]: 2 })}
+                    whileHover={{ scale: 1.02 }}
+                  >
+                    F2 0123456789
+                  </motion.div>
+                  <motion.div
+                    className={`${styles.fontItem3} ${
+                      numberFont[childIndex] == 3 ? styles.selected : ""
+                    }`}
+                    onClick={() => updateNumberFont({ [childIndex]: 3 })}
+                    whileHover={{ scale: 1.02 }}
+                  >
+                    F3 0123456789
+                  </motion.div>
+                  <motion.div
+                    className={`${styles.fontItem4} ${
+                      numberFont[childIndex] == 4 ? styles.selected : ""
+                    }`}
+                    onClick={() => updateNumberFont({ [childIndex]: 4 })}
+                    whileHover={{ scale: 1.02 }}
+                  >
+                    F4 0123456789
+                  </motion.div>{" "}
+                  <motion.div
+                    className={`${styles.fontItem5} ${
+                      numberFont[childIndex] == 5 ? styles.selected : ""
+                    }`}
+                    onClick={() => updateNumberFont({ [childIndex]: 5 })}
+                    whileHover={{ scale: 1.02 }}
+                  >
+                    F5 0123456789
+                  </motion.div>{" "}
+                  <motion.div
+                    className={`${styles.fontItem6} ${
+                      numberFont[childIndex] == 6 ? styles.selected : ""
+                    }`}
+                    onClick={() => updateNumberFont({ [childIndex]: 6 })}
+                    whileHover={{ scale: 1.02 }}
+                  >
+                    F6 0123456789
+                  </motion.div>{" "}
+                  <motion.div
+                    className={`${styles.fontItem7} ${
+                      numberFont[childIndex] == 7 ? styles.selected : ""
+                    }`}
+                    onClick={() => updateNumberFont({ [childIndex]: 7 })}
+                    whileHover={{ scale: 1.02 }}
+                  >
+                    F7 0123456789
+                  </motion.div>{" "}
+                  <motion.div
+                    className={`${styles.fontItem8} ${
+                      numberFont[childIndex] == 8 ? styles.selected : ""
+                    }`}
+                    onClick={() => updateNumberFont({ [childIndex]: 8 })}
+                    whileHover={{ scale: 1.02 }}
+                  >
+                    F8 0123456789
+                  </motion.div>
+                  <motion.div
+                    className={`${styles.fontItem9} ${
+                      numberFont[childIndex] == 9 ? styles.selected : ""
+                    }`}
+                    onClick={() => updateNumberFont({ [childIndex]: 9 })}
+                    whileHover={{ scale: 1.02 }}
+                  >
+                    F9 0123456789
+                  </motion.div>{" "}
+                </div>
+                <h3>Color & Outline</h3>
+                <div className={styles.scaleAngleWrap}>
+                  <div className={styles.sliderWrap}>
+                    <span>Scale</span>
+                    <Slider
+                      min={0.1}
+                      max={1}
+                      step={0.01}
+                      value={numberScale[childIndex]}
+                      onChange={(e) => {
+                        updateNumberScale({ [childIndex]: e });
+                      }}
+                    />
+                  </div>
+                  <div className={styles.sliderWrap}>
+                    <span>Rotate</span>
+                    <Slider
+                      min={0}
+                      max={180}
+                      step={5}
+                      value={numberAngle[childIndex]}
+                      onChange={(e) => {
+                        updateNumberAngle({ [childIndex]: e });
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className={styles.fontColorWrap}>
+                  <div className={styles.buttonWrap}>
+                    <ThemeButton
+                      onClick={() => setType({ [childIndex]: 1 })}
+                      variant={type[childIndex] != 1 ? "outlined" : "contained"}
+                    >
+                      Color
+                    </ThemeButton>
+                    <ThemeButton
+                      onClick={() => setType({ [childIndex]: 3 })}
+                      variant={type[childIndex] != 3 ? "outlined" : "contained"}
+                    >
+                      Gradient
+                    </ThemeButton>
+                    <ThemeButton
+                      onClick={() => setType({ [childIndex]: 2 })}
+                      variant={type[childIndex] != 2 ? "outlined" : "contained"}
+                    >
+                      Outline
+                    </ThemeButton>
+                    {isNumberGradientColor && (
+                      <div
+                        className={styles.gradientViewer}
+                        style={{
+                          background: isNumberGradientColor
+                            ? `linear-gradient(0deg, ${
+                                numberColor || "transparent"
+                              }, ${
+                                numberGradientColor[childIndex] || "transparent"
+                              })`
+                            : numberColor,
+                          height: 35,
+                          width: 50,
+                        }}
+                        variant={"outlined"}
+                      ></div>
+                    )}
+                  </div>
+
+                  <div className={styles.colorPalletWrap}>
+                    <div
+                      className={styles.colorViewer}
+                      style={{ backgroundColor: "transparent" }}
+                      onClick={() => {
+                        type[childIndex] == 1
+                          ? updateNumberColor({ [childIndex]: "" })
+                          : type[childIndex] == 3
+                          ? updateNumberGradient({ [childIndex]: "" })
+                          : updateNumberOutline({ [childIndex]: "" });
+
+                        if (type[childIndex] == 3) {
+                          updateIsNumberGradient(false);
+                        }
+                      }}
+                    >
+                      <CrossIcon />
+                    </div>
+                    {colorList.map((itemColor, index) => (
+                      <div
+                        key={index}
+                        className={styles.colorViewer}
+                        style={{ backgroundColor: itemColor }}
+                        onClick={() => {
+                          if (type[childIndex] == 3) {
+                            updateIsNumberGradient(true);
+                          }
+                          type[childIndex] == 1
+                            ? updateNumberColor({ [childIndex]: itemColor })
+                            : type[childIndex] == 3
+                            ? updateNumberGradient({ [childIndex]: itemColor })
+                            : updateNumberOutline({ [childIndex]: itemColor });
+                        }}
+                      >
+                        {type[childIndex] == 1
+                          ? numberColor[childIndex] === itemColor && (
+                              <TickIcon />
+                            )
+                          : type[childIndex] == 3
+                          ? numberGradientColor[childIndex] === itemColor && (
+                              <TickIcon />
+                            )
+                          : numberOutline[childIndex] === itemColor && (
+                              <TickIcon />
+                            )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </AccordionDetails>
+            </Accordion>
+          );
+        }
+      })}
+      {/* <Accordion onChange={handleChange("tab1")} expanded={expanded === "tab1"}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           + Add Number
         </AccordionSummary>
@@ -107,22 +339,6 @@ const Number = () => {
               >
                 <img src={images.back} alt="" />
               </div>
-              {/* <div
-                className={`${styles.imgWrap} ${
-                  numberPosition === 3 ? styles.selected : ""
-                }`}
-                onClick={() => updateNumberPosition(3)}
-              >
-                <img src={images.chest_left} alt="" />
-              </div>
-              <div
-                className={`${styles.imgWrap} ${
-                  numberPosition === 4 ? styles.selected : ""
-                }`}
-                onClick={() => updateNumberPosition(4)}
-              >
-                <img src={images.chest_right} alt="" />
-              </div> */}
             </div>
           </div>
           <input
@@ -136,9 +352,9 @@ const Number = () => {
             }
           />
         </AccordionDetails>
-      </Accordion>
+      </Accordion> */}
 
-      <Accordion onChange={handleChange("tab2")} expanded={expanded === "tab2"}>
+      {/* <Accordion onChange={handleChange("tab2")} expanded={expanded === "tab2"}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           Change Font
         </AccordionSummary>
@@ -227,9 +443,9 @@ const Number = () => {
             </motion.div>{" "}
           </div>
         </AccordionDetails>
-      </Accordion>
+      </Accordion> */}
 
-      <Accordion onChange={handleChange("tab3")} expanded={expanded === "tab3"}>
+      {/* <Accordion onChange={handleChange("tab3")} expanded={expanded === "tab3"}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           Color & Outline
         </AccordionSummary>
@@ -315,7 +531,7 @@ const Number = () => {
             </div>
           </div>
         </AccordionDetails>
-      </Accordion>
+      </Accordion> */}
     </div>
   );
 };

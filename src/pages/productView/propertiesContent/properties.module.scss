@@ -159,6 +159,7 @@
     }
   }
   .numberInput {
+    width: 100%;
     margin-top: 20px;
     margin-left: 30px;
     height: 30px;
@@ -420,5 +421,39 @@
   h6 {
     margin: 0px;
     font-size: medium;
+  }
+}
+.scaleAngleWrap {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  .sliderWrap {
+    span {
+      color: $white;
+      font-size: $fontXsm;
+      font-weight: $fontExtraBold;
+    }
+    border-radius: 2px;
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+    gap: 10px;
+    background-color: $secondary;
+    padding: 12px 15px 12px 10px;
+
+    :global {
+      .rc-slider-handle {
+        border: none;
+        background: $primary;
+        height: 11px;
+        width: 11px;
+        margin-top: -3px;
+        box-shadow: none;
+        opacity: 1;
+      }
+      .rc-slider-track {
+        background: $primary;
+      }
+    }
   }
 }
