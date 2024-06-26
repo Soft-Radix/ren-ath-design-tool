@@ -39,19 +39,40 @@ export const useProductStore = create((set) => ({
   patternScale: {},
   patternAngle: {},
 
-  number: "",
+  number: {},
   numberPosition: 0,
-  numberFont: 1,
-  numberColor: "",
-  numberOutline: "",
-  numberGradientColor: "",
+  numberFont: {
+    2: "1",
+    3: "1",
+  },
+  numberColor: {},
+  numberOutline: {},
+  numberScale: {
+    2: 0.48,
+    3: 0.48,
+  },
+  numberAngle: {},
+  numberGradientColor: {},
   isNumberGradientColor: false,
-  modelName: "",
+  modelName: {},
   namePosition: 1,
-  nameFont: 1,
-  nameColor: "",
-  nameOutline: "",
-  nameGradientColor: "",
+  nameFont: {
+    0: 1,
+    1: 1,
+    2: 1,
+    3: 1,
+  },
+  nameColor: {},
+  nameOutline: {},
+  nameScale: {
+    0: 4,
+    1: 4,
+    2: 4,
+    3: 4,
+  },
+  nameGradientColor: {},
+  nameGradientScale: {},
+  nameGradientAngle: {},
   isNameGradientColor: false,
 
   logo: null,
@@ -175,24 +196,24 @@ export const useProductStore = create((set) => ({
       layer: updatedLayer,
     })),
   updateNumber: (updatedNumber) =>
-    set(() => ({
-      number: updatedNumber,
+    set((state) => ({
+      number: { ...state.number, ...updatedNumber },
     })),
   updateNumberPosition: (updatedPosition) =>
     set(() => ({
       numberPosition: updatedPosition,
     })),
   updateNumberFont: (updatedFont) =>
-    set(() => ({
-      numberFont: updatedFont,
+    set((state) => ({
+      numberFont: { ...state.numberFont, ...updatedFont },
     })),
   updateNumberColor: (color) =>
-    set(() => ({
-      numberColor: color,
+    set((state) => ({
+      numberColor: { ...state.numberColor, ...color },
     })),
   updateNumberGradient: (color) =>
-    set(() => ({
-      numberGradientColor: color,
+    set((state) => ({
+      numberGradientColor: { ...state.numberGradientColor, ...color },
     })),
   updateIsNumberGradient: (isValue) =>
     set(() => ({
@@ -200,38 +221,58 @@ export const useProductStore = create((set) => ({
     })),
 
   updateNameGradient: (color) =>
-    set(() => ({
-      nameGradientColor: color,
+    set((state) => ({
+      nameGradientColor: { ...state.nameGradientColor, ...color },
     })),
   updateIsNameGradient: (isValue) =>
     set(() => ({
       isNameGradientColor: isValue,
     })),
+  updateNameGradientScale: (scale) =>
+    set((state) => ({
+      nameGradientScale: { ...state.nameGradientScale, ...scale },
+    })),
+  updateNameGradientAngle: (angle) =>
+    set((state) => ({
+      nameGradientAngle: { ...state.nameGradientAngle, ...angle },
+    })),
 
   updateNumberOutline: (color) =>
-    set(() => ({
-      numberOutline: color,
+    set((state) => ({
+      numberOutline: { ...state.numberOutline, ...color },
+    })),
+  updateNumberScale: (scale) =>
+    set((state) => ({
+      numberScale: { ...state.numberScale, ...scale },
+    })),
+  updateNumberAngle: (angle) =>
+    set((state) => ({
+      numberAngle: { ...state.numberAngle, ...angle },
     })),
 
   updateName: (updatedName) =>
-    set(() => ({
-      modelName: updatedName,
+    set((state) => ({
+      modelName: { ...state.modelName, ...updatedName },
     })),
   updateNamePosition: (updatedPosition) =>
     set(() => ({
       namePosition: updatedPosition,
     })),
   updateNameFont: (updatedFont) =>
-    set(() => ({
-      nameFont: updatedFont,
+    set((state) => ({
+      nameFont: { ...state.nameFont, ...updatedFont },
     })),
   updateNameColor: (color) =>
-    set(() => ({
-      nameColor: color,
+    set((state) => ({
+      nameColor: { ...state.nameColor, ...color },
     })),
   updateNameOutline: (color) =>
-    set(() => ({
-      nameOutline: color,
+    set((state) => ({
+      nameOutline: { ...state.nameOutline, ...color },
+    })),
+  updateNameScale: (scale) =>
+    set((state) => ({
+      nameScale: { ...state.nameScale, ...scale },
     })),
 
   updateLogo: (imageFile) =>

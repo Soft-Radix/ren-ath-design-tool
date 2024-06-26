@@ -24,3 +24,18 @@ export const handleZoomOut = (orbitControlsRef) => {
     }
   }
 };
+
+export function transformGradientScale(originalValue) {
+  var scaledValue = originalValue * 0.2 + 1.0;
+  return scaledValue;
+}
+
+export const calculateScale = (value) => {
+  if (value <= 10) {
+    const minScale = [1, 1, 1];
+    const maxScale = [10, 10, 10];
+    const factor = (value - 1) / 9; // Normalize value to range 0 to 1
+
+    return minScale.map((min, i) => min + factor * (maxScale[i] - min));
+  }
+};
