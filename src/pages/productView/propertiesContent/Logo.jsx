@@ -1,31 +1,43 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import styles from "./properties.module.scss";
-import back from "../../../assets/images/products/placement/W1/back.png";
-import front from "../../../assets/images/products/placement/W1/front.png";
 import { useProductStore } from "../../../store";
 import { useDropzone } from "react-dropzone";
-import crossImg from "../../../assets/images/crossImg.png";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import { UploadIcon } from "../../../assets/svg/icons";
+import { IconButton } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const Logo = () => {
   const {
-    logo,
     updateLogo,
-    logoPosition,
-    updateLogoPosition,
+    id,
+    updatedLogos,
+    setUpdatedLogos,
     logoScale,
     updateLogoScale,
-    logoAngle,
-    updateLogoAngle,
   } = useProductStore((state) => state);
 
-  // Drag drop input styles start
+  const [logos, setLogos] = useState([]);
+  const [expanded, setExpanded] = React.useState(false);
+
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
+  const [logoPositions, setLogoPositions] = useState({});
+
+  console.log("🚀 ~ Logo ~ logoScale:", logoScale);
+  const [logoAngles, setLogoAngles] = useState({});
+  const [images, setImages] = useState({
+    front: "",
+    back: "",
+    chest_left: "",
+    chest_right: "",
+  });
 
   const baseStyle = {
     flex: 1,
@@ -58,7 +70,19 @@ const Logo = () => {
   };
 
   const onDropAccepted = (acceptedFiles) => {
+    const newLogo = acceptedFiles[0]
+      ? URL.createObjectURL(acceptedFiles[0])
+      : null;
     updateLogo(acceptedFiles[0]);
+    const logoKey = `image${logos.length + 1}`;
+    setLogos([...logos, newLogo]);
+    setUpdatedLogos({
+      ...updatedLogos,
+      [logoKey]: { 1: [], 2: [], 3: [], 4: [] },
+    });
+    setLogoPositions({ ...logoPositions, [logoKey]: null });
+    updateLogoScale({ ...logoScale, [logoKey]: 1 });
+    setLogoAngles({ ...logoAngles, [logoKey]: 0 });
   };
 
   const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject } =
@@ -74,100 +98,211 @@ const Logo = () => {
     [isFocused, isDragAccept, isDragReject]
   );
 
-  // Drag drop input styles end
+  useEffect(() => {
+    const loadImages = async () => {
+      try {
+        const front = (
+          await import(
+            `../../../assets/images/products/placement/${id}/front.png`
+          )
+        ).default;
+        const back = (
+          await import(
+            `../../../assets/images/products/placement/${id}/back.png`
+          )
+        ).default;
+        const chest_left = (
+          await import(
+            `../../../assets/images/products/placement/${id}/left.png`
+          )
+        ).default;
+        const chest_right = (
+          await import(
+            `../../../assets/images/products/placement/${id}/right.png`
+          )
+        ).default;
+        const images = { front, back, chest_left, chest_right };
+        setImages({ ...images });
+      } catch (error) {
+        // Handle error
+      }
+    };
+    loadImages();
+  }, [id]);
+
+  const updateLogosWithPosition = (key, logo, logoKey) => {
+    const newLogos = { ...updatedLogos };
+
+    // Ensure logoKey exists
+    if (!newLogos[logoKey]) {
+      newLogos[logoKey] = { 1: [], 2: [], 3: [], 4: [] };
+    }
+
+    // Remove logo from other keys
+    Object.keys(newLogos[logoKey]).forEach((k) => {
+      if (k !== String(key)) {
+        newLogos[logoKey][k] = newLogos[logoKey][k].filter((l) => l !== logo);
+      }
+    });
+
+    // Add logo to the specified key if it doesn't exist
+    if (!newLogos[logoKey][key].includes(logo)) {
+      newLogos[logoKey][key] = [...newLogos[logoKey][key], logo];
+    }
+
+    // Update the position state for this logo
+    const newLogoPositions = { ...logoPositions, [logoKey]: key };
+
+    setUpdatedLogos(newLogos);
+    setLogoPositions(newLogoPositions);
+  };
+
+  const updateLogoScales = (logoKey, scale) => {
+    updateLogoScale({ ...logoScale, [logoKey]: scale });
+  };
+
+  const updateLogoAngle = (logoKey, angle) => {
+    setLogoAngles({ ...logoAngles, [logoKey]: angle });
+  };
+
+  const handleDeleteLogo = (logoKey) => {
+    const newLogos = logos.filter((logo) => logo !== logoKey);
+    const { [logoKey]: _, ...remainingUpdatedLogos } = updatedLogos;
+    const { [logoKey]: __, ...remainingLogoPositions } = logoPositions;
+    const { [logoKey]: ___, ...remainingLogoScales } = logoScale;
+    const { [logoKey]: ____, ...remainingLogoAngles } = logoAngles;
+
+    setLogos(newLogos);
+    setUpdatedLogos(remainingUpdatedLogos);
+    setLogoPositions(remainingLogoPositions);
+    updateLogoScale(remainingLogoScales);
+    setLogoAngles(remainingLogoAngles);
+  };
 
   return (
     <div className={`${styles.numberWrap} ${styles.logoWrap}`}>
-      <Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          + Add Logo Place
-        </AccordionSummary>
-        <AccordionDetails>
-          <div className={`${styles.textLayerWrap} ${styles.addNumberWrap}`}>
-            <div className={styles.layers}>
-              <div
-                className={`${styles.imgWrap} ${
-                  logoPosition === 1 ? styles.selected : ""
-                }`}
-                onClick={() => updateLogoPosition(1)}
-              >
-                <img src={front} alt="" />
-              </div>
-              <div
-                className={`${styles.imgWrap} ${
-                  logoPosition === 2 ? styles.selected : ""
-                }`}
-                onClick={() => updateLogoPosition(2)}
-              >
-                <img src={back} alt="" />
-              </div>
-            </div>
-          </div>
-          <div {...getRootProps({ style })}>
-            <input {...getInputProps()} />
-            <span className={styles.uploadWrap}>
-              <UploadIcon />
-              <span className={styles.textWrap}>
-                <span className={styles.text1}>Upload logo</span>
-                <span className={styles.text2}>
-                  Max size 10MB, JPG, PNG, SVG, PDF
-                </span>
-              </span>
-            </span>
-          </div>
-          {logo && (
-            <div className={styles.imageWrap}>
-              <img src={logo} alt="" className={styles.selectedImg} />
-              <img
-                onClick={() => updateLogo(null)}
-                src={crossImg}
-                alt=""
-                className={styles.crossImg}
-              />
-            </div>
-          )}
-        </AccordionDetails>
-      </Accordion>
-      {logo && (
-        <>
-          <Accordion>
+      {logos?.map((logo, index) => {
+        const logoKey = logo;
+
+        return (
+          <Accordion
+            key={index + 1}
+            onChange={handleChange(index + 1)}
+            expanded={expanded === index + 1}
+          >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              Scale
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  width: "100%",
+                }}
+              >
+                <img
+                  src={logo}
+                  alt={`${index}-${logo}`}
+                  style={{
+                    width: 40,
+                    height: 40,
+                  }}
+                />
+                <IconButton
+                  aria-label="delete"
+                  color="error"
+                  onClick={() => handleDeleteLogo(logoKey)}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </div>
             </AccordionSummary>
             <AccordionDetails>
+              <div
+                className={`${styles.textLayerWrap} ${styles.addNumberWrap}`}
+              >
+                <div className={styles.layers}>
+                  <div
+                    className={`${styles.imgWrap} ${
+                      logoPositions[logoKey] === 1 ? styles.selected : ""
+                    }`}
+                    onClick={() => {
+                      updateLogosWithPosition(1, logo, logoKey);
+                    }}
+                  >
+                    <img src={images.front} alt="" />
+                  </div>
+                  <div
+                    className={`${styles.imgWrap} ${
+                      logoPositions[logoKey] === 2 ? styles.selected : ""
+                    }`}
+                    onClick={() => {
+                      updateLogosWithPosition(2, logo, logoKey);
+                    }}
+                  >
+                    <img src={images.back} alt="" />
+                  </div>
+                  <div
+                    className={`${styles.imgWrap} ${
+                      logoPositions[logoKey] === 3 ? styles.selected : ""
+                    }`}
+                    onClick={() => {
+                      updateLogosWithPosition(3, logo, logoKey);
+                    }}
+                  >
+                    <img src={images.chest_left} alt="" />
+                  </div>
+                  <div
+                    className={`${styles.imgWrap} ${
+                      logoPositions[logoKey] === 4 ? styles.selected : ""
+                    }`}
+                    onClick={() => {
+                      updateLogosWithPosition(4, logo, logoKey);
+                    }}
+                  >
+                    <img src={images.chest_right} alt="" />
+                  </div>
+                </div>
+              </div>
+              <h3>Scale</h3>
               <div className={styles.sliderWrap}>
                 <Slider
                   min={0.3}
-                  max={1.2}
+                  max={0.8}
                   step={0.01}
-                  value={logoScale}
-                  onChange={(e) => updateLogoScale(e)}
+                  value={logoScale[logoKey]}
+                  defaultValue={0.3}
+                  onChange={(e) => updateLogoScales(logoKey, e)}
                 />
               </div>
-            </AccordionDetails>
-          </Accordion>{" "}
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              Angle
-            </AccordionSummary>
-            <AccordionDetails>
-              <div className={styles.sliderWrap}>
+              {/* <h3>Angle</h3> */}
+              {/* <div className={styles.sliderWrap}>
                 <Slider
                   min={0}
                   max={360}
                   step={1}
-                  value={logoAngle}
-                  onChange={(e) => updateLogoAngle(e)}
+                  value={logoAngles[logoKey]}
+                  onChange={(e) => updateLogoAngle(logoKey, e)}
                 />
                 <span>
-                  {logoAngle || 0}
+                  {logoAngles[logoKey] || 0}
                   <sup>°</sup>
                 </span>
-              </div>
+              </div> */}
             </AccordionDetails>
           </Accordion>
-        </>
-      )}
+        );
+      })}
+      <div {...getRootProps({ style })}>
+        <input {...getInputProps()} />
+        <span className={styles.uploadWrap}>
+          <UploadIcon />
+          <span className={styles.textWrap}>
+            <span className={styles.text1}>Upload logo</span>
+            <span className={styles.text2}>
+              Max size 10MB, JPG, PNG, SVG, PDF
+            </span>
+          </span>
+        </span>
+      </div>
     </div>
   );
 };

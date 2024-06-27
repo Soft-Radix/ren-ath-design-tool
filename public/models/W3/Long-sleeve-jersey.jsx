@@ -24,6 +24,7 @@ import font9 from "../../../src/assets/fonts/SawarabiGothic-Regular.ttf";
 import font4 from "../../../src/assets/fonts/TiltNeon.ttf";
 import GradientText from "../../../src/components/common/gradientText/GradientText";
 import { useProductStore } from "../../../src/store";
+import LogoDecal from "../../../src/components/common/logoDecal";
 import {
   calculateScale,
   transformGradientScale,
@@ -83,8 +84,9 @@ export function Model(props) {
     designGradient1,
     designGradient2,
     isDesignGradientEnabled,
+
+    updatedLogos,
   } = useProductStore((state) => state);
-  // console.log("🚀 ~ Model ~ isGradient:", isGradient);
 
   // SET CAMERA POSITION
   const camera = useThree((state) => state.camera);
@@ -101,6 +103,19 @@ export function Model(props) {
   );
   const primaryTexture = useTexture(designTexture);
   const secondaryTexture = useTexture(secondaryTextureUrl);
+  const [combinedLogos, setCombinedLogos] = useState({});
+  const [decalPositions1, setDecalPositions1] = useState(
+    [[0, 0, 1]] // Initialize positions array with default values
+  );
+  const [decalPositions2, setDecalPositions2] = useState(
+    [[0, 0, 1]] // Initialize positions array with default values
+  );
+  const [decalPositions3, setDecalPositions3] = useState(
+    [[0, 0, 1]] // Initialize positions array with default values
+  );
+  const [decalPositions4, setDecalPositions4] = useState(
+    [[0, 0, 1]] // Initialize positions array with default values
+  );
   const normal = useTexture("./model-designs/W3/normal.png");
 
   // state to update color of each layer
@@ -518,6 +533,7 @@ export function Model(props) {
     },
     { pointerEvents: true }
   );
+  const logoTexture = useTexture(combinedLogos[1] || "./textures/pattern2.png");
 
   // HANDLE TEXT DRAG ON FIRST LAYER
   const bindBack = useDrag(
@@ -539,8 +555,20 @@ export function Model(props) {
     { pointerEvents: true }
   );
   // HANDLE LOGO STATES
-  const logoTexture = useTexture(logo || "./textures/pattern7.png");
+  const logoTexture1 = useTexture(
+    combinedLogos[1] || "./textures/pattern2.png"
+  );
+  const logoTexture2 = useTexture(
+    combinedLogos[2] || "./textures/pattern2.png"
+  );
+  const logoTexture3 = useTexture(
+    combinedLogos[3] || "./textures/pattern2.png"
+  );
+  const logoTexture4 = useTexture(
+    combinedLogos[4] || "./textures/pattern2.png"
+  );
   const [modelLogoPosition, setModelLogoPosition] = useState([0, 0, 1]);
+  const [modelLogoPosition2, setModelLogoPosition2] = useState([0, 1, 1]);
   const [logoRotation, setLogoRotation] = useState([0, 0, 0]);
 
   // HANDLE TEXT DRAG ON FIRST LAYER
@@ -626,6 +654,32 @@ export function Model(props) {
     setNumber1Rotation(modelRotation);
   }, [modelRotation]);
 
+  const combineKeys = (logosObject) => {
+    const combined = { 1: [], 2: [], 3: [], 4: [] };
+
+    Object.values(logosObject).forEach((image) => {
+      Object.keys(combined).forEach((key) => {
+        combined[key] = [...combined[key], ...image[key]];
+      });
+    });
+
+    return combined;
+  };
+
+  useEffect(() => {
+    const result = combineKeys(updatedLogos);
+    setCombinedLogos(result);
+    const positions1 = result?.[1]?.map(() => [0, 0, 1]);
+    const positions2 = result?.[2]?.map(() => [0, 0, 1]);
+    const positions3 = result?.[3]?.map(() => [0, 0, 1]);
+    const positions4 = result?.[4]?.map(() => [0, 0, 1]);
+    setDecalPositions1(positions1);
+    setDecalPositions2(positions2);
+    setDecalPositions3(positions3);
+    setDecalPositions4(positions4);
+  }, [updatedLogos]);
+
+  console.log("combinedLogos", combinedLogos);
   return (
     <>
       {/* Ambient light and orbit controls */}
@@ -662,6 +716,44 @@ export function Model(props) {
                 />
               </meshStandardMaterial>
             )}
+            {combinedLogos?.[3]?.length > 0 &&
+              combinedLogos?.[3]?.map((item, index) => {
+                return (
+                  <Decal
+                    // {...logoBind()}
+                    onPointerEnter={toggleHovered}
+                    onPointerLeave={toggleHovered}
+                    scale={[
+                      (logoScale[item] || 0.5) * 2,
+                      (logoScale[item] || 0.5) * 2,
+                      5,
+                    ]}
+                    // debug={true}
+                    position={[0, 0.9 + index, 0.3333333]}
+                    rotation={[0, 1.5, 0]}
+                    // position={modelLogoPosition}
+                    // rotation={logoRotation}
+                    map={logoTexture3[index]}
+                    origin={[0, 0, 0]}
+                  />
+                  // <LogoDecal
+                  //   index={index}
+                  //   key={index + item}
+                  //   logoScale={logoScale}
+                  //   toggleHovered={toggleHovered}
+                  //   logoTexture={logoTexture3}
+                  //   modelLogoPosition={decalPositions3}
+                  //   item={item}
+                  //   orbitalRef={orbitalRef}
+                  //   logoPosition={3}
+                  //   setModelLogoPosition={(position) => {
+                  //     const newPositions = [...decalPositions3];
+                  //     newPositions[index] = position;
+                  //     setDecalPositions3(newPositions);
+                  //   }}
+                  // />
+                );
+              })}
 
             {modelName[0] && (
               <Decal
@@ -732,6 +824,44 @@ export function Model(props) {
             material={materials.blinn4}
             name="Right Sleeve Upper"
           >
+            {combinedLogos?.[4]?.length > 0 &&
+              combinedLogos?.[4]?.map((item, index) => {
+                return (
+                  // <Decal
+                  //   // {...logoBind(index)}
+                  //   onPointerEnter={toggleHovered}
+                  //   onPointerLeave={toggleHovered}
+                  //   scale={[
+                  //     (logoScale[item] || 0.5) * 2,
+                  //     (logoScale[item] || 0.5) * 5,
+                  //     5,
+                  //   ]}
+                  //   // debug={true}
+                  //   position={[1, 1, 0.411111111]}
+                  //   rotation={[0, 4.999999999999, 0.2]}
+                  //   // position={modelLogoPosition}
+                  //   // rotation={logoRotation}
+                  //   map={logoTexture4[index]}
+                  //   origin={[0, 0, 0]}
+                  // />
+                  <LogoDecal
+                    index={index}
+                    key={index + item}
+                    logoScale={logoScale}
+                    toggleHovered={toggleHovered}
+                    logoTexture={logoTexture4}
+                    modelLogoPosition={decalPositions4}
+                    item={item}
+                    orbitalRef={orbitalRef}
+                    logoPosition={4}
+                    setModelLogoPosition={(position) => {
+                      const newPositions = [...decalPositions4];
+                      newPositions[index] = position;
+                      setDecalPositions4(newPositions);
+                    }}
+                  />
+                );
+              })}
             {gradient[1] && !isDesign && (
               <meshStandardMaterial side={DoubleSide}>
                 <GradientTexture
@@ -831,7 +961,6 @@ export function Model(props) {
                       aspect={2}
                       position={[0, 0.1, 2.5]}
                     />
-
                     <GradientText
                       rotation={[0, 0, 0]}
                       fontSize={1.2}
@@ -940,20 +1069,41 @@ export function Model(props) {
                 />
               </meshStandardMaterial>
             )}
-
-            {logo && logoPosition === 1 && (
+            {combinedLogos?.[1]?.length > 0 &&
+              combinedLogos?.[1]?.map((item, index) => {
+                return (
+                  <LogoDecal
+                    index={index}
+                    key={index + item}
+                    logoScale={logoScale}
+                    toggleHovered={toggleHovered}
+                    logoTexture={logoTexture1}
+                    modelLogoPosition={decalPositions1}
+                    item={item}
+                    orbitalRef={orbitalRef}
+                    logoPosition={1}
+                    logoRotation={[0.1, 0, 0]}
+                    setModelLogoPosition={(position) => {
+                      const newPositions = [...decalPositions1];
+                      newPositions[index] = position;
+                      setDecalPositions1(newPositions);
+                    }}
+                  />
+                );
+              })}
+            {/* {logo && logoPosition === 1 && (
               <Decal
                 {...logoBind()}
                 onPointerEnter={toggleHovered}
                 onPointerLeave={toggleHovered}
-                scale={[logoScale * 5, logoScale * 5, 10]}
+                scale={[logoScale * 2, logoScale * 5, 5]}
                 // debug={true}
                 position={modelLogoPosition}
                 rotation={logoRotation}
                 map={logoTexture}
                 origin={[0, 0, 0]}
               />
-            )}
+            )} */}
           </mesh>
           <mesh
             geometry={nodes.Dress_1_Group6255_0005_2.geometry}
@@ -1089,19 +1239,24 @@ export function Model(props) {
               </Decal>
             )}
 
-            {logo && logoPosition === 2 && (
-              <Decal
-                {...logoBind()}
-                onPointerEnter={toggleHovered}
-                onPointerLeave={toggleHovered}
-                scale={[logoScale * 5, logoScale * 5, 10]}
-                // debug={true}
-                position={modelLogoPosition}
-                rotation={logoRotation}
-                map={logoTexture}
-                origin={[0, 0, 0]}
-              />
-            )}
+            {combinedLogos?.[2]?.length > 0 &&
+              combinedLogos?.[2]?.map((item, index) => {
+                return (
+                  <LogoDecal
+                    index={index}
+                    key={index + item}
+                    logoScale={logoScale}
+                    toggleHovered={toggleHovered}
+                    logoTexture={logoTexture2}
+                    modelLogoPosition={decalPositions2}
+                    item={item}
+                    orbitalRef={orbitalRef}
+                    setModelLogoPosition={setDecalPositions2}
+                    logoPosition={2}
+                    logoRotation={[0, Math.PI, 0]}
+                  />
+                );
+              })}
           </mesh>
           <mesh
             geometry={nodes.Dress_1_Group6255_0005_6.geometry}

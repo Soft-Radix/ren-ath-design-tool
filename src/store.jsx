@@ -77,12 +77,16 @@ export const useProductStore = create((set) => ({
 
   logo: null,
   logoPosition: 1,
-  logoScale: 0.5,
+  logoScale: {},
   logoRotate: 0,
   isDesign: false,
   modelLoading: true,
   isGradient: null,
-
+  updatedLogos: {},
+  setUpdatedLogos: (updatedLogos) =>
+    set(() => ({
+      updatedLogos: updatedLogos,
+    })),
   handleDesignGradient1: (color) =>
     set((state) => ({
       designGradient1: { ...state.designGradient1, ...color },
