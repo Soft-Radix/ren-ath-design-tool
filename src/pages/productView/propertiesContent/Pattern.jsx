@@ -1,11 +1,16 @@
+import React, { useState, useEffect } from "react";
+import { useProductStore } from "../../../store";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
-import React, { useState, useEffect } from "react";
-import { useProductStore } from "../../../store";
+import Slider from "rc-slider";
+
+import { IconButton, Tooltip } from "@mui/material";
 import styles from "./properties.module.scss";
-// import all 30 patterns
+import resetIcon from "../../../assets/svg/reset.svg";
+import loaderGif from "../../../assets/gif/loader.gif";
+
 import pattern1 from "../../../../public/textures/pattern1.png";
 import pattern2 from "../../../../public/textures/pattern2.png";
 import pattern3 from "../../../../public/textures/pattern3.png";
@@ -36,12 +41,43 @@ import pattern27 from "../../../../public/textures/pattern27.png";
 import pattern28 from "../../../../public/textures/pattern28.png";
 import pattern29 from "../../../../public/textures/pattern29.png";
 import pattern30 from "../../../../public/textures/pattern30.png";
-// import pattern31 from "../../../../public/textures/pattern31.png";
-import resetIcon from "../../../assets/svg/reset.svg";
-import Slider from "rc-slider";
-import { IconButton, Tooltip } from "@mui/material";
+
+const patterns = [
+  pattern1,
+  pattern2,
+  pattern3,
+  pattern4,
+  pattern5,
+  pattern6,
+  pattern7,
+  pattern8,
+  pattern9,
+  pattern10,
+  pattern11,
+  pattern12,
+  pattern13,
+  pattern14,
+  pattern15,
+  pattern16,
+  pattern17,
+  pattern18,
+  pattern19,
+  pattern20,
+  pattern21,
+  pattern22,
+  pattern23,
+  pattern24,
+  pattern25,
+  pattern26,
+  pattern27,
+  pattern28,
+  pattern29,
+  pattern30,
+];
+
 const Pattern = () => {
   const ref = useProductStore((state) => state.ref);
+  const [loader, setLoader] = useState(false);
   const children = ref?.current?.children || [];
   const {
     color,
@@ -50,46 +86,28 @@ const Pattern = () => {
     patternScale,
     updatePatternScale,
   } = useProductStore((state) => state);
-  // state to store all imported images
 
-  const patterns = [
-    pattern1,
-    pattern2,
-    pattern3,
-    pattern4,
-    pattern5,
-    pattern6,
-    pattern7,
-    pattern8,
-    pattern9,
-    pattern10,
-    pattern11,
-    pattern12,
-    pattern13,
-    pattern14,
-    pattern15,
-    pattern16,
-    pattern17,
-    pattern18,
-    pattern19,
-    pattern20,
-    pattern21,
-    pattern22,
-    pattern23,
-    pattern24,
-    pattern25,
-    pattern26,
-    pattern27,
-    pattern28,
-    pattern29,
-    pattern30,
-    // pattern31,
-  ];
-
-  const [expanded, setExpanded] = React.useState(false > false);
+  const [expanded, setExpanded] = useState(false);
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
+  };
+
+  useEffect(() => {
+    if (expanded) {
+      preloadImages();
+    }
+  }, [expanded]);
+
+  const preloadImages = () => {
+    setLoader(true);
+    patterns.forEach((pattern) => {
+      const img = new Image();
+      img.src = pattern;
+    });
+    setTimeout(() => {
+      setLoader(false);
+    }, 1000);
   };
 
   return (
@@ -103,10 +121,6 @@ const Pattern = () => {
               expanded={expanded === item?.uuid}
             >
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                {/* <div
-              className={`${styles.colorViewer} ${styles.mainColorViewer}`}
-              style={{ backgroundColor: color[childIndex] }}
-            /> */}
                 <div
                   style={{
                     width: "100%",
@@ -124,7 +138,7 @@ const Pattern = () => {
                         updateLayer(childIndex);
                       }}
                     >
-                      <img src={resetIcon} alt="" />
+                      <img src={resetIcon} alt="Reset Pattern" />
                     </IconButton>
                   </Tooltip>
                 </div>
@@ -144,18 +158,31 @@ const Pattern = () => {
                   </div>
                 </div>
                 <div className={styles.contentWrap}>
-                  {patterns?.map((pattern, index) => (
+                  {loader ? (
                     <div
-                      key={index + 1}
-                      className={`${styles.imgWrap}`}
-                      onClick={() => {
-                        updatePattern(index + 1);
-                        updateLayer(childIndex);
+                      className="modelLoader"
+                      style={{
+                        display: "flex",
+                        width: "100%",
+                        justifyContent: "center",
                       }}
                     >
-                      <img src={pattern} alt={`pattern${index + 1}`} />
+                      <img src={loaderGif} alt="" />
                     </div>
-                  ))}
+                  ) : (
+                    patterns?.map((pattern, index) => (
+                      <div
+                        key={index + 1}
+                        className={`${styles.imgWrap}`}
+                        onClick={() => {
+                          updatePattern(index + 1);
+                          updateLayer(childIndex);
+                        }}
+                      >
+                        <img src={pattern} alt={`pattern${index + 1}`} />
+                      </div>
+                    ))
+                  )}
                 </div>
               </AccordionDetails>
             </Accordion>

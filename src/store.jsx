@@ -18,7 +18,7 @@ export const useProductStore = create((set) => ({
   ref: null,
   orbitalRef: null,
   modelRotation: 0,
-  designColor: null,
+  designColor: {},
   designGradient1: {},
   designGradient2: {},
   designScale: {},
@@ -33,6 +33,7 @@ export const useProductStore = create((set) => ({
   gradient2: {},
   gradientScale: {},
   gradientAngle: {},
+  designGradientAngle: {},
 
   pattern: null,
   layer: null,
@@ -104,8 +105,8 @@ export const useProductStore = create((set) => ({
       isDesignGradientEnabled: color,
     })),
   handleDesignColor: (color) =>
-    set(() => ({
-      designColor: color,
+    set((state) => ({
+      designColor: { ...state.designColor, ...color },
     })),
   handlePatternColor: (color) =>
     set((state) => ({
@@ -189,6 +190,10 @@ export const useProductStore = create((set) => ({
   updateGradientAngle: (updatedAngle) =>
     set((state) => ({
       gradientAngle: { ...state.gradientAngle, ...updatedAngle },
+    })),
+  updateDesignGradientAngle: (updatedAngle) =>
+    set((state) => ({
+      designGradientAngle: { ...state.designGradientAngle, ...updatedAngle },
     })),
 
   updatePattern: (updatedPattern) =>

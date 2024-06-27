@@ -133,11 +133,37 @@ const Color = () => {
                   </div>
                 </div>
               )}
+              <h3>Design Color</h3>
+              <div className={styles.colorPalletWrap}>
+                {/* <div
+              className={styles.colorViewer}
+              style={{ backgroundColor: "transparent" }}
+              onClick={() => {
+                handleDesignColor(null);
+              }}
+            >
+              <CrossIcon />
+            </div> */}
+                {colorList.map((itemColor, index) => (
+                  <div
+                    key={index}
+                    className={styles.colorViewer}
+                    style={{ backgroundColor: itemColor }}
+                    onClick={() => {
+                      handleDesignColor({ [childIndex]: itemColor });
+                      handleIsDesignGradientEnabled(false);
+                    }}
+                  >
+                    {designColor[childIndex] &&
+                      designColor[childIndex] === itemColor && <TickIcon />}
+                  </div>
+                ))}
+              </div>
             </div>
           </AccordionDetails>
         </Accordion>
       ))}
-      <Accordion
+      {/* <Accordion
         onChange={handleChange("design")}
         expanded={expanded === "design"}
       >
@@ -150,15 +176,7 @@ const Color = () => {
         </AccordionSummary>
         <AccordionDetails>
           <div className={styles.colorPalletWrap}>
-            {/* <div
-              className={styles.colorViewer}
-              style={{ backgroundColor: "transparent" }}
-              onClick={() => {
-                handleDesignColor(null);
-              }}
-            >
-              <CrossIcon />
-            </div> */}
+            
             {colorList.map((itemColor, index) => (
               <div
                 key={index}
@@ -174,7 +192,7 @@ const Color = () => {
             ))}
           </div>
         </AccordionDetails>
-      </Accordion>
+      </Accordion> */}
     </div>
   );
 };

@@ -83,7 +83,7 @@ const ProductView = () => {
                 </div>
               </div>
               <div className={styles.canvasWrap}>
-                <Suspense fallback={<Loader />}>
+                {/* <Suspense fallback={<Loader />}> */}
                   <Canvas
                     style={{
                       backgroundColor: "#f0eeed",
@@ -119,7 +119,7 @@ const ProductView = () => {
                       enableZoom={true}
                     />
                   </Canvas>
-                </Suspense>
+                {/* </Suspense> */}
                 {/* <Scene /> */}
               </div>
               <ButtonGroup
