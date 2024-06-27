@@ -23,8 +23,8 @@ import font1 from "../../../src/assets/fonts/Roboto.ttf";
 import font9 from "../../../src/assets/fonts/SawarabiGothic-Regular.ttf";
 import font4 from "../../../src/assets/fonts/TiltNeon.ttf";
 import GradientText from "../../../src/components/common/gradientText/GradientText";
-import { useProductStore } from "../../../src/store";
 import LogoDecal from "../../../src/components/common/logoDecal";
+import { useProductStore } from "../../../src/store";
 import {
   calculateScale,
   transformGradientScale,
@@ -45,6 +45,7 @@ export function Model(props) {
     gradient,
     gradientScale,
     gradientAngle,
+    designGradientAngle,
     designScale,
     pattern,
     isGradient,
@@ -216,7 +217,8 @@ export function Model(props) {
         primaryGradientColor2,
         isPrimaryGradient,
         normalMap,
-        gradientRotationAngle // Pass rotation angle as an argument
+        gradientRotationAngle, // Pass rotation angle as an argument
+        primaryGradientRotationAngle // Pass primary gradient rotation angle
       ) => {
         const uniforms = {
           primaryTexture: { value: primaryTexture },
@@ -239,11 +241,17 @@ export function Model(props) {
           primaryGradientColor2: { value: primaryGradientColor2 },
           normalMap: { value: normalMap },
           gradientRotationAngle: { value: gradientRotationAngle || 0 }, // Add rotation angle uniform
+          primaryGradientRotationAngle: {
+            value: primaryGradientRotationAngle || 0,
+          }, // Add primary gradient rotation angle uniform
+          hasPrimaryColor: { value: !!primaryColor },
+          primaryColor: {
+            value: primaryColor
+              ? new Three.Color(primaryColor)
+              : new Three.Color(0, 0, 0),
+          },
         };
 
-        if (primaryColor) {
-          uniforms.primaryColor = { value: new Three.Color(primaryColor) };
-        }
         if (newColor) {
           uniforms.newColor = { value: new Three.Color(newColor) };
         }
@@ -256,130 +264,140 @@ export function Model(props) {
         return new ShaderMaterial({
           uniforms,
           vertexShader: `
-                    varying vec2 vUv;
-                    varying vec3 vNormal;
-                    varying vec3 vViewPosition;
-                    varying vec3 vTangent;
-                    varying vec3 vBitangent;
-
-                    attribute vec4 tangent;
-
-                    void main() {
-                        vUv = uv;
-
-                        vNormal = normalize(normalMatrix * normal);
-                        vTangent = normalize(normalMatrix * tangent.xyz);
-                        vBitangent = normalize(cross(vNormal, vTangent) * tangent.w);
-                        vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-                        vViewPosition = -mvPosition.xyz;
-                        gl_Position = projectionMatrix * mvPosition;
-                    }
-                `,
+            varying vec2 vUv;
+            varying vec3 vNormal;
+            varying vec3 vViewPosition;
+            varying vec3 vTangent;
+            varying vec3 vBitangent;
+      
+            attribute vec4 tangent;
+      
+            void main() {
+              vUv = uv;
+      
+              vNormal = normalize(normalMatrix * normal);
+              vTangent = normalize(normalMatrix * tangent.xyz);
+              vBitangent = normalize(cross(vNormal, vTangent) * tangent.w);
+              vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+              vViewPosition = -mvPosition.xyz;
+              gl_Position = projectionMatrix * mvPosition;
+            }
+          `,
           fragmentShader: `
-                    uniform sampler2D primaryTexture;
-                    uniform vec3 primaryColor;
-                    uniform sampler2D secondaryTexture;
-                    uniform vec3 secondaryColor;
-                    uniform vec3 newColor;
-                    uniform bool hasSecondaryTexture;
-                    uniform bool hasSecondaryColor;
-                    uniform vec3 defaultColor;
-                    uniform int selectedLayer;
-                    uniform vec3 gradientColor1;
-                    uniform vec3 gradientColor2;
-                    uniform bool isGradient;
-                    uniform float gradientScale;
-                    uniform vec3 ambientLightColor;
-                    uniform vec3 directionalLightColor;
-                    uniform vec3 directionalLightDirection;
-                    uniform float patternScale;
-                    uniform bool isPrimaryGradient;
-                    uniform vec3 primaryGradientColor1;
-                    uniform vec3 primaryGradientColor2;
-                    uniform sampler2D normalMap;
-                    uniform float gradientRotationAngle; // Add this uniform for gradient rotation
-
-                    varying vec2 vUv;
-                    varying vec3 vNormal;
-                    varying vec3 vViewPosition;
-                    varying vec3 vTangent;
-                    varying vec3 vBitangent;
-
-                    void main() {
-                        vec4 primaryTexColor = texture2D(primaryTexture, vUv);
-
-                        vec4 coloredPrimaryTexColor = primaryTexColor;
-                        if (primaryColor != vec3(0.0)) {
-                            vec4 primaryColColor = vec4(primaryColor, 1.0);
-                            coloredPrimaryTexColor = vec4(mix(primaryTexColor.rgb, primaryColColor.rgb, primaryTexColor.a), primaryTexColor.a);
-                        }
-
-                        if (isPrimaryGradient) {
-                            float gradientPosition = smoothstep(0.15 * gradientScale, 0.75 * gradientScale, vUv.y);
-                            vec3 gradientColor = mix(primaryGradientColor1, primaryGradientColor2, gradientPosition);
-                            vec4 gradientColorWithAlpha = vec4(gradientColor, 1.0);
-                            coloredPrimaryTexColor = mix(coloredPrimaryTexColor, gradientColorWithAlpha, coloredPrimaryTexColor.a);
-                        }
-
-                        // Scale the UV coordinates for the secondary texture
-                        vec2 scaledUv = vUv / patternScale;
-                        vec4 secondaryTexColor = hasSecondaryTexture ? texture2D(secondaryTexture, scaledUv) : vec4(1.0);
-                        secondaryTexColor.a = 1.0 - secondaryTexColor.a;
-
-                        vec4 coloredSecondaryTexColor = secondaryTexColor;
-                        if (newColor != vec3(0.0)) {
-                            vec4 newColColor = vec4(newColor, 1.0);
-                            coloredSecondaryTexColor = vec4(mix(secondaryTexColor.rgb, newColColor.rgb, secondaryTexColor.a), secondaryTexColor.a);
-                        }
-
-                        vec4 secondaryColColor = hasSecondaryColor ? vec4(secondaryColor, 1.0) : vec4(1.0);
-                        vec4 finalSecondaryColor = mix(secondaryColColor, coloredSecondaryTexColor, coloredSecondaryTexColor.a);
-
-                        vec4 baseColor = vec4(defaultColor, 1.0);
-
-                        // Normal Map perturbation
-                        vec3 normal = normalize(vNormal);
-                        vec3 tangent = normalize(vTangent);
-                        vec3 bitangent = normalize(vBitangent);
-                        mat3 tbnMatrix = mat3(tangent, bitangent, normal);
-                        vec3 perturbedNormal = texture2D(normalMap, vUv).rgb * 2.0 - 1.0;
-                        perturbedNormal = normalize(tbnMatrix * perturbedNormal);
-
-                        vec3 lightDir = normalize(directionalLightDirection);
-                        float diff = max(dot(perturbedNormal, lightDir), 0.0);
-                        vec3 diffuse = diff * directionalLightColor * 0.7;
-                        vec3 ambient = ambientLightColor * 0.7;
-
-                        vec3 lighting = ambient + diffuse;
-
-                        vec4 finalColor = baseColor;
-
-                        if (selectedLayer == 1) {
-                            if (isGradient) {
-                                // Apply rotation to the gradient direction
-                                float cosTheta = cos(gradientRotationAngle);
-                                float sinTheta = sin(gradientRotationAngle);
-                                mat2 rotationMatrix = mat2(cosTheta, -sinTheta, sinTheta, cosTheta);
-                                
-                                // Rotate the gradient vector
-                                vec2 rotatedUv = (rotationMatrix * (vUv - 0.5)) + 0.5;
-
-                                float gradientPosition = smoothstep(0.15 * gradientScale, 0.75 * gradientScale, rotatedUv.y);
-                                vec3 gradientColor = mix(gradientColor1, gradientColor2, gradientPosition);
-
-                                vec4 gradientColorWithAlpha = vec4(gradientColor, 1.0);
-                                vec4 blendedColor = mix(finalSecondaryColor, gradientColorWithAlpha, 1.0 - coloredSecondaryTexColor.a);
-                                finalColor = vec4(mix(blendedColor.rgb, coloredPrimaryTexColor.rgb, coloredPrimaryTexColor.a), 1.0);
-                            } else {
-                                finalColor = vec4(mix(finalSecondaryColor.rgb, coloredPrimaryTexColor.rgb, coloredPrimaryTexColor.a), 1.0);
-                            }
-                        } else {
-                            finalColor = vec4(mix(finalSecondaryColor.rgb, coloredPrimaryTexColor.rgb, coloredPrimaryTexColor.a), 1.0);
-                        }
-
-                        gl_FragColor = vec4(finalColor.rgb * lighting, finalColor.a);
-                    }
-                `,
+            uniform sampler2D primaryTexture;
+            uniform vec3 primaryColor;
+            uniform bool hasPrimaryColor;
+            uniform sampler2D secondaryTexture;
+            uniform vec3 secondaryColor;
+            uniform vec3 newColor;
+            uniform bool hasSecondaryTexture;
+            uniform bool hasSecondaryColor;
+            uniform vec3 defaultColor;
+            uniform int selectedLayer;
+            uniform vec3 gradientColor1;
+            uniform vec3 gradientColor2;
+            uniform bool isGradient;
+            uniform float gradientScale;
+            uniform vec3 ambientLightColor;
+            uniform vec3 directionalLightColor;
+            uniform vec3 directionalLightDirection;
+            uniform float patternScale;
+            uniform bool isPrimaryGradient;
+            uniform vec3 primaryGradientColor1;
+            uniform vec3 primaryGradientColor2;
+            uniform sampler2D normalMap;
+            uniform float gradientRotationAngle; // Add this uniform for gradient rotation
+            uniform float primaryGradientRotationAngle; // Add this uniform for primary gradient rotation
+      
+            varying vec2 vUv;
+            varying vec3 vNormal;
+            varying vec3 vViewPosition;
+            varying vec3 vTangent;
+            varying vec3 vBitangent;
+      
+            void main() {
+              vec4 primaryTexColor = texture2D(primaryTexture, vUv);
+      
+              vec4 coloredPrimaryTexColor = primaryTexColor;
+              if (hasPrimaryColor) {
+                vec4 primaryColColor = vec4(primaryColor, 1.0);
+                coloredPrimaryTexColor = vec4(mix(primaryTexColor.rgb, primaryColColor.rgb, primaryTexColor.a), primaryTexColor.a);
+              }
+      
+              if (isPrimaryGradient) {
+                // Apply rotation to the primary gradient direction
+                float cosThetaPrimary = cos(primaryGradientRotationAngle);
+                float sinThetaPrimary = sin(primaryGradientRotationAngle);
+                mat2 rotationMatrixPrimary = mat2(cosThetaPrimary, -sinThetaPrimary, sinThetaPrimary, cosThetaPrimary);
+                
+                // Rotate the gradient vector
+                vec2 rotatedUvPrimary = (rotationMatrixPrimary * (vUv - 0.5)) + 0.5;
+      
+                float gradientPosition = smoothstep(0.15 * gradientScale, 0.75 * gradientScale, rotatedUvPrimary.y);
+                vec3 gradientColor = mix(primaryGradientColor1, primaryGradientColor2, gradientPosition);
+                vec4 gradientColorWithAlpha = vec4(gradientColor, 1.0);
+                coloredPrimaryTexColor = mix(coloredPrimaryTexColor, gradientColorWithAlpha, coloredPrimaryTexColor.a);
+              }
+      
+              // Scale the UV coordinates for the secondary texture
+              vec2 scaledUv = vUv / patternScale;
+              vec4 secondaryTexColor = hasSecondaryTexture ? texture2D(secondaryTexture, scaledUv) : vec4(1.0);
+              secondaryTexColor.a = 1.0 - secondaryTexColor.a;
+      
+              vec4 coloredSecondaryTexColor = secondaryTexColor;
+              if (newColor != vec3(0.0)) {
+                vec4 newColColor = vec4(newColor, 1.0);
+                coloredSecondaryTexColor = vec4(mix(secondaryTexColor.rgb, newColColor.rgb, secondaryTexColor.a), secondaryTexColor.a);
+              }
+      
+              vec4 secondaryColColor = hasSecondaryColor ? vec4(secondaryColor, 1.0) : vec4(1.0);
+              vec4 finalSecondaryColor = mix(secondaryColColor, coloredSecondaryTexColor, coloredSecondaryTexColor.a);
+      
+              vec4 baseColor = vec4(defaultColor, 1.0);
+      
+              // Normal Map perturbation
+              vec3 normal = normalize(vNormal);
+              vec3 tangent = normalize(vTangent);
+              vec3 bitangent = normalize(vBitangent);
+              mat3 tbnMatrix = mat3(tangent, bitangent, normal);
+              vec3 perturbedNormal = texture2D(normalMap, vUv).rgb * 2.0 - 1.0;
+              perturbedNormal = normalize(tbnMatrix * perturbedNormal);
+      
+              vec3 lightDir = normalize(directionalLightDirection);
+              float diff = max(dot(perturbedNormal, lightDir), 0.0);
+              vec3 diffuse = diff * directionalLightColor * 0.7;
+              vec3 ambient = ambientLightColor * 0.7;
+      
+              vec3 lighting = ambient + diffuse;
+      
+              vec4 finalColor = baseColor;
+      
+              if (selectedLayer == 1) {
+                if (isGradient) {
+                  // Apply rotation to the gradient direction
+                  float cosTheta = cos(gradientRotationAngle);
+                  float sinTheta = sin(gradientRotationAngle);
+                  mat2 rotationMatrix = mat2(cosTheta, -sinTheta, sinTheta, cosTheta);
+                  
+                  // Rotate the gradient vector
+                  vec2 rotatedUv = (rotationMatrix * (vUv - 0.5)) + 0.5;
+      
+                  float gradientPosition = smoothstep(0.15 * gradientScale, 0.75 * gradientScale, rotatedUv.y);
+                  vec3 gradientColor = mix(gradientColor1, gradientColor2, gradientPosition);
+      
+                  vec4 gradientColorWithAlpha = vec4(gradientColor, 1.0);
+                  vec4 blendedColor = mix(finalSecondaryColor, gradientColorWithAlpha, 1.0 - coloredSecondaryTexColor.a);
+                  finalColor = vec4(mix(blendedColor.rgb, coloredPrimaryTexColor.rgb, coloredPrimaryTexColor.a), 1.0);
+                } else {
+                  finalColor = vec4(mix(finalSecondaryColor.rgb, coloredPrimaryTexColor.rgb, coloredPrimaryTexColor.a), 1.0);
+                }
+              } else {
+                finalColor = vec4(mix(finalSecondaryColor.rgb, coloredPrimaryTexColor.rgb, coloredPrimaryTexColor.a), 1.0);
+              }
+      
+              gl_FragColor = vec4(finalColor.rgb * lighting, finalColor.a);
+            }
+          `,
           side: Three.DoubleSide,
         });
       };
@@ -395,19 +413,16 @@ export function Model(props) {
           const gradientColor1 = new Three.Color(gradient2[index]);
           const gradientColor2 = new Three.Color(gradient[index]);
           const gradientBool = isGradient ? isGradient[index] : false;
-          const primaryGradientColor1 = designGradient1[index]
-            ? new Three.Color(designGradient1[index])
-            : threeJsColor;
-          const primaryGradientColor2 = designGradient2[index]
-            ? new Three.Color(designGradient2[index])
-            : threeJsColor;
+          const primaryGradientColor1 = new Three.Color(designGradient1[index]);
+          const primaryGradientColor2 = new Three.Color(designGradient2[index]);
           const gradientscale =
             index === 6 || index === 7
               ? transformGradientScale(gradientScale[index])
               : gradientScale[index] ?? designScale[index];
 
           const rotationAngle = gradientAngle[index] * (Math.PI / 180);
-
+          const rotationAngle2 = designGradientAngle[index] * (Math.PI / 180);
+          const designcolor = designColor[index];
           const material = createMaterial(
             secondaryTexture,
             secondaryColor,
@@ -416,14 +431,15 @@ export function Model(props) {
             gradientColor2,
             gradientBool,
             gradientscale,
-            designColor,
+            designcolor,
             patternScale[index],
             patternColor[index],
             primaryGradientColor1,
             primaryGradientColor2,
             isDesignGradientEnabled,
             normal, // Pass the normal map as an argument
-            rotationAngle // Pass the rotation angle
+            rotationAngle, // Pass the rotation angle
+            rotationAngle2
           );
           child.material = material;
         }
@@ -449,6 +465,7 @@ export function Model(props) {
     normal, // Add normal to dependency array
     designScale,
     gradientAngle,
+    designGradientAngle,
   ]);
 
   const [number1Position, setNumber1Position] = useState([0, 0, 2]);
@@ -679,7 +696,6 @@ export function Model(props) {
     setDecalPositions4(positions4);
   }, [updatedLogos]);
 
-  console.log("combinedLogos", combinedLogos);
   return (
     <>
       {/* Ambient light and orbit controls */}
