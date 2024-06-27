@@ -3,7 +3,7 @@ import { Button, ButtonGroup } from "@mui/material";
 
 import { OrbitControls } from "@react-three/drei";
 import { Canvas, useThree } from "@react-three/fiber";
-import { Suspense, useEffect, useRef } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { Model as M1 } from "../../../public/models/M1/Flex-custom-board-shorts";
 import { Model as M6 } from "../../../public/models/M6/Sleeveless-jersey";
 import { Model as W1 } from "../../../public/models/W1/Long-sleeve-hitting-tees-with-hood";
@@ -28,7 +28,7 @@ import Pattern from "./propertiesContent/Pattern";
 import Sidebar from "./sidebar";
 const ProductView = () => {
   const orbitalRef = useRef();
-
+  const [loader, setLoader] = useState(true);
   const { selectedSidebarItem, selectedSidebarItemName } = useProductStore(
     (state) => state
   );
@@ -45,11 +45,18 @@ const ProductView = () => {
 
   useEffect(() => {
     updateOrbitalRef(orbitalRef);
+    const time = setTimeout(() => {
+      setLoader(false);
+    }, 3000);
+    return () => clearTimeout(time);
   }, []);
 
   return (
     <div className={styles.loadingScreen}>
-      <Suspense fallback={<Loader />}>
+      {/* <Suspense fallback={<Loader />}> */}
+      {loader ? (
+        <Loader />
+      ) : (
         <div className={styles.mainWrap}>
           <Sidebar />
           <div className={styles.rightWrap}>
@@ -76,41 +83,43 @@ const ProductView = () => {
                 </div>
               </div>
               <div className={styles.canvasWrap}>
-                <Canvas
-                  style={{
-                    backgroundColor: "#f0eeed",
-                  }}
-                >
-                  {id === "W1" || id === "M2" ? (
-                    <W1 />
-                  ) : id === "W2" || id === "M3" ? (
-                    <W2 />
-                  ) : id === "W4" || id === "M4" ? (
-                    <W4 />
-                  ) : id === "W6" ? (
-                    <W6 />
-                  ) : id === "W7" ? (
-                    <W7 />
-                  ) : id === "W8" ? (
-                    <W8 />
-                  ) : id === "M1" ? (
-                    <M1 />
-                  ) : id === "M6" ? (
-                    <M6 />
-                  ) : id === "W3" ? (
-                    <W3 />
-                  ) : null}
-                  {/* <Grid position={[0, -0.01, 0]} args={[15, 15]} />
+                <Suspense fallback={<Loader />}>
+                  <Canvas
+                    style={{
+                      backgroundColor: "#f0eeed",
+                    }}
+                  >
+                    {id === "W1" || id === "M2" ? (
+                      <W1 />
+                    ) : id === "W2" || id === "M3" ? (
+                      <W2 />
+                    ) : id === "W4" || id === "M4" ? (
+                      <W4 />
+                    ) : id === "W6" ? (
+                      <W6 />
+                    ) : id === "W7" ? (
+                      <W7 />
+                    ) : id === "W8" ? (
+                      <W8 />
+                    ) : id === "M1" ? (
+                      <M1 />
+                    ) : id === "M6" ? (
+                      <M6 />
+                    ) : id === "W3" ? (
+                      <W3 />
+                    ) : null}
+                    {/* <Grid position={[0, -0.01, 0]} args={[15, 15]} />
         <axesHelper args={[8]} /> */}
-                  <ambientLight intensity={6} />
-                  //{" "}
-                  <OrbitControls
-                    ref={orbitalRef}
-                    minPolarAngle={Math.PI * 0.05}
-                    maxPolarAngle={Math.PI * 0.55}
-                    enableZoom={true}
-                  />
-                </Canvas>
+                    <ambientLight intensity={6} />
+                    //{" "}
+                    <OrbitControls
+                      ref={orbitalRef}
+                      minPolarAngle={Math.PI * 0.05}
+                      maxPolarAngle={Math.PI * 0.55}
+                      enableZoom={true}
+                    />
+                  </Canvas>
+                </Suspense>
                 {/* <Scene /> */}
               </div>
               <ButtonGroup
@@ -130,22 +139,20 @@ const ProductView = () => {
                 <Button
                   key="one"
                   className="btn2"
-                  onClick={() => handleZoomIn( orbitalRef)}
+                  onClick={() => handleZoomIn(orbitalRef)}
                 >
                   <ZoomIn fontSize="large" />
                 </Button>
 
-                <Button
-                  key="three"
-                  onClick={() => handleZoomOut( orbitalRef)}
-                >
+                <Button key="three" onClick={() => handleZoomOut(orbitalRef)}>
                   <ZoomOut fontSize="large" />
                 </Button>
               </ButtonGroup>
             </div>
           </div>
         </div>
-      </Suspense>
+      )}
+      {/* </Suspense> */}
     </div>
   );
 };
