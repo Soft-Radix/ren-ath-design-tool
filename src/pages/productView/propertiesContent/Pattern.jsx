@@ -78,6 +78,8 @@ const patterns = [
 const Pattern = () => {
   const ref = useProductStore((state) => state.ref);
   const [loader, setLoader] = useState(false);
+  const [count, setCount] = useState(0);
+
   const children = ref?.current?.children || [];
   const {
     color,
@@ -95,12 +97,14 @@ const Pattern = () => {
 
   useEffect(() => {
     if (expanded) {
+      setCount((prev) => prev + 1);
       preloadImages();
     }
   }, [expanded]);
 
   const preloadImages = () => {
     setLoader(true);
+
     patterns.forEach((pattern) => {
       const img = new Image();
       img.src = pattern;
@@ -158,7 +162,7 @@ const Pattern = () => {
                   </div>
                 </div>
                 <div className={styles.contentWrap}>
-                  {loader ? (
+                  {count <= 1 && loader ? (
                     <div
                       className="modelLoader"
                       style={{
