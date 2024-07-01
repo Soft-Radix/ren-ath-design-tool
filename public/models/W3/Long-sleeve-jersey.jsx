@@ -102,6 +102,8 @@ export function Model(props) {
   const [secondaryTextureUrl, setSecondaryTextureUrl] = useState(
     "./textures/pattern2.png"
   );
+
+  const [loading, setLoading] = useState(false);
   const primaryTexture = useTexture(designTexture);
   const secondaryTexture = useTexture(secondaryTextureUrl);
   const [combinedLogos, setCombinedLogos] = useState({});
@@ -184,9 +186,13 @@ export function Model(props) {
     if (layer !== null && secondaryTextureUrl) {
       loadTexture(secondaryTextureUrl)
         .then((texture) => {
+          setLoading({ ...loading, [layer]: true });
           const textures = [...secondaryTextures];
           textures[layer] = texture;
           setSecondaryTextures(textures);
+          setTimeout(() => {
+            setLoading({ ...loading, [layer]: false });
+          }, 1000);
         })
         .catch((error) => {
           //console.error("Failed to load texture", error);
@@ -218,7 +224,9 @@ export function Model(props) {
         isPrimaryGradient,
         normalMap,
         gradientRotationAngle, // Pass rotation angle as an argument
-        primaryGradientRotationAngle // Pass primary gradient rotation angle
+        primaryGradientRotationAngle, // Pass primary gradient rotation angle
+        isPattern,
+        index
       ) => {
         const uniforms = {
           primaryTexture: { value: primaryTexture },
@@ -250,6 +258,7 @@ export function Model(props) {
               ? new Three.Color(primaryColor)
               : new Three.Color(0, 0, 0),
           },
+          isPattern: { value: isPattern },
         };
 
         if (newColor) {
@@ -291,6 +300,7 @@ export function Model(props) {
             uniform vec3 secondaryColor;
             uniform vec3 newColor;
             uniform bool hasSecondaryTexture;
+            uniform bool isPattern;
             uniform bool hasSecondaryColor;
             uniform vec3 defaultColor;
             uniform int selectedLayer;
@@ -342,7 +352,7 @@ export function Model(props) {
               // Scale the UV coordinates for the secondary texture
               vec2 scaledUv = vUv / patternScale;
               vec4 secondaryTexColor = hasSecondaryTexture ? texture2D(secondaryTexture, scaledUv) : vec4(1.0);
-              secondaryTexColor.a = 1.0 - secondaryTexColor.a;
+              secondaryTexColor.a = isPattern  ? secondaryTexColor.a : 1.0 - secondaryTexColor.a;
       
               vec4 coloredSecondaryTexColor = secondaryTexColor;
               if (newColor != vec3(0.0)) {
@@ -406,7 +416,9 @@ export function Model(props) {
       modelRef.current.children.forEach((child, index) => {
         if (child.isMesh) {
           const isSelectedLayer = index === colorIndex;
-          const secondaryTexture = secondaryTextures[index] || null;
+          const secondaryTexture = !loading[index]
+            ? secondaryTextures[index] || null
+            : threeJsColor;
           const secondaryColor = new Three.Color(
             secondaryColors[index] ?? threeJsColor
           );
@@ -423,6 +435,7 @@ export function Model(props) {
           const rotationAngle = gradientAngle[index] * (Math.PI / 180);
           const rotationAngle2 = designGradientAngle[index] * (Math.PI / 180);
           const designcolor = designColor[index];
+          const isPattern = secondaryTextures[index] ? true : false;
           const material = createMaterial(
             secondaryTexture,
             secondaryColor,
@@ -439,7 +452,9 @@ export function Model(props) {
             isDesignGradientEnabled,
             normal, // Pass the normal map as an argument
             rotationAngle, // Pass the rotation angle
-            rotationAngle2
+            rotationAngle2,
+            isPattern,
+            index
           );
           child.material = material;
         }
@@ -466,8 +481,10 @@ export function Model(props) {
     designScale,
     gradientAngle,
     designGradientAngle,
+    loading,
   ]);
 
+  console.log("🚀 ~ modelRef.current.children.forEach ~ loading:", loading);
   const [number1Position, setNumber1Position] = useState([0, 0, 2]);
   const [number1Scale, setNumber1Scale] = useState([4.5, 2.5, 2]);
   const [number1Rotation, setNumber1Rotation] = useState(0);

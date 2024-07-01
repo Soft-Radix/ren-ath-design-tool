@@ -1,25 +1,17 @@
-import React, { useState, useEffect } from "react";
-import { useProductStore } from "../../../store";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
 import Slider from "rc-slider";
+import React, { useEffect, useState } from "react";
+import { useProductStore } from "../../../store";
 
 import { IconButton, Tooltip } from "@mui/material";
-import styles from "./properties.module.scss";
-import resetIcon from "../../../assets/svg/reset.svg";
 import loaderGif from "../../../assets/gif/loader.gif";
+import resetIcon from "../../../assets/svg/reset.svg";
+import styles from "./properties.module.scss";
 
 import pattern1 from "../../../../public/textures/pattern1.png";
-import pattern2 from "../../../../public/textures/pattern2.png";
-import pattern3 from "../../../../public/textures/pattern3.png";
-import pattern4 from "../../../../public/textures/pattern4.png";
-import pattern5 from "../../../../public/textures/pattern5.png";
-import pattern6 from "../../../../public/textures/pattern6.png";
-import pattern7 from "../../../../public/textures/pattern7.png";
-import pattern8 from "../../../../public/textures/pattern8.png";
-import pattern9 from "../../../../public/textures/pattern9.png";
 import pattern10 from "../../../../public/textures/pattern10.png";
 import pattern11 from "../../../../public/textures/pattern11.png";
 import pattern12 from "../../../../public/textures/pattern12.png";
@@ -30,6 +22,7 @@ import pattern16 from "../../../../public/textures/pattern16.png";
 import pattern17 from "../../../../public/textures/pattern17.png";
 import pattern18 from "../../../../public/textures/pattern18.png";
 import pattern19 from "../../../../public/textures/pattern19.png";
+import pattern2 from "../../../../public/textures/pattern2.png";
 import pattern20 from "../../../../public/textures/pattern20.png";
 import pattern21 from "../../../../public/textures/pattern21.png";
 import pattern22 from "../../../../public/textures/pattern22.png";
@@ -40,8 +33,19 @@ import pattern26 from "../../../../public/textures/pattern26.png";
 import pattern27 from "../../../../public/textures/pattern27.png";
 import pattern28 from "../../../../public/textures/pattern28.png";
 import pattern29 from "../../../../public/textures/pattern29.png";
+import pattern3 from "../../../../public/textures/pattern3.png";
 import pattern30 from "../../../../public/textures/pattern30.png";
-
+import pattern4 from "../../../../public/textures/pattern4.png";
+import pattern5 from "../../../../public/textures/pattern5.png";
+import pattern6 from "../../../../public/textures/pattern6.png";
+import pattern7 from "../../../../public/textures/pattern7.png";
+import pattern8 from "../../../../public/textures/pattern8.png";
+import pattern9 from "../../../../public/textures/pattern9.png";
+import loading from "../../../assets/images/load.png";
+import {
+  LazyLoadImage,
+  trackWindowScroll,
+} from "react-lazy-load-image-component";
 const patterns = [
   pattern1,
   pattern2,
@@ -111,7 +115,7 @@ const Pattern = () => {
     });
     setTimeout(() => {
       setLoader(false);
-    }, 1000);
+    }, 9000);
   };
 
   return (
@@ -138,7 +142,7 @@ const Pattern = () => {
                     <IconButton
                       onClick={(e) => {
                         e.stopPropagation();
-                        updatePattern(6);
+                        updatePattern(31);
                         updateLayer(childIndex);
                       }}
                     >
@@ -183,7 +187,13 @@ const Pattern = () => {
                           updateLayer(childIndex);
                         }}
                       >
-                        <img src={pattern} alt={`pattern${index + 1}`} />
+                        <LazyLoadImage
+                          src={pattern}
+                          alt={`pattern${index + 1}`}
+                          effect="opacity"
+                          placeholderSrc={loading}
+                          visibleByDefault={true}
+                        />
                       </div>
                     ))
                   )}
@@ -196,5 +206,6 @@ const Pattern = () => {
     </div>
   );
 };
+export default trackWindowScroll(Pattern);
 
-export default Pattern;
+// export default Pattern;
