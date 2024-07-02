@@ -21,10 +21,10 @@ const Logo = () => {
     logoScale,
     updateLogoScale,
   } = useProductStore((state) => state);
-
+  
   const [logos, setLogos] = useState([]);
   const [expanded, setExpanded] = React.useState(false);
-
+  
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
@@ -64,7 +64,7 @@ const Logo = () => {
   const acceptStyle = {
     borderColor: "#00e676",
   };
-
+  
   const rejectStyle = {
     borderColor: "#ff1744",
   };
@@ -73,9 +73,9 @@ const Logo = () => {
     const newLogo = acceptedFiles[0]
       ? URL.createObjectURL(acceptedFiles[0])
       : null;
-    updateLogo(acceptedFiles[0]);
-    const logoKey = `image${logos.length + 1}`;
-    setLogos([...logos, newLogo]);
+      updateLogo(acceptedFiles[0]);
+      const logoKey = `image${logos.length + 1}`;
+      setLogos([...logos, newLogo]);
     setUpdatedLogos({
       ...updatedLogos,
       [logoKey]: { 1: [], 2: [], 3: [], 4: [] },
@@ -87,10 +87,10 @@ const Logo = () => {
 
   const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject } =
     useDropzone({ onDropAccepted, accept: { "image/*": [] }, multiple: false });
-
-  const style = useMemo(
-    () => ({
-      ...baseStyle,
+    
+    const style = useMemo(
+      () => ({
+        ...baseStyle,
       ...(isFocused ? focusedStyle : {}),
       ...(isDragAccept ? acceptStyle : {}),
       ...(isDragReject ? rejectStyle : {}),
@@ -98,6 +98,7 @@ const Logo = () => {
     [isFocused, isDragAccept, isDragReject]
   );
 
+  console.log("🚀 ~ Logo ~ updatedLogos:", updatedLogos)
   useEffect(() => {
     const loadImages = async () => {
       try {
