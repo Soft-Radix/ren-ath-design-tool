@@ -29,6 +29,7 @@ import {
   calculateScale,
   transformGradientScale,
 } from "../../../src/utils/funtions";
+import NameDecal from "../../../src/components/common/nameDecal";
 const hexColor = "#D2D1D3";
 // Extract RGB components from the hexadecimal color
 const r = parseInt(hexColor.substring(1, 3), 16) / 255;
@@ -85,9 +86,10 @@ export function Model(props) {
     designGradient1,
     designGradient2,
     isDesignGradientEnabled,
-
     updatedLogos,
+    updatedNames,
   } = useProductStore((state) => state);
+  console.log("🚀 ~ Model ~ updatedNames:", updatedNames);
 
   // SET CAMERA POSITION
   const camera = useThree((state) => state.camera);
@@ -107,6 +109,7 @@ export function Model(props) {
   const primaryTexture = useTexture(designTexture);
   const secondaryTexture = useTexture(secondaryTextureUrl);
   const [combinedLogos, setCombinedLogos] = useState({});
+  const [combinedNames, setCombinedNames] = useState({});
   const [decalPositions1, setDecalPositions1] = useState(
     [[0, 0, 1]] // Initialize positions array with default values
   );
@@ -117,6 +120,13 @@ export function Model(props) {
     [[0, 0, 1]] // Initialize positions array with default values
   );
   const [decalPositions4, setDecalPositions4] = useState(
+    [[0, 0, 1]] // Initialize positions array with default values
+  );
+
+  const [nameDecalPositions1, setNameDecalPositions1] = useState(
+    [[0, 0, 1]] // Initialize positions array with default values
+  );
+  const [nameDecalPositions2, setNameDecalPositions2] = useState(
     [[0, 0, 1]] // Initialize positions array with default values
   );
   const normal = useTexture("./model-designs/W3/normal.png");
@@ -688,10 +698,10 @@ export function Model(props) {
     setNumber1Rotation(modelRotation);
   }, [modelRotation]);
 
-  const combineKeys = (logosObject) => {
+  const combineKeys = (object) => {
     const combined = { 1: [], 2: [], 3: [], 4: [] };
 
-    Object.values(logosObject).forEach((image) => {
+    Object.values(object).forEach((image) => {
       Object.keys(combined).forEach((key) => {
         combined[key] = [...combined[key], ...image[key]];
       });
@@ -707,11 +717,24 @@ export function Model(props) {
     const positions2 = result?.[2]?.map(() => [0, 0, 1]);
     const positions3 = result?.[3]?.map(() => [0, 0, 1]);
     const positions4 = result?.[4]?.map(() => [0, 0, 1]);
-    setDecalPositions1(positions1);
-    setDecalPositions2(positions2);
-    setDecalPositions3(positions3);
-    setDecalPositions4(positions4);
+    setDecalPositions1([...decalPositions1, ...positions1]);
+    setDecalPositions2([...decalPositions2, ...positions2]);
+    setDecalPositions3([...decalPositions3, ...positions3]);
+    setDecalPositions4([...decalPositions4, ...positions4]);
   }, [updatedLogos]);
+
+  useEffect(() => {
+    const result = combineKeys(updatedNames);
+    setCombinedNames(result);
+    const positions1 = result?.[1]?.map(() => [0, 0, 1]);
+    const positions2 = result?.[2]?.map(() => [0, 0, 1]);
+    // const positions3 = result?.[3]?.map(() => [0, 0, 1]);
+    // const positions4 = result?.[4]?.map(() => [0, 0, 1]);
+    setNameDecalPositions1([...nameDecalPositions1, ...positions1]);
+    setNameDecalPositions2([...nameDecalPositions2, ...positions2]);
+    // setDecalPositions3(positions3);
+    // setDecalPositions4(positions4);
+  }, [updatedNames]);
 
   return (
     <>
@@ -788,9 +811,76 @@ export function Model(props) {
                 );
               })}
 
-            {modelName[0] && (
+            {combinedNames?.[3]?.length > 0 &&
+              combinedNames?.[3]?.map((item, index) => {
+                return (
+                  <Decal
+                    // {...bind()}
+                    onPointerEnter={toggleHovered}
+                    onPointerLeave={toggleHovered}
+                    position={[0.5, 1.8 + index / 4, 1]}
+                    rotation={[90, 90, -90]}
+                    scale={name1Scale}
+                    origin={[0, 0, 0]}
+                  >
+                    <meshStandardMaterial
+                      transparent
+                      polygonOffset
+                      polygonOffsetFactor={-5}
+                    >
+                      <RenderTexture attach="map">
+                        <PerspectiveCamera
+                          makeDefault
+                          manual
+                          aspect={2}
+                          position={[-0.4, 1.6, 2.9]}
+                        />
+                        {/* {hovered && (
+                        <color attach="background" args={["#279954"]} />
+                      )} */}
+                        <GradientText
+                          color1={nameColor[item]}
+                          color2={nameGradientColor[item]}
+                          outlineColor={nameOutline[item]}
+                          gradientRotation={nameGradientAngle[item]}
+                          gradientScale={nameGradientScale[item]}
+                          isNumberGradientColor={isNameGradientColor}
+                          rotation={[320, 360, -0.2]}
+                          fontSize={0.5}
+                          position={[-0.2, 0.8, -0.9]}
+                          font={
+                            nameFont[item] == 1
+                              ? font1
+                              : nameFont[item] == 2
+                              ? font3
+                              : nameFont[item] == 3
+                              ? font3
+                              : nameFont[item] == 4
+                              ? font4
+                              : nameFont[item] == 5
+                              ? font5
+                              : nameFont[item] == 6
+                              ? font6
+                              : nameFont[item] == 7
+                              ? font7
+                              : nameFont[item] == 8
+                              ? font8
+                              : nameFont[item] == 9
+                              ? font9
+                              : font1
+                          }
+                        >
+                          {item}
+                        </GradientText>
+                      </RenderTexture>
+                    </meshStandardMaterial>
+                  </Decal>
+                );
+              })}
+
+            {/* {modelName[0] && (
               <Decal
-                {...bind()}
+                // {...bind()}
                 onPointerEnter={toggleHovered}
                 onPointerLeave={toggleHovered}
                 position={[0.5, 1.8, 1]}
@@ -810,37 +900,35 @@ export function Model(props) {
                       aspect={2}
                       position={[-0.4, 1.6, 2.9]}
                     />
-                    {/* {hovered && (
-                      <color attach="background" args={["#279954"]} />
-                    )} */}
+                   
                     <GradientText
-                      color1={nameColor[0]}
-                      color2={nameGradientColor[0]}
-                      outlineColor={nameOutline[0]}
-                      gradientRotation={nameGradientAngle[0]}
-                      gradientScale={nameGradientScale[0]}
+                      color1={nameColor[item]}
+                      color2={nameGradientColor[item]}
+                      outlineColor={nameOutline[item]}
+                      gradientRotation={nameGradientAngle[item]}
+                      gradientScale={nameGradientScale[item]}
                       isNumberGradientColor={isNameGradientColor}
                       rotation={[320, 360, -0.2]}
                       fontSize={0.5}
                       position={[-0.2, 0.8, -0.9]}
                       font={
-                        nameFont[0] == 1
+                        nameFont[item+index] == 1
                           ? font1
-                          : nameFont[0] == 2
+                          : nameFont[item+index] == 2
                           ? font3
-                          : nameFont[0] == 3
+                          : nameFont[item+index] == 3
                           ? font3
-                          : nameFont[0] == 4
+                          : nameFont[item+index] == 4
                           ? font4
-                          : nameFont[0] == 5
+                          : nameFont[item+index] == 5
                           ? font5
-                          : nameFont[0] == 6
+                          : nameFont[item+index] == 6
                           ? font6
-                          : nameFont[0] == 7
+                          : nameFont[item+index] == 7
                           ? font7
-                          : nameFont[0] == 8
+                          : nameFont[item+index] == 8
                           ? font8
-                          : nameFont[0] == 9
+                          : nameFont[item+index] == 9
                           ? font9
                           : font1
                       }
@@ -850,7 +938,7 @@ export function Model(props) {
                   </RenderTexture>
                 </meshStandardMaterial>
               </Decal>
-            )}
+            )} */}
           </mesh>
           <mesh
             geometry={nodes.Dress_1_Group6255_0005_7.geometry}
@@ -895,6 +983,74 @@ export function Model(props) {
                   />
                 );
               })}
+
+            {combinedNames?.[4]?.length > 0 &&
+              combinedNames?.[4]?.map((item, index) => {
+                return (
+                  <Decal
+                    // {...bind()}
+                    onPointerEnter={toggleHovered}
+                    onPointerLeave={toggleHovered}
+                    position={[0.5, -1, 1]}
+                    rotation={[180, 180, -20.1]}
+                    scale={name1Scale}
+                    origin={[0, 0, 0]}
+                  >
+                    <meshStandardMaterial
+                      transparent
+                      polygonOffset
+                      polygonOffsetFactor={-5}
+                    >
+                      <RenderTexture attach="map">
+                        <PerspectiveCamera
+                          makeDefault
+                          manual
+                          aspect={2}
+                          position={[0, 0.1, 2.5]}
+                        />
+                        {/* {hovered && (
+                      <color attach="background" args={["#279954"]} />
+                    )} */}
+                        <GradientText
+                          color1={nameColor[item]}
+                          color2={nameGradientColor[item]}
+                          outlineColor={nameOutline[item]}
+                          gradientRotation={nameGradientAngle[item]}
+                          gradientScale={nameGradientScale[item]}
+                          isNumberGradientColor={isNameGradientColor}
+                          rotation={[320, 360, 0]}
+                          fontSize={0.5}
+                          position={[0, 0, -0.9]}
+                          font={
+                            nameFont[item] == 1
+                              ? font1
+                              : nameFont[item] == 2
+                              ? font8
+                              : nameFont[item] == 3
+                              ? font3
+                              : nameFont[item] == 4
+                              ? font4
+                              : nameFont[item] == 5
+                              ? font5
+                              : nameFont[item] == 6
+                              ? font6
+                              : nameFont[item] == 7
+                              ? font7
+                              : nameFont[item] == 8
+                              ? font8
+                              : nameFont[item] == 9
+                              ? font9
+                              : font1
+                          }
+                        >
+                          {item}
+                        </GradientText>
+                      </RenderTexture>
+                    </meshStandardMaterial>
+                  </Decal>
+                );
+              })}
+
             {gradient[1] && !isDesign && (
               <meshStandardMaterial side={DoubleSide}>
                 <GradientTexture
@@ -904,9 +1060,9 @@ export function Model(props) {
                 />
               </meshStandardMaterial>
             )}
-            {modelName[1] && (
+            {/* {modelName[1] && (
               <Decal
-                {...bind()}
+                // {...bind()}
                 onPointerEnter={toggleHovered}
                 onPointerLeave={toggleHovered}
                 position={[0.5, -1, 1]}
@@ -926,37 +1082,35 @@ export function Model(props) {
                       aspect={2}
                       position={[0, 0.1, 2.5]}
                     />
-                    {/* {hovered && (
-                      <color attach="background" args={["#279954"]} />
-                    )} */}
+
                     <GradientText
-                      color1={nameColor[1]}
-                      color2={nameGradientColor[1]}
-                      outlineColor={nameOutline[1]}
-                      gradientRotation={nameGradientAngle[1]}
-                      gradientScale={nameGradientScale[1]}
+                      color1={nameColor[item]}
+                      color2={nameGradientColor[item]}
+                      outlineColor={nameOutline[item]}
+                      gradientRotation={nameGradientAngle[item]}
+                      gradientScale={nameGradientScale[item]}
                       isNumberGradientColor={isNameGradientColor}
                       rotation={[320, 360, 0]}
                       fontSize={0.5}
                       position={[0, 0, -0.9]}
                       font={
-                        nameFont[1] == 1
+                        nameFont[item+index] == 1
                           ? font1
-                          : nameFont[1] == 2
+                          : nameFont[item+index] == 2
                           ? font8
-                          : nameFont[1] == 3
+                          : nameFont[item+index] == 3
                           ? font3
-                          : nameFont[1] == 4
+                          : nameFont[item+index] == 4
                           ? font4
-                          : nameFont[1] == 5
+                          : nameFont[item+index] == 5
                           ? font5
-                          : nameFont[1] == 6
+                          : nameFont[item+index] == 6
                           ? font6
-                          : nameFont[1] == 7
+                          : nameFont[item+index] == 7
                           ? font7
-                          : nameFont[1] == 8
+                          : nameFont[item+index] == 8
                           ? font8
-                          : nameFont[1] == 9
+                          : nameFont[item+index] == 9
                           ? font9
                           : font1
                       }
@@ -966,7 +1120,7 @@ export function Model(props) {
                   </RenderTexture>
                 </meshStandardMaterial>
               </Decal>
-            )}
+            )} */}
           </mesh>
           <mesh
             geometry={nodes.Dress_1_Group6255_0005_4.geometry}
@@ -1032,7 +1186,7 @@ export function Model(props) {
               </Decal>
             )}
 
-            {modelName[2] && (
+            {/* {modelName[2] && (
               <Decal
                 {...bindFront()}
                 onPointerEnter={toggleHovered}
@@ -1058,30 +1212,30 @@ export function Model(props) {
                     <GradientText
                       rotation={[0, 0, 0]}
                       fontSize={0.5}
-                      color1={nameColor[2]}
-                      color2={nameGradientColor[2]}
-                      outlineColor={nameOutline[2]}
-                      gradientRotation={nameGradientAngle[2]}
-                      gradientScale={nameGradientScale[2]}
+                      color1={nameColor[item]}
+                      color2={nameGradientColor[item]}
+                      outlineColor={nameOutline[item]}
+                      gradientRotation={nameGradientAngle[item]}
+                      gradientScale={nameGradientScale[item]}
                       isNumberGradientColor={isNameGradientColor}
                       font={
-                        nameFont[2] == 1
+                        nameFont[item+index] == 1
                           ? font1
-                          : nameFont[2] == 2
+                          : nameFont[item+index] == 2
                           ? font8
-                          : nameFont[2] == 3
+                          : nameFont[item+index] == 3
                           ? font3
-                          : nameFont[2] == 4
+                          : nameFont[item+index] == 4
                           ? font4
-                          : nameFont[2] == 5
+                          : nameFont[item+index] == 5
                           ? font5
-                          : nameFont[2] == 6
+                          : nameFont[item+index] == 6
                           ? font6
-                          : nameFont[2] == 7
+                          : nameFont[item+index] == 7
                           ? font7
-                          : nameFont[2] == 8
+                          : nameFont[item+index] == 8
                           ? font8
-                          : nameFont[2] == 9
+                          : nameFont[item+index] == 9
                           ? font9
                           : font1
                       }
@@ -1091,7 +1245,7 @@ export function Model(props) {
                   </RenderTexture>
                 </meshStandardMaterial>
               </Decal>
-            )}
+            )} */}
 
             {gradient[2] && !isDesign && (
               <meshStandardMaterial side={DoubleSide}>
@@ -1121,6 +1275,54 @@ export function Model(props) {
                       newPositions[index] = position;
                       setDecalPositions1(newPositions);
                     }}
+                  />
+                );
+              })}
+
+            {combinedNames?.[1]?.length > 0 &&
+              combinedNames?.[1]?.map((item, index) => {
+                return (
+                  <NameDecal
+                    modelNamePosition={nameDecalPositions1[index]}
+                    toggleHovered={toggleHovered}
+                    index={index}
+                    isNameGradientColor={isNameGradientColor}
+                    name={item}
+                    nameColor={nameColor[item]}
+                    nameFont={
+                      nameFont[item] == 1
+                        ? font1
+                        : nameFont[item] == 2
+                        ? font8
+                        : nameFont[item] == 3
+                        ? font3
+                        : nameFont[item] == 4
+                        ? font4
+                        : nameFont[item] == 5
+                        ? font5
+                        : nameFont[item] == 6
+                        ? font6
+                        : nameFont[item] == 7
+                        ? font7
+                        : nameFont[item] == 8
+                        ? font8
+                        : nameFont[item] == 9
+                        ? font9
+                        : font1
+                    }
+                    nameGradientAngle={nameGradientAngle[item]}
+                    nameGradientColor={nameGradientColor[item]}
+                    nameGradientScale={nameGradientScale[item]}
+                    nameScale={calculateScale(nameScale[item])}
+                    nameOutline={nameOutline[item]}
+                    orbitalRef={orbitalRef}
+                    key={item + index}
+                    setModelNamePosition={(position) => {
+                      const newPositions = [...nameDecalPositions1];
+                      newPositions[index] = position;
+                      setNameDecalPositions1(newPositions);
+                    }}
+                    namePosition={1}
                   />
                 );
               })}
@@ -1211,14 +1413,14 @@ export function Model(props) {
               </Decal>
             )}
 
-            {modelName[3] && (
+            {/* {modelName[3] && (
               <Decal
                 {...bindBack()}
                 onPointerEnter={toggleHovered}
                 onPointerLeave={toggleHovered}
                 position={name2Position}
                 rotation={[0, degToRad(180), 0]}
-                scale={calculateScale(nameScale[3])}
+                scale={calculateScale(nameScale[item+index])}
                 origin={[0, 0, 0]}
               >
                 <meshStandardMaterial
@@ -1235,32 +1437,32 @@ export function Model(props) {
                     />
 
                     <GradientText
-                      color1={nameColor[3]}
-                      color2={nameGradientColor[3]}
-                      outlineColor={nameOutline[3]}
+                      color1={nameColor[item]}
+                      color2={nameGradientColor[item]}
+                      outlineColor={nameOutline[item]}
                       isNumberGradientColor={isNameGradientColor}
                       rotation={[0, 0, 0]}
                       fontSize={0.5}
-                      gradientRotation={nameGradientAngle[3]}
-                      gradientScale={nameGradientScale[3]}
+                      gradientRotation={nameGradientAngle[item]}
+                      gradientScale={nameGradientScale[item]}
                       font={
-                        nameFont[3] == 1
+                        nameFont[item+index] == 1
                           ? font1
-                          : nameFont[3] == 2
+                          : nameFont[item+index] == 2
                           ? font8
-                          : nameFont[3] == 3
+                          : nameFont[item+index] == 3
                           ? font3
-                          : nameFont[3] == 4
+                          : nameFont[item+index] == 4
                           ? font4
-                          : nameFont[3] == 5
+                          : nameFont[item+index] == 5
                           ? font5
-                          : nameFont[3] == 6
+                          : nameFont[item+index] == 6
                           ? font6
-                          : nameFont[3] == 7
+                          : nameFont[item+index] == 7
                           ? font7
-                          : nameFont[3] == 8
+                          : nameFont[item+index] == 8
                           ? font8
-                          : nameFont[3] == 9
+                          : nameFont[item+index] == 9
                           ? font9
                           : font1
                       }
@@ -1270,7 +1472,7 @@ export function Model(props) {
                   </RenderTexture>
                 </meshStandardMaterial>
               </Decal>
-            )}
+            )} */}
 
             {combinedLogos?.[2]?.length > 0 &&
               combinedLogos?.[2]?.map((item, index) => {
@@ -1288,6 +1490,112 @@ export function Model(props) {
                     logoPosition={2}
                     logoRotation={[0, Math.PI, 0]}
                   />
+                );
+              })}
+
+            {combinedNames?.[2]?.length > 0 &&
+              combinedNames?.[2]?.map((item, index) => {
+                return (
+                  <NameDecal
+                    modelNamePosition={nameDecalPositions2[index]}
+                    toggleHovered={toggleHovered}
+                    index={index}
+                    isNameGradientColor={isNameGradientColor}
+                    name={item}
+                    nameColor={nameColor[item]}
+                    nameFont={
+                      nameFont[item] == 1
+                        ? font1
+                        : nameFont[item] == 2
+                        ? font8
+                        : nameFont[item] == 3
+                        ? font3
+                        : nameFont[item] == 4
+                        ? font4
+                        : nameFont[item] == 5
+                        ? font5
+                        : nameFont[item] == 6
+                        ? font6
+                        : nameFont[item] == 7
+                        ? font7
+                        : nameFont[item] == 8
+                        ? font8
+                        : nameFont[item] == 9
+                        ? font9
+                        : font1
+                    }
+                    nameGradientAngle={nameGradientAngle[item]}
+                    nameGradientColor={nameGradientColor[item]}
+                    nameGradientScale={nameGradientScale[item]}
+                    nameScale={calculateScale(nameScale[item])}
+                    nameOutline={nameOutline[item]}
+                    orbitalRef={orbitalRef}
+                    key={item + index}
+                    setModelNamePosition={(position) => {
+                      const newPositions = [...nameDecalPositions2];
+                      newPositions[index] = position;
+                      setNameDecalPositions2(newPositions);
+                    }}
+                    namePosition={2}
+                  />
+                  // <Decal
+                  //   {...bindBack()}
+                  //   onPointerEnter={toggleHovered}
+                  //   onPointerLeave={toggleHovered}
+                  //   position={name2Position}
+                  //   rotation={[0, degToRad(180), 0]}
+                  //   scale={calculateScale(nameScale[item])}
+                  //   origin={[0, 0, 0]}
+                  // >
+                  //   <meshStandardMaterial
+                  //     transparent
+                  //     polygonOffset
+                  //     polygonOffsetFactor={-1}
+                  //   >
+                  //     <RenderTexture attach="map">
+                  //       <PerspectiveCamera
+                  //         makeDefault
+                  //         manual
+                  //         aspect={2}
+                  //         position={[0, 0.1, 2.5]}
+                  //       />
+
+                  //       <GradientText
+                  //         color1={nameColor[item]}
+                  //         color2={nameGradientColor[item]}
+                  //         outlineColor={nameOutline[item]}
+                  //         isNumberGradientColor={isNameGradientColor}
+                  //         rotation={[0, 0, 0]}
+                  //         fontSize={0.5}
+                  //         gradientRotation={nameGradientAngle[item]}
+                  //         gradientScale={nameGradientScale[item]}
+                  //         font={
+                  //           nameFont[item] == 1
+                  //             ? font1
+                  //             : nameFont[item] == 2
+                  //             ? font8
+                  //             : nameFont[item] == 3
+                  //             ? font3
+                  //             : nameFont[item] == 4
+                  //             ? font4
+                  //             : nameFont[item] == 5
+                  //             ? font5
+                  //             : nameFont[item] == 6
+                  //             ? font6
+                  //             : nameFont[item] == 7
+                  //             ? font7
+                  //             : nameFont[item] == 8
+                  //             ? font8
+                  //             : nameFont[item] == 9
+                  //             ? font9
+                  //             : font1
+                  //         }
+                  //       >
+                  //         {item}
+                  //       </GradientText>
+                  //     </RenderTexture>
+                  //   </meshStandardMaterial>
+                  // </Decal>
                 );
               })}
           </mesh>

@@ -75,6 +75,7 @@ export const useProductStore = create((set) => ({
   nameGradientScale: {},
   nameGradientAngle: {},
   isNameGradientColor: false,
+  updatedNames: {},
 
   logo: null,
   logoPosition: 1,
@@ -84,6 +85,10 @@ export const useProductStore = create((set) => ({
   modelLoading: true,
   isGradient: null,
   updatedLogos: {},
+  setUpdatedNames: (updatedNames) =>
+    set(() => ({
+      updatedNames: updatedNames,
+    })),
   setUpdatedLogos: (updatedLogos) =>
     set(() => ({
       updatedLogos: updatedLogos,
