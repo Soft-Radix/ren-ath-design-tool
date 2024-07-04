@@ -39,15 +39,16 @@ const LogoDecal = ({
       {...logoBind()}
       onPointerEnter={toggleHovered}
       onPointerLeave={toggleHovered}
-      scale={[(logoScale[item] || 0.3) * 2, (logoScale[item] || 0.5) * 4, 4]}
-      // debug={true}
-      position={
-        logoPosition === 4
-          ? [1, 0.5, 0.122222222]
-          : logoPosition === 3
-          ? [0, 0, 0.44444444]
-          : modelLogoPosition[index]
+      scale={
+        logoPosition === 4 || logoPosition === 3
+          ? [
+              (logoScale[item] || 0.5) * 1.2222,
+              (logoScale[item] || 0.5) * 1.2222,
+              5,
+            ]
+          : [(logoScale[item] || 0.3) * 2, (logoScale[item] || 0.5) * 4, 4]
       }
+      position={modelLogoPosition[index]}
       rotation={logoRotation}
       map={logoTexture[index]}
       origin={[0, 0, 0]}
