@@ -20,17 +20,18 @@ const Logo = () => {
     setUpdatedLogos,
     logoScale,
     updateLogoScale,
+    handleModelRotation,
+    logos,
+    setLogos,
   } = useProductStore((state) => state);
-  
-  const [logos, setLogos] = useState([]);
+
   const [expanded, setExpanded] = React.useState(false);
-  
+
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
   const [logoPositions, setLogoPositions] = useState({});
 
-  console.log("🚀 ~ Logo ~ logoScale:", logoScale);
   const [logoAngles, setLogoAngles] = useState({});
   const [images, setImages] = useState({
     front: "",
@@ -64,7 +65,7 @@ const Logo = () => {
   const acceptStyle = {
     borderColor: "#00e676",
   };
-  
+
   const rejectStyle = {
     borderColor: "#ff1744",
   };
@@ -73,9 +74,9 @@ const Logo = () => {
     const newLogo = acceptedFiles[0]
       ? URL.createObjectURL(acceptedFiles[0])
       : null;
-      updateLogo(acceptedFiles[0]);
-      const logoKey = `image${logos.length + 1}`;
-      setLogos([...logos, newLogo]);
+    updateLogo(acceptedFiles[0]);
+    const logoKey = `image${logos.length + 1}`;
+    setLogos([...logos, newLogo]);
     setUpdatedLogos({
       ...updatedLogos,
       [logoKey]: { 1: [], 2: [], 3: [], 4: [] },
@@ -87,10 +88,10 @@ const Logo = () => {
 
   const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject } =
     useDropzone({ onDropAccepted, accept: { "image/*": [] }, multiple: false });
-    
-    const style = useMemo(
-      () => ({
-        ...baseStyle,
+
+  const style = useMemo(
+    () => ({
+      ...baseStyle,
       ...(isFocused ? focusedStyle : {}),
       ...(isDragAccept ? acceptStyle : {}),
       ...(isDragReject ? rejectStyle : {}),
@@ -98,7 +99,6 @@ const Logo = () => {
     [isFocused, isDragAccept, isDragReject]
   );
 
-  console.log("🚀 ~ Logo ~ updatedLogos:", updatedLogos)
   useEffect(() => {
     const loadImages = async () => {
       try {
@@ -226,6 +226,7 @@ const Logo = () => {
                       logoPositions[logoKey] === 1 ? styles.selected : ""
                     }`}
                     onClick={() => {
+                      handleModelRotation(0);
                       updateLogosWithPosition(1, logo, logoKey);
                     }}
                   >
@@ -236,6 +237,7 @@ const Logo = () => {
                       logoPositions[logoKey] === 2 ? styles.selected : ""
                     }`}
                     onClick={() => {
+                      handleModelRotation(180);
                       updateLogosWithPosition(2, logo, logoKey);
                     }}
                   >
@@ -246,6 +248,7 @@ const Logo = () => {
                       logoPositions[logoKey] === 3 ? styles.selected : ""
                     }`}
                     onClick={() => {
+                      handleModelRotation(90);
                       updateLogosWithPosition(3, logo, logoKey);
                     }}
                   >
@@ -256,6 +259,7 @@ const Logo = () => {
                       logoPositions[logoKey] === 4 ? styles.selected : ""
                     }`}
                     onClick={() => {
+                      handleModelRotation(270);
                       updateLogosWithPosition(4, logo, logoKey);
                     }}
                   >
@@ -266,9 +270,9 @@ const Logo = () => {
               <h3>Scale</h3>
               <div className={styles.sliderWrap}>
                 <Slider
-                  min={0.3}
+                  min={0.1}
                   max={0.8}
-                  step={0.01}
+                  step={0.1}
                   value={logoScale[logoKey]}
                   defaultValue={0.3}
                   onChange={(e) => updateLogoScales(logoKey, e)}

@@ -85,6 +85,16 @@ export const useProductStore = create((set) => ({
   modelLoading: true,
   isGradient: null,
   updatedLogos: {},
+  names: [],
+  logos: [],
+  setNames: (names) =>
+    set(() => ({
+      names: names,
+    })),
+  setLogos: (logos) =>
+    set(() => ({
+      logos: logos,
+    })),
   setUpdatedNames: (updatedNames) =>
     set(() => ({
       updatedNames: updatedNames,
