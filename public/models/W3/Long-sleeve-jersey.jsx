@@ -494,7 +494,6 @@ export function Model(props) {
     loading,
   ]);
 
-  console.log("🚀 ~ modelRef.current.children.forEach ~ loading:", loading);
   const [number1Position, setNumber1Position] = useState([0, 0, 2]);
   const [number1Scale, setNumber1Scale] = useState([4.5, 2.5, 2]);
   const [number1Rotation, setNumber1Rotation] = useState(0);

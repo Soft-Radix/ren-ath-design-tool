@@ -42,7 +42,6 @@ const NameDecal = ({
     { pointerEvents: true }
   );
 
-  console.log("🚀 ~ modelNamePosition:", modelNamePosition);
   return (
     <Decal
       position={modelNamePosition}
@@ -72,7 +71,7 @@ const NameDecal = ({
             isNumberGradientColor={isNameGradientColor}
             font={nameFont}
           >
-            {name}
+            {`${name}`.toUpperCase()}
           </GradientText>
         </RenderTexture>
       </meshStandardMaterial>
