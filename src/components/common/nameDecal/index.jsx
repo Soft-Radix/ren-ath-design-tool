@@ -22,7 +22,6 @@ const NameDecal = ({
   modelNamePosition,
   setModelNamePosition,
 }) => {
-  console.log("🚀 ~ nameScale:", nameScale);
   const bindFront = useDrag(
     ({ offset: [x, y], down }) => {
       orbitalRef.current.enabled = !down;
@@ -41,7 +40,6 @@ const NameDecal = ({
     },
     { pointerEvents: true }
   );
-
   return (
     <Decal
       position={modelNamePosition}

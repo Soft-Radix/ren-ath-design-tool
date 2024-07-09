@@ -221,25 +221,35 @@ const Name = () => {
                 <img src={images.chest_right} alt="chest right" />
               </div>
             </div>
-            {namePositions[name] !== 3 && namePositions[name] !== 4 && (
-              <>
-                <h3>Scale</h3>
-                <div className={styles.scaleAngleWrap}>
-                  <div className={styles.sliderWrap}>
-                    <span>Scale</span>
-                    <Slider
-                      min={namePositions[name] === 2 ? 4 : 1}
-                      max={10}
-                      step={1}
-                      value={nameScale[name]}
-                      onChange={(e) => {
-                        updateNameScale({ [name]: e });
-                      }}
-                    />
-                  </div>
+
+            <>
+              <h3>Scale</h3>
+              <div className={styles.scaleAngleWrap}>
+                <div className={styles.sliderWrap}>
+                  <span>Scale</span>
+                  <Slider
+                    min={
+                      namePositions[name] === 2
+                        ? 4
+                        : namePositions[name] === 3 || namePositions[name] === 4
+                        ? 3
+                        : 1
+                    }
+                    max={
+                      namePositions[name] === 3 || namePositions[name] === 4
+                        ? 5
+                        : 10
+                    }
+                    step={1}
+                    value={nameScale[name]}
+                    onChange={(e) => {
+                      updateNameScale({ [name]: e });
+                    }}
+                  />
                 </div>
-              </>
-            )}
+              </div>
+            </>
+
             <h3>Add Fonts</h3>
             <div className={styles.fontWrap}>
               <motion.div

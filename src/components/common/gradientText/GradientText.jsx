@@ -67,7 +67,6 @@ export default function GradientText({
   isNumberGradientColor,
   ...props
 }) {
-  console.log("🚀 ~ gradientRotation:", gradientRotation);
   const material = useMemo(
     () =>
       new THREE.ShaderMaterial({
@@ -114,14 +113,16 @@ export default function GradientText({
     <>
       <Text
         {...props}
+        renderOrder={999}
         color={color1}
         outlineColor={outlineColor}
+        
         outlineWidth={outlineColor ? outlineWidth : 0}
       >
         {children}
       </Text>
       {isNumberGradientColor && (
-        <Text {...props} material={material}>
+        <Text {...props} material={material} renderOrder={999}>
           {children}
         </Text>
       )}
