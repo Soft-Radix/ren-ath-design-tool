@@ -381,14 +381,14 @@ const Name = () => {
                     >
                       Gradient
                     </ThemeButton>
+                    <ThemeButton
+                      onClick={() => setType({ ...type, [name]: 2 })}
+                      variant={type[name] != 2 ? "outlined" : "contained"}
+                    >
+                      Outline
+                    </ThemeButton>
                   </>
                 )}
-                <ThemeButton
-                  onClick={() => setType({ ...type, [name]: 2 })}
-                  variant={type[name] != 2 ? "outlined" : "contained"}
-                >
-                  Outline
-                </ThemeButton>
                 <div
                   className={styles.gradientViewer}
                   style={{

@@ -74,7 +74,6 @@ const Color = () => {
                     updateColorIndex(childIndex);
                     // updateLayer(childIndex);
                     if (childIndex == 0 || childIndex % 2 === 0) {
-                      console.log("object");
                       updateColor({
                         [childIndex]: itemColor,
                         [childIndex + 1]: itemColor,

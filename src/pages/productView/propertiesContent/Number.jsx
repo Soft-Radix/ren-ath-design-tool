@@ -61,7 +61,6 @@ const Number = () => {
             `../../../assets/images/products/placement/${id}/front.png`
           )
         ).default;
-        console.log("🚀 ~ loadImages ~ front:", front);
         const back = (
           await import(
             `../../../assets/images/products/placement/${id}/back.png`

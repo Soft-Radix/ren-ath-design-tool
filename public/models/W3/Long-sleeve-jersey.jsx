@@ -90,7 +90,7 @@ export function Model(props) {
     updatedLogos,
     updatedNames,
   } = useProductStore((state) => state);
-  console.log("🚀 ~ Model ~ updatedNames:", updatedNames);
+  // console.log("🚀 ~ Model ~ updatedNames:", updatedNames);
 
   // SET CAMERA POSITION
   const camera = useThree((state) => state.camera);

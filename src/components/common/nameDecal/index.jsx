@@ -40,7 +40,6 @@ const NameDecal = ({
     },
     { pointerEvents: true }
   );
-  console.log("modelNamePosition", modelNamePosition);
   return (
     <Decal
       position={modelNamePosition}
