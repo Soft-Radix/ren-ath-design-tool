@@ -115,7 +115,7 @@ const Pattern = () => {
     });
     setTimeout(() => {
       setLoader(false);
-    }, 9000);
+    }, 10000);
   };
 
   return (

@@ -18,15 +18,20 @@ export const useProductStore = create((set) => ({
   ref: null,
   orbitalRef: null,
   modelRotation: 0,
+
   designColor: {},
   designGradient1: {},
   designGradient2: {},
   designScale: {},
   isDesignGradientEnabled: false,
-  patternColor: {},
-
   designCount: designCount,
   designType: 0,
+  
+  patternColor: {},
+  pattern: null,
+  patternScale: {},
+  patternAngle: {},
+
   color: {},
   colorIndex: null,
   gradient: {},
@@ -35,10 +40,7 @@ export const useProductStore = create((set) => ({
   gradientAngle: {},
   designGradientAngle: {},
 
-  pattern: null,
   layer: null,
-  patternScale: {},
-  patternAngle: {},
 
   number: {},
   numberPosition: 0,
@@ -55,7 +57,7 @@ export const useProductStore = create((set) => ({
   numberAngle: {},
   numberGradientColor: {},
   isNumberGradientColor: false,
-  modelName: {},
+  
   namePosition: 1,
   nameFont: {
     0: 1,
@@ -63,6 +65,7 @@ export const useProductStore = create((set) => ({
     2: 1,
     3: 1,
   },
+  modelName: {},
   nameColor: {},
   nameOutline: {},
   nameScale: {
@@ -81,12 +84,15 @@ export const useProductStore = create((set) => ({
   logoPosition: 1,
   logoScale: {},
   logoRotate: 0,
+
   isDesign: false,
+
   modelLoading: true,
   isGradient: null,
   updatedLogos: {},
   names: [],
   logos: [],
+  
   setNames: (names) =>
     set(() => ({
       names: names,

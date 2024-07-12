@@ -1,3 +1,35 @@
+// ----------------------------- React imports ----------------------------------
+import React, { useEffect, useRef, useState } from "react";
+
+// ----------------------------- Framer motion imports --------------------------
+import { motion } from "framer-motion-3d";
+
+// ----------------------------- Store import -----------------------------------
+import { useProductStore } from "../../../src/store";
+
+// ----------------------------- Utils function imports -------------------------
+import {
+  calculateScale,
+  transformGradientScale,
+} from "../../../src/utils/funtions";
+
+// ----------------------------- Components import ------------------------------
+import GradientText from "../../../src/components/common/gradientText/GradientText";
+import LogoDecal from "../../../src/components/common/logoDecal";
+import NameDecal from "../../../src/components/common/nameDecal";
+import SleeveDecalName from "../../../src/components/common/sleeveNameDecal";
+
+// ----------------------------- Fonts import ------------------------------------
+import font3 from "../../../src/assets/fonts/BebasNeue.ttf";
+import font5 from "../../../src/assets/fonts/Freshman.ttf";
+import font6 from "../../../src/assets/fonts/Impact.ttf";
+import font7 from "../../../src/assets/fonts/MachineRegular.ttf";
+import font8 from "../../../src/assets/fonts/Oswald-VariableFont_wght.ttf";
+import font1 from "../../../src/assets/fonts/Roboto.ttf";
+import font9 from "../../../src/assets/fonts/SawarabiGothic-Regular.ttf";
+import font4 from "../../../src/assets/fonts/TiltNeon.ttf";
+
+// ----------------------------- React three and use-gesture imports --------------
 import {
   Decal,
   GradientTexture,
@@ -9,38 +41,93 @@ import {
 } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import { useDrag } from "@use-gesture/react";
-import { motion } from "framer-motion-3d";
-import React, { useEffect, useRef, useState } from "react";
 import * as Three from "three";
 import { DoubleSide, ShaderMaterial } from "three";
 import { degToRad } from "three/src/math/MathUtils.js";
-import font3 from "../../../src/assets/fonts/BebasNeue.ttf";
-import font5 from "../../../src/assets/fonts/Freshman.ttf";
-import font6 from "../../../src/assets/fonts/Impact.ttf";
-import font7 from "../../../src/assets/fonts/MachineRegular.ttf";
-import font8 from "../../../src/assets/fonts/Oswald-VariableFont_wght.ttf";
-import font1 from "../../../src/assets/fonts/Roboto.ttf";
-import font9 from "../../../src/assets/fonts/SawarabiGothic-Regular.ttf";
-import font4 from "../../../src/assets/fonts/TiltNeon.ttf";
-import GradientText from "../../../src/components/common/gradientText/GradientText";
-import LogoDecal from "../../../src/components/common/logoDecal";
-import { useProductStore } from "../../../src/store";
-import {
-  calculateScale,
-  transformGradientScale,
-} from "../../../src/utils/funtions";
-import NameDecal from "../../../src/components/common/nameDecal";
-import SleeveDecalName from "../../../src/components/common/sleeveNameDecal";
+
+// ---------------------------- A variable for initial color in custom shader ----
 const hexColor = "#D2D1D3";
 // Extract RGB components from the hexadecimal color
 const r = parseInt(hexColor.substring(1, 3), 16) / 255;
 const g = parseInt(hexColor.substring(3, 5), 16) / 255;
 const b = parseInt(hexColor.substring(5, 7), 16) / 255;
+const threeJsColor = new Three.Color(r, g, b); // Create a Three.js Color instance using the RGB values
 
-// Create a Three.js Color instance using the RGB values
-const threeJsColor = new Three.Color(r, g, b);
-
+//** ---------------- Main code of Model >>>> Here is the jsx responsible for all behaviour or change of model in browser -----------------------
 export function Model(props) {
+  // initialise model glb file
+  const { nodes, materials } = useGLTF("./models/W3/long-sleeve-jersey.glb");
+
+  // Set Camera Position
+  const camera = useThree((state) => state.camera);
+
+  // React useState
+  const [secondaryTextures, setSecondaryTextures] = useState([]);
+  const [secondaryColors, setSecondaryColors] = useState([]);
+
+  const [modelLogoPosition, setModelLogoPosition] = useState([
+    0, 0.9, 0.3333333,
+  ]);
+  const [modelLogoPosition2, setModelLogoPosition2] = useState([0, 1, 1]);
+  const [logoRotation, setLogoRotation] = useState([0, 0, 0]);
+
+  // NAME STATES
+  const name1Scale = [4.5, 2.5, 10];
+  const [name1FontSize, setName1FontSize] = useState(1);
+  const [name1Position, setName1Position] = useState([0, 0, 1]);
+  const [name2Position, setName2Position] = useState([0, 0, 1]);
+  const [name1Rotation, setName1Rotation] = useState([0, 0, 0]);
+  const [hovered, setHovered] = useState(false);
+
+  // NUMBER STATES
+  const [number1Position, setNumber1Position] = useState([0, 0, 2]);
+  const [number1Scale, setNumber1Scale] = useState([4.5, 2.5, 2]);
+  const [number1Rotation, setNumber1Rotation] = useState(0);
+
+  // State for primary texture URL (for dynamic texture changes)
+  const [designTexture, setDesignTexture] = useState(
+    "./model-designs/W3/design1.png"
+  );
+  const [secondaryTextureUrl, setSecondaryTextureUrl] = useState(
+    "./textures/pattern2.png"
+  );
+
+  const [loading, setLoading] = useState(false);
+  const primaryTexture = useTexture(designTexture);
+  const secondaryTexture = useTexture(secondaryTextureUrl);
+  const [combinedLogos, setCombinedLogos] = useState({});
+  const [combinedNames, setCombinedNames] = useState({});
+  const [decalPositions1, setDecalPositions1] = useState(
+    [[0, 0, 1]] // Initialize positions array with default values
+  );
+  const [decalPositions2, setDecalPositions2] = useState(
+    [[0, 0, 1]] // Initialize positions array with default values
+  );
+  const [decalPositions3, setDecalPositions3] = useState(
+    [[-0, 0, 0.333333]] // Initialize positions array with default values
+  );
+  const [decalPositions4, setDecalPositions4] = useState(
+    [[1, 0.5, 0.111111]] // Initialize positions array with default values
+  );
+
+  const [nameDecalPositions1, setNameDecalPositions1] = useState(
+    [[0, 0, 1]] // Initialize positions array with default values
+  );
+  const [nameDecalPositions2, setNameDecalPositions2] = useState(
+    [[0, 0, 1]] // Initialize positions array with default values
+  );
+  const [nameDecalPositions3, setNameDecalPositions3] = useState(
+    [[0.5, 1.8, 1]] // Initialize positions array with default values
+  );
+  const [nameDecalPositions4, setNameDecalPositions4] = useState(
+    [[0.6, -1.2, 1.1]] // Initialize positions array with default values
+  );
+  const normal = useTexture("./model-designs/W3/normal.png");
+
+  // state to update color of each layer
+  const [layerColor, setLayerColor] = useState(threeJsColor);
+
+  // useProductStore initialise and get states from store
   const {
     color,
     gradient2,
@@ -90,56 +177,8 @@ export function Model(props) {
     updatedLogos,
     updatedNames,
   } = useProductStore((state) => state);
-  // console.log("🚀 ~ Model ~ updatedNames:", updatedNames);
-
-  // SET CAMERA POSITION
-  const camera = useThree((state) => state.camera);
 
   // Load 3D model and textures
-  const { nodes, materials } = useGLTF("./models/W3/long-sleeve-jersey.glb");
-
-  // State for primary texture URL (for dynamic texture changes)
-  const [designTexture, setDesignTexture] = useState(
-    "./model-designs/W3/design1.png"
-  );
-  const [secondaryTextureUrl, setSecondaryTextureUrl] = useState(
-    "./textures/pattern2.png"
-  );
-
-  const [loading, setLoading] = useState(false);
-  const primaryTexture = useTexture(designTexture);
-  const secondaryTexture = useTexture(secondaryTextureUrl);
-  const [combinedLogos, setCombinedLogos] = useState({});
-  const [combinedNames, setCombinedNames] = useState({});
-  const [decalPositions1, setDecalPositions1] = useState(
-    [[0, 0, 1]] // Initialize positions array with default values
-  );
-  const [decalPositions2, setDecalPositions2] = useState(
-    [[0, 0, 1]] // Initialize positions array with default values
-  );
-  const [decalPositions3, setDecalPositions3] = useState(
-    [[-0, 0, 0.333333]] // Initialize positions array with default values
-  );
-  const [decalPositions4, setDecalPositions4] = useState(
-    [[1, 0.5, 0.111111]] // Initialize positions array with default values
-  );
-
-  const [nameDecalPositions1, setNameDecalPositions1] = useState(
-    [[0, 0, 1]] // Initialize positions array with default values
-  );
-  const [nameDecalPositions2, setNameDecalPositions2] = useState(
-    [[0, 0, 1]] // Initialize positions array with default values
-  );
-  const [nameDecalPositions3, setNameDecalPositions3] = useState(
-    [[0.5, 1.8, 1]] // Initialize positions array with default values
-  );
-  const [nameDecalPositions4, setNameDecalPositions4] = useState(
-    [[0.6, -1.2, 1.1]] // Initialize positions array with default values
-  );
-  const normal = useTexture("./model-designs/W3/normal.png");
-
-  // state to update color of each layer
-  const [layerColor, setLayerColor] = useState(threeJsColor);
 
   // References
   const orbitRef = useRef();
@@ -164,8 +203,6 @@ export function Model(props) {
     setLayerColor(changeColor);
   }, [color[colorIndex]]);
 
-  const [secondaryTextures, setSecondaryTextures] = useState([]);
-  const [secondaryColors, setSecondaryColors] = useState([]);
   //console.log("secondaryColors", secondaryColors);
   // Effect to update secondary texture based on pattern change
   useEffect(() => {
@@ -501,10 +538,6 @@ export function Model(props) {
     loading,
   ]);
 
-  const [number1Position, setNumber1Position] = useState([0, 0, 2]);
-  const [number1Scale, setNumber1Scale] = useState([4.5, 2.5, 2]);
-  const [number1Rotation, setNumber1Rotation] = useState(0);
-
   useEffect(() => {
     camera.position.set(0, 2, 8);
     camera.lookAt(0, 0, 0);
@@ -518,13 +551,6 @@ export function Model(props) {
       setNumber1Rotation(180);
     }
   }, [number]);
-
-  // NAME STATES
-  const name1Scale = [4.5, 2.5, 10];
-  const [name1FontSize, setName1FontSize] = useState(1);
-  const [name1Position, setName1Position] = useState([0, 0, 1]);
-  const [name2Position, setName2Position] = useState([0, 0, 1]);
-  const [name1Rotation, setName1Rotation] = useState([0, 0, 0]);
 
   useEffect(() => {
     camera.position.set(0, 2, 8);
@@ -546,7 +572,6 @@ export function Model(props) {
   }, [modelName]);
 
   // CHANGE CURSOR DEFAULT TO POINTER
-  const [hovered, setHovered] = useState(false);
   const toggleHovered = () => setHovered(!hovered);
   useCursor(hovered, "grab");
 
@@ -617,11 +642,6 @@ export function Model(props) {
   const logoTexture4 = useTexture(
     combinedLogos[4] || "./textures/pattern2.png"
   );
-  const [modelLogoPosition, setModelLogoPosition] = useState([
-    0, 0.9, 0.3333333,
-  ]);
-  const [modelLogoPosition2, setModelLogoPosition2] = useState([0, 1, 1]);
-  const [logoRotation, setLogoRotation] = useState([0, 0, 0]);
 
   // HANDLE TEXT DRAG ON FIRST LAYER
   const logoBind = useDrag(
@@ -783,24 +803,6 @@ export function Model(props) {
             {combinedLogos?.[3]?.length > 0 &&
               combinedLogos?.[3]?.map((item, index) => {
                 return (
-                  // <Decal
-                  //   {...logoBind()}
-                  //   onPointerEnter={toggleHovered}
-                  //   onPointerLeave={toggleHovered}
-                  //   scale={[
-                  //     (logoScale[item] || 0.5) * 1.2222,
-                  //     (logoScale[item] || 0.5) * 1.2222,
-                  //     5,
-                  //   ]}
-                  //   // debug={true}
-                  //   // position={[0, 0.9 + index, 0.3333333]}
-                  //   rotation={[0, degToRad(270), 0]}
-                  //   position={modelLogoPosition}
-                  //   // rotation={logoRotation}
-                  //   map={logoTexture3[index]}
-                  //   origin={[0, 0, 0]}
-                  //   renderOrder={9999}
-                  // />
                   <LogoDecal
                     index={index}
                     key={index + item}
@@ -1146,19 +1148,6 @@ export function Model(props) {
                   />
                 );
               })}
-            {/* {logo && logoPosition === 1 && (
-              <Decal
-                {...logoBind()}
-                onPointerEnter={toggleHovered}
-                onPointerLeave={toggleHovered}
-                scale={[logoScale * 2, logoScale * 5, 5]}
-                // debug={true}
-                position={modelLogoPosition}
-                rotation={logoRotation}
-                map={logoTexture}
-                origin={[0, 0, 0]}
-              />
-            )} */}
           </mesh>
           <mesh
             geometry={nodes.Dress_1_Group6255_0005_2.geometry}
