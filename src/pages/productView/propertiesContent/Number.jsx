@@ -195,7 +195,7 @@ const Number = () => {
                     <Slider
                       min={0.1}
                       max={1}
-                      step={0.01}
+                      step={0.1}
                       value={numberScale[childIndex]}
                       onChange={(e) => {
                         updateNumberScale({ [childIndex]: e });
@@ -206,8 +206,8 @@ const Number = () => {
                     <span>Rotate</span>
                     <Slider
                       min={0}
-                      max={180}
-                      step={5}
+                      max={270}
+                      step={30}
                       value={numberAngle[childIndex]}
                       onChange={(e) => {
                         updateNumberAngle({ [childIndex]: e });

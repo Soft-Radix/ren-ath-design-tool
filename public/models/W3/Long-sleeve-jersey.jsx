@@ -203,7 +203,6 @@ export function Model(props) {
     setLayerColor(changeColor);
   }, [color[colorIndex]]);
 
-  //console.log("secondaryColors", secondaryColors);
   // Effect to update secondary texture based on pattern change
   useEffect(() => {
     if (pattern !== null) {
@@ -277,9 +276,10 @@ export function Model(props) {
         primaryGradientColor2,
         isPrimaryGradient,
         normalMap,
-        gradientRotationAngle, // Pass rotation angle as an argument
-        primaryGradientRotationAngle, // Pass primary gradient rotation angle
+        gradientRotationAngle,
+        primaryGradientRotationAngle,
         isPattern,
+        dynamicGradientStart, // Add this parameter
         index
       ) => {
         const uniforms = {
@@ -302,10 +302,10 @@ export function Model(props) {
           primaryGradientColor1: { value: primaryGradientColor1 },
           primaryGradientColor2: { value: primaryGradientColor2 },
           normalMap: { value: normalMap },
-          gradientRotationAngle: { value: gradientRotationAngle || 0 }, // Add rotation angle uniform
+          gradientRotationAngle: { value: gradientRotationAngle || 0 },
           primaryGradientRotationAngle: {
             value: primaryGradientRotationAngle || 0,
-          }, // Add primary gradient rotation angle uniform
+          },
           hasPrimaryColor: { value: !!primaryColor },
           primaryColor: {
             value: primaryColor
@@ -313,6 +313,7 @@ export function Model(props) {
               : new Three.Color(0, 0, 0),
           },
           isPattern: { value: isPattern },
+          dynamicGradientStart: { value: dynamicGradientStart }, // Add this uniform
         };
 
         if (newColor) {
@@ -321,7 +322,7 @@ export function Model(props) {
 
         if (secondaryTexture) {
           secondaryTexture.wrapS = secondaryTexture.wrapT =
-            Three.ClampToEdgeWrapping; // Use ClampToEdgeWrapping to avoid repeating
+            Three.ClampToEdgeWrapping;
         }
 
         return new ShaderMaterial({
@@ -370,8 +371,9 @@ export function Model(props) {
             uniform vec3 primaryGradientColor1;
             uniform vec3 primaryGradientColor2;
             uniform sampler2D normalMap;
-            uniform float gradientRotationAngle; // Add this uniform for gradient rotation
-            uniform float primaryGradientRotationAngle; // Add this uniform for primary gradient rotation
+            uniform float gradientRotationAngle;
+            uniform float primaryGradientRotationAngle;
+            uniform float dynamicGradientStart; // Add this uniform
       
             varying vec2 vUv;
             varying vec3 vNormal;
@@ -389,24 +391,20 @@ export function Model(props) {
               }
       
               if (isPrimaryGradient) {
-                // Apply rotation to the primary gradient direction
                 float cosThetaPrimary = cos(primaryGradientRotationAngle);
                 float sinThetaPrimary = sin(primaryGradientRotationAngle);
                 mat2 rotationMatrixPrimary = mat2(cosThetaPrimary, -sinThetaPrimary, sinThetaPrimary, cosThetaPrimary);
-                
-                // Rotate the gradient vector
                 vec2 rotatedUvPrimary = (rotationMatrixPrimary * (vUv - 0.5)) + 0.5;
       
-                float gradientPosition = smoothstep(0.15 * gradientScale, 0.75 * gradientScale, rotatedUvPrimary.y);
+                float gradientPosition = smoothstep(dynamicGradientStart * gradientScale, 0.75 * gradientScale, rotatedUvPrimary.y); // Use dynamicGradientStart
                 vec3 gradientColor = mix(primaryGradientColor1, primaryGradientColor2, gradientPosition);
                 vec4 gradientColorWithAlpha = vec4(gradientColor, 1.0);
                 coloredPrimaryTexColor = mix(coloredPrimaryTexColor, gradientColorWithAlpha, coloredPrimaryTexColor.a);
               }
       
-              // Scale the UV coordinates for the secondary texture
               vec2 scaledUv = vUv / patternScale;
               vec4 secondaryTexColor = hasSecondaryTexture ? texture2D(secondaryTexture, scaledUv) : vec4(1.0);
-              secondaryTexColor.a = isPattern  ? secondaryTexColor.a : 1.0 - secondaryTexColor.a;
+              secondaryTexColor.a = isPattern ? secondaryTexColor.a : 1.0 - secondaryTexColor.a;
       
               vec4 coloredSecondaryTexColor = secondaryTexColor;
               if (newColor != vec3(0.0)) {
@@ -419,7 +417,6 @@ export function Model(props) {
       
               vec4 baseColor = vec4(defaultColor, 1.0);
       
-              // Normal Map perturbation
               vec3 normal = normalize(vNormal);
               vec3 tangent = normalize(vTangent);
               vec3 bitangent = normalize(vBitangent);
@@ -438,17 +435,14 @@ export function Model(props) {
       
               if (selectedLayer == 1) {
                 if (isGradient) {
-                  // Apply rotation to the gradient direction
                   float cosTheta = cos(gradientRotationAngle);
                   float sinTheta = sin(gradientRotationAngle);
                   mat2 rotationMatrix = mat2(cosTheta, -sinTheta, sinTheta, cosTheta);
-                  
-                  // Rotate the gradient vector
                   vec2 rotatedUv = (rotationMatrix * (vUv - 0.5)) + 0.5;
       
-                  float gradientPosition = smoothstep(0.15 * gradientScale, 0.75 * gradientScale, rotatedUv.y);
-                  vec3 gradientColor = mix(gradientColor1, gradientColor2, gradientPosition);
+                  float gradientPosition = smoothstep(dynamicGradientStart * gradientScale, 0.75 * gradientScale, rotatedUv.y); // Use dynamicGradientStart
       
+                  vec3 gradientColor = mix(gradientColor1, gradientColor2, gradientPosition);
                   vec4 gradientColorWithAlpha = vec4(gradientColor, 1.0);
                   vec4 blendedColor = mix(finalSecondaryColor, gradientColorWithAlpha, 1.0 - coloredSecondaryTexColor.a);
                   finalColor = vec4(mix(blendedColor.rgb, coloredPrimaryTexColor.rgb, coloredPrimaryTexColor.a), 1.0);
@@ -466,7 +460,12 @@ export function Model(props) {
         });
       };
 
-      // Loop through each child of modelRef.current and apply the material
+      const mapRange = (value, newMin, newMax) => {
+        const normalizedValue = (value - 0.1) / (1.0 - 0.1);
+        const mappedValue = 0.1 + normalizedValue * (newMax - newMin);
+        return mappedValue.toFixed(2);
+      };
+
       modelRef.current.children.forEach((child, index) => {
         if (child.isMesh) {
           const isSelectedLayer = index === colorIndex;
@@ -483,13 +482,18 @@ export function Model(props) {
           const primaryGradientColor2 = new Three.Color(designGradient2[index]);
           const gradientscale =
             index === 6 || index === 7
-              ? transformGradientScale(gradientScale[index])
-              : gradientScale[index] ?? designScale[index];
+              ? mapRange(gradientScale[index],0.5, 2.0)
+              : index === 1
+              ? mapRange(gradientScale[1], 1.0, 2.5)
+              : gradientScale[index];
 
           const rotationAngle = gradientAngle[index] * (Math.PI / 180);
           const rotationAngle2 = designGradientAngle[index] * (Math.PI / 180);
           const designcolor = designColor[index];
           const isPattern = secondaryTextures[index] ? true : false;
+
+          const dynamicGradientStart = index === 6 || index === 7 ? 0.6 : 0.15; // Add this line to get the dynamic start value
+
           const material = createMaterial(
             secondaryTexture,
             secondaryColor,
@@ -504,12 +508,14 @@ export function Model(props) {
             primaryGradientColor1,
             primaryGradientColor2,
             isDesignGradientEnabled,
-            normal, // Pass the normal map as an argument
-            rotationAngle, // Pass the rotation angle
+            normal,
+            rotationAngle,
             rotationAngle2,
             isPattern,
+            dynamicGradientStart, // Pass the dynamic start value here
             index
           );
+
           child.material = material;
         }
       });
@@ -531,12 +537,13 @@ export function Model(props) {
     designGradient1,
     designGradient2,
     isDesignGradientEnabled,
-    normal, // Add normal to dependency array
+    normal,
     designScale,
     gradientAngle,
     designGradientAngle,
     loading,
   ]);
+  console.log("🚀 ~ modelRef.current.children.forEach ~ gradientScale[index]:", gradientScale[6])
 
   useEffect(() => {
     camera.position.set(0, 2, 8);
@@ -1013,7 +1020,7 @@ export function Model(props) {
             {number[2] && (
               <Decal
                 // debug={true}
-                position={[0, 1.5, 1]}
+                position={[0, 1.3, 1]}
                 rotation={[0, 0, 0]}
                 scale={number1Scale}
                 origin={[0, 0, 0]}
@@ -1033,7 +1040,7 @@ export function Model(props) {
                     />
                     <GradientText
                       rotation={[0, 0, 0]}
-                      fontSize={1.2}
+                      fontSize={1.1}
                       color1={numberColor[2]}
                       color2={numberGradientColor[2]}
                       outlineColor={numberOutline[2]}
@@ -1166,7 +1173,7 @@ export function Model(props) {
 
             {number[3] && (
               <Decal
-                position={[0, 1.6, 0]}
+                position={[0, 1.4, 0]}
                 rotation={[0, degToRad(180), 0]}
                 scale={[4.5, 2.5, 2]}
                 origin={[0, 0, 0]}
@@ -1186,7 +1193,7 @@ export function Model(props) {
                     />
                     <GradientText
                       rotation={[0, 0, 0]}
-                      fontSize={1.8}
+                      fontSize={1.6}
                       color1={numberColor[3]}
                       color2={numberGradientColor[3]}
                       outlineColor={numberOutline[3]}
@@ -1249,6 +1256,7 @@ export function Model(props) {
               combinedNames?.[2]?.map((item, index) => {
                 return (
                   <NameDecal
+                    fontSize={0.3}
                     modelNamePosition={nameDecalPositions2[index]}
                     toggleHovered={toggleHovered}
                     index={index}

@@ -20,7 +20,7 @@ const NameDecal = ({
   isNameGradientColor,
   namePosition,
   modelNamePosition,
-  setModelNamePosition,
+  setModelNamePosition,fontSize=0.6
 }) => {
   const bindFront = useDrag(
     ({ offset: [x, y], down }) => {
@@ -60,7 +60,7 @@ const NameDecal = ({
             onPointerEnter={toggleHovered}
             onPointerLeave={toggleHovered}
             rotation={[0, 0, 0]}
-            fontSize={0.5}
+            fontSize={fontSize}
             color1={nameColor}
             color2={nameGradientColor}
             outlineColor={nameOutline}

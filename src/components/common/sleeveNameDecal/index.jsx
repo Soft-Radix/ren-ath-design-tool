@@ -44,10 +44,7 @@ const SleeveDecalName = ({
     { pointerEvents: true }
   );
 
-  console.log(item + " position", nameDecalPosition);
-  console.log(item + " rotation", nameRotation);
-  console.log(item + "🚀 ~ nameColor:", nameColor);
-  console.log(item + "🚀 ~ nameOutline:", nameOutline);
+  
   return (
     <Decal
       position={nameDecalPosition}
@@ -62,7 +59,7 @@ const SleeveDecalName = ({
           <PerspectiveCamera
             makeDefault
             manual
-            aspect={1.2}
+            aspect={1.4}
             position={[0, 0.1, 2.5]}
           />
           <Text
