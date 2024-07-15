@@ -91,6 +91,8 @@ const Pattern = () => {
     updateLayer,
     patternScale,
     updatePatternScale,
+    updatePatternRotationDeegre,
+    patternRotationDeegre,
   } = useProductStore((state) => state);
 
   const [expanded, setExpanded] = useState(false);
@@ -152,9 +154,9 @@ const Pattern = () => {
                 </div>
               </AccordionSummary>
               <AccordionDetails>
-                <div className={styles.sliderWrapper}>
-                  <h6>Scale</h6>
-                  <div className={styles.patternSlider}>
+                <div className={styles.scaleAngleWrap}>
+                  <div className={styles.sliderWrap}>
+                    <span>Scale</span>
                     <Slider
                       min={0}
                       max={10}
@@ -163,6 +165,19 @@ const Pattern = () => {
                       onChange={(e) => updatePatternScale({ [childIndex]: e })}
                     />
                     <span>{patternScale[childIndex]}</span>
+                  </div>
+                  <div className={styles.sliderWrap}>
+                    <span>Rotate</span>
+                    <Slider
+                      min={0}
+                      max={360}
+                      step={30}
+                      value={patternRotationDeegre[childIndex]}
+                      onChange={(e) =>
+                        updatePatternRotationDeegre({ [childIndex]: e })
+                      }
+                    />
+                    <span>{patternRotationDeegre[childIndex]}</span>
                   </div>
                 </div>
                 <div className={styles.contentWrap}>

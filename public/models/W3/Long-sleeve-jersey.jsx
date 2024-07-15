@@ -176,6 +176,7 @@ export function Model(props) {
     isDesignGradientEnabled,
     updatedLogos,
     updatedNames,
+    patternRotationDeegre,
   } = useProductStore((state) => state);
 
   // Load 3D model and textures
@@ -279,7 +280,8 @@ export function Model(props) {
         gradientRotationAngle,
         primaryGradientRotationAngle,
         isPattern,
-        dynamicGradientStart, // Add this parameter
+        dynamicGradientStart,
+        secondaryTextureRotationAngle, // Add this parameter
         index
       ) => {
         const uniforms = {
@@ -313,7 +315,10 @@ export function Model(props) {
               : new Three.Color(0, 0, 0),
           },
           isPattern: { value: isPattern },
-          dynamicGradientStart: { value: dynamicGradientStart }, // Add this uniform
+          dynamicGradientStart: { value: dynamicGradientStart },
+          secondaryTextureRotationAngle: {
+            value: secondaryTextureRotationAngle || 0,
+          }, // Add this uniform
         };
 
         if (newColor) {
@@ -373,7 +378,8 @@ export function Model(props) {
             uniform sampler2D normalMap;
             uniform float gradientRotationAngle;
             uniform float primaryGradientRotationAngle;
-            uniform float dynamicGradientStart; // Add this uniform
+            uniform float dynamicGradientStart;
+            uniform float secondaryTextureRotationAngle; // Add this uniform
       
             varying vec2 vUv;
             varying vec3 vNormal;
@@ -396,14 +402,21 @@ export function Model(props) {
                 mat2 rotationMatrixPrimary = mat2(cosThetaPrimary, -sinThetaPrimary, sinThetaPrimary, cosThetaPrimary);
                 vec2 rotatedUvPrimary = (rotationMatrixPrimary * (vUv - 0.5)) + 0.5;
       
-                float gradientPosition = smoothstep(dynamicGradientStart * gradientScale, 0.75 * gradientScale, rotatedUvPrimary.y); // Use dynamicGradientStart
+                float gradientPosition = smoothstep(dynamicGradientStart * gradientScale, 0.75 * gradientScale, rotatedUvPrimary.y);
                 vec3 gradientColor = mix(primaryGradientColor1, primaryGradientColor2, gradientPosition);
                 vec4 gradientColorWithAlpha = vec4(gradientColor, 1.0);
                 coloredPrimaryTexColor = mix(coloredPrimaryTexColor, gradientColorWithAlpha, coloredPrimaryTexColor.a);
               }
       
               vec2 scaledUv = vUv / patternScale;
-              vec4 secondaryTexColor = hasSecondaryTexture ? texture2D(secondaryTexture, scaledUv) : vec4(1.0);
+      
+              // Apply rotation to the secondary texture UV coordinates
+              float cosThetaSecondary = cos(secondaryTextureRotationAngle);
+              float sinThetaSecondary = sin(secondaryTextureRotationAngle);
+              mat2 rotationMatrixSecondary = mat2(cosThetaSecondary, -sinThetaSecondary, sinThetaSecondary, cosThetaSecondary);
+              vec2 rotatedUvSecondary = (rotationMatrixSecondary * (scaledUv - 0.5)) + 0.5;
+      
+              vec4 secondaryTexColor = hasSecondaryTexture ? texture2D(secondaryTexture, rotatedUvSecondary) : vec4(1.0);
               secondaryTexColor.a = isPattern ? secondaryTexColor.a : 1.0 - secondaryTexColor.a;
       
               vec4 coloredSecondaryTexColor = secondaryTexColor;
@@ -440,7 +453,7 @@ export function Model(props) {
                   mat2 rotationMatrix = mat2(cosTheta, -sinTheta, sinTheta, cosTheta);
                   vec2 rotatedUv = (rotationMatrix * (vUv - 0.5)) + 0.5;
       
-                  float gradientPosition = smoothstep(dynamicGradientStart * gradientScale, 0.75 * gradientScale, rotatedUv.y); // Use dynamicGradientStart
+                  float gradientPosition = smoothstep(dynamicGradientStart * gradientScale, 0.75 * gradientScale, rotatedUv.y);
       
                   vec3 gradientColor = mix(gradientColor1, gradientColor2, gradientPosition);
                   vec4 gradientColorWithAlpha = vec4(gradientColor, 1.0);
@@ -482,7 +495,7 @@ export function Model(props) {
           const primaryGradientColor2 = new Three.Color(designGradient2[index]);
           const gradientscale =
             index === 6 || index === 7
-              ? mapRange(gradientScale[index],0.5, 2.0)
+              ? mapRange(gradientScale[index], 0.5, 2.0)
               : index === 1
               ? mapRange(gradientScale[1], 1.0, 2.5)
               : gradientScale[index];
@@ -492,8 +505,11 @@ export function Model(props) {
           const designcolor = designColor[index];
           const isPattern = secondaryTextures[index] ? true : false;
 
-          const dynamicGradientStart = index === 6 || index === 7 ? 0.6 : 0.15; // Add this line to get the dynamic start value
+          const dynamicGradientStart = index === 6 || index === 7 ? 0.6 : 0.15;
 
+          const secondaryTextureRotationAngle =
+            (patternRotationDeegre[index] || 0) * (Math.PI / 180); // Convert degrees to radians
+          const patternScales = patternScale[index];
           const material = createMaterial(
             secondaryTexture,
             secondaryColor,
@@ -503,7 +519,7 @@ export function Model(props) {
             gradientBool,
             gradientscale,
             designcolor,
-            patternScale[index],
+            patternScales,
             patternColor[index],
             primaryGradientColor1,
             primaryGradientColor2,
@@ -512,7 +528,8 @@ export function Model(props) {
             rotationAngle,
             rotationAngle2,
             isPattern,
-            dynamicGradientStart, // Pass the dynamic start value here
+            dynamicGradientStart,
+            secondaryTextureRotationAngle, // Pass the rotation angle here
             index
           );
 
@@ -542,8 +559,8 @@ export function Model(props) {
     gradientAngle,
     designGradientAngle,
     loading,
+    patternRotationDeegre,
   ]);
-  console.log("🚀 ~ modelRef.current.children.forEach ~ gradientScale[index]:", gradientScale[6])
 
   useEffect(() => {
     camera.position.set(0, 2, 8);
