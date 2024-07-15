@@ -9,8 +9,7 @@ import { useProductStore } from "../../../src/store";
 
 // ----------------------------- Utils function imports -------------------------
 import {
-  calculateScale,
-  transformGradientScale,
+  calculateScale
 } from "../../../src/utils/funtions";
 
 // ----------------------------- Components import ------------------------------
@@ -261,7 +260,7 @@ export function Model(props) {
       primaryTexture.repeat.set(1, 1);
       primaryTexture.rotation = 0;
       primaryTexture.encoding = Three.sRGBEncoding;
-
+  
       const createMaterial = (
         secondaryTexture,
         secondaryColor,
@@ -281,7 +280,8 @@ export function Model(props) {
         primaryGradientRotationAngle,
         isPattern,
         dynamicGradientStart,
-        secondaryTextureRotationAngle, // Add this parameter
+        secondaryTextureRotationAngle,
+        secondaryTextureTranslation, // Add this parameter
         index
       ) => {
         const uniforms = {
@@ -318,18 +318,21 @@ export function Model(props) {
           dynamicGradientStart: { value: dynamicGradientStart },
           secondaryTextureRotationAngle: {
             value: secondaryTextureRotationAngle || 0,
+          },
+          secondaryTextureTranslation: {
+            value: secondaryTextureTranslation || new Three.Vector2(0, 0),
           }, // Add this uniform
         };
-
+  
         if (newColor) {
           uniforms.newColor = { value: new Three.Color(newColor) };
         }
-
+  
         if (secondaryTexture) {
           secondaryTexture.wrapS = secondaryTexture.wrapT =
             Three.ClampToEdgeWrapping;
         }
-
+  
         return new ShaderMaterial({
           uniforms,
           vertexShader: `
@@ -379,7 +382,8 @@ export function Model(props) {
             uniform float gradientRotationAngle;
             uniform float primaryGradientRotationAngle;
             uniform float dynamicGradientStart;
-            uniform float secondaryTextureRotationAngle; // Add this uniform
+            uniform float secondaryTextureRotationAngle;
+            uniform vec2 secondaryTextureTranslation; // Add this uniform
       
             varying vec2 vUv;
             varying vec3 vNormal;
@@ -410,11 +414,11 @@ export function Model(props) {
       
               vec2 scaledUv = vUv / patternScale;
       
-              // Apply rotation to the secondary texture UV coordinates
+              // Apply rotation and translation to the secondary texture UV coordinates
               float cosThetaSecondary = cos(secondaryTextureRotationAngle);
               float sinThetaSecondary = sin(secondaryTextureRotationAngle);
               mat2 rotationMatrixSecondary = mat2(cosThetaSecondary, -sinThetaSecondary, sinThetaSecondary, cosThetaSecondary);
-              vec2 rotatedUvSecondary = (rotationMatrixSecondary * (scaledUv - 0.5)) + 0.5;
+              vec2 rotatedUvSecondary = (rotationMatrixSecondary * (scaledUv - 0.5)) + 0.5 + secondaryTextureTranslation;
       
               vec4 secondaryTexColor = hasSecondaryTexture ? texture2D(secondaryTexture, rotatedUvSecondary) : vec4(1.0);
               secondaryTexColor.a = isPattern ? secondaryTexColor.a : 1.0 - secondaryTexColor.a;
@@ -472,13 +476,13 @@ export function Model(props) {
           side: Three.DoubleSide,
         });
       };
-
+  
       const mapRange = (value, newMin, newMax) => {
         const normalizedValue = (value - 0.1) / (1.0 - 0.1);
         const mappedValue = 0.1 + normalizedValue * (newMax - newMin);
         return mappedValue.toFixed(2);
       };
-
+  
       modelRef.current.children.forEach((child, index) => {
         if (child.isMesh) {
           const isSelectedLayer = index === colorIndex;
@@ -499,16 +503,20 @@ export function Model(props) {
               : index === 1
               ? mapRange(gradientScale[1], 1.0, 2.5)
               : gradientScale[index];
-
+  
           const rotationAngle = gradientAngle[index] * (Math.PI / 180);
           const rotationAngle2 = designGradientAngle[index] * (Math.PI / 180);
           const designcolor = designColor[index];
           const isPattern = secondaryTextures[index] ? true : false;
-
+  
           const dynamicGradientStart = index === 6 || index === 7 ? 0.6 : 0.15;
-
+  
           const secondaryTextureRotationAngle =
             (patternRotationDeegre[index] || 0) * (Math.PI / 180); // Convert degrees to radians
+  
+          // Define the translation vector for the secondary texture
+          const secondaryTextureTranslation = index === 1 ? new Three.Vector2(0, -0.22) : new Three.Vector2(0, 0); // Adjust the position as needed
+  
           const patternScales = patternScale[index];
           const material = createMaterial(
             secondaryTexture,
@@ -529,10 +537,11 @@ export function Model(props) {
             rotationAngle2,
             isPattern,
             dynamicGradientStart,
-            secondaryTextureRotationAngle, // Pass the rotation angle here
+            secondaryTextureRotationAngle,
+            secondaryTextureTranslation, // Pass the translation vector here
             index
           );
-
+  
           child.material = material;
         }
       });
@@ -561,6 +570,7 @@ export function Model(props) {
     loading,
     patternRotationDeegre,
   ]);
+  
 
   useEffect(() => {
     camera.position.set(0, 2, 8);

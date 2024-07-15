@@ -158,9 +158,9 @@ const Pattern = () => {
                   <div className={styles.sliderWrap}>
                     <span>Scale</span>
                     <Slider
-                      min={0}
-                      max={10}
-                      step={1}
+                      min={1}
+                      max={5}
+                      step={0.5}
                       value={patternScale[childIndex]}
                       onChange={(e) => updatePatternScale({ [childIndex]: e })}
                     />
