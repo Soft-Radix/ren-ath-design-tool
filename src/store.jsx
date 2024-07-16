@@ -18,27 +18,39 @@ export const useProductStore = create((set) => ({
   ref: null,
   orbitalRef: null,
   modelRotation: 0,
+
   designColor: {},
   designGradient1: {},
   designGradient2: {},
   designScale: {},
   isDesignGradientEnabled: false,
-  patternColor: {},
-
   designCount: designCount,
   designType: 0,
+
+  patternColor: {},
+  pattern: null,
+  patternScale: {},
+  patternAngle: {},
+  patternRotationDeegre: {},
+
   color: {},
   colorIndex: null,
   gradient: {},
   gradient2: {},
-  gradientScale: {},
+  gradientScale: {
+    0: 0.5,
+    1: 0.7777,
+    2: 0.5,
+    3: 0.5,
+    4: 0.5,
+    5: 0.5,
+    6: 0.6,
+    7: 0.6,
+  },
   gradientAngle: {},
   designGradientAngle: {},
 
-  pattern: null,
   layer: null,
-  patternScale: {},
-  patternAngle: {},
 
   number: {},
   numberPosition: 0,
@@ -55,7 +67,7 @@ export const useProductStore = create((set) => ({
   numberAngle: {},
   numberGradientColor: {},
   isNumberGradientColor: false,
-  modelName: {},
+
   namePosition: 1,
   nameFont: {
     0: 1,
@@ -63,6 +75,7 @@ export const useProductStore = create((set) => ({
     2: 1,
     3: 1,
   },
+  modelName: {},
   nameColor: {},
   nameOutline: {},
   nameScale: {
@@ -71,6 +84,7 @@ export const useProductStore = create((set) => ({
     2: 4,
     3: 4,
   },
+  nameRotation: {},
   nameGradientColor: {},
   nameGradientScale: {},
   nameGradientAngle: {},
@@ -81,12 +95,15 @@ export const useProductStore = create((set) => ({
   logoPosition: 1,
   logoScale: {},
   logoRotate: 0,
+
   isDesign: false,
+
   modelLoading: true,
   isGradient: null,
   updatedLogos: {},
   names: [],
   logos: [],
+
   setNames: (names) =>
     set(() => ({
       names: names,
@@ -298,7 +315,10 @@ export const useProductStore = create((set) => ({
     set((state) => ({
       nameScale: { ...state.nameScale, ...scale },
     })),
-
+  updateNameRotation: (rotation) =>
+    set((state) => ({
+      nameRotation: { ...state.nameRotation, ...rotation },
+    })),
   updateLogo: (imageFile) =>
     set(() => ({
       logo: imageFile ? URL.createObjectURL(imageFile) : null,
@@ -330,4 +350,9 @@ export const useProductStore = create((set) => ({
       patternScale: { ...state.patternScale, ...patternScale },
     }));
   },
+  updatePatternRotationDeegre: (patternRotationDeegre) => {
+    set((state) => ({
+      patternRotationDeegre: { ...state.patternRotationDeegre, ...patternRotationDeegre },
+    }));
+  }
 }));

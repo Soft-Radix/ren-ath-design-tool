@@ -65,7 +65,7 @@ export default function GradientText({
   outlineColor = null,
   outlineWidth = 0.05,
   isNumberGradientColor,
-  ...props
+    ...props
 }) {
   const material = useMemo(
     () =>

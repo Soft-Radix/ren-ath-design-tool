@@ -82,7 +82,7 @@ const Logo = () => {
       [logoKey]: { 1: [], 2: [], 3: [], 4: [] },
     });
     setLogoPositions({ ...logoPositions, [logoKey]: null });
-    updateLogoScale({ ...logoScale, [logoKey]: 1 });
+    updateLogoScale({ ...logoScale });
     setLogoAngles({ ...logoAngles, [logoKey]: 0 });
   };
 

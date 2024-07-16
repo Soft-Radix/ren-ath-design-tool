@@ -159,8 +159,8 @@ const Gradient = () => {
                     <span>Scale</span>
                     <Slider
                       min={0.1}
-                      max={1}
-                      step={0.01}
+                      max={1.0}
+                      step={0.1}
                       value={gradientScale[childIndex]}
                       onChange={(e) => updateGradientScale({ [childIndex]: e })}
                     />
@@ -169,8 +169,8 @@ const Gradient = () => {
                     <span>Rotate</span>
                     <Slider
                       min={0}
-                      max={180}
-                      step={5}
+                      max={360}
+                      step={30}
                       value={gradientAngle[childIndex]}
                       onChange={(e) => updateGradientAngle({ [childIndex]: e })}
                     />
@@ -179,7 +179,7 @@ const Gradient = () => {
                 <div className={styles.buttonWrap}>
                   <ThemeButton
                     onClick={() => {
-                      updateGradientScale({ [childIndex]: 0.91 });
+                      // updateGradientScale({ [childIndex]: 0.91 });
                       setType(1);
                       //updateIsGradient(true);
                     }}
@@ -189,7 +189,7 @@ const Gradient = () => {
                   </ThemeButton>
                   <ThemeButton
                     onClick={() => {
-                      updateGradientScale({ [childIndex]: 0.91 });
+                      // updateGradientScale({ [childIndex]: 0.91 });
                       setType(2);
                       //updateIsGradient(true);
                     }}
@@ -231,14 +231,29 @@ const Gradient = () => {
                       style={{ backgroundColor: itemColor }}
                       onClick={() => {
                         if (type === 1) {
-                          updateGradient2({ [childIndex]: itemColor });
+                          if (childIndex === 0 || childIndex % 2 === 0) {
+                            updateGradient2({ [childIndex]: itemColor });
+                            updateGradient2({ [childIndex + 1]: itemColor });
+                          } else {
+                            updateGradient2({ [childIndex]: itemColor });
+                          }
                           updateColorIndex(childIndex);
                           // item.material.color = new ParceColor(itemColor);
                         } else {
+                          if (childIndex === 0 || childIndex % 2 === 0) {
+                            updateGradient({ [childIndex]: itemColor });
+                            updateGradient({ [childIndex + 1]: itemColor });
+                          } else {
+                            updateGradient({ [childIndex]: itemColor });
+                          }
                           updateColorIndex(childIndex);
-                          updateGradient({ [childIndex]: itemColor });
                         }
-                        updateIsGradient({ [childIndex]: true });
+                        if (childIndex === 0 || childIndex % 2 === 0) {
+                          updateIsGradient({ [childIndex]: true });
+                          updateIsGradient({ [childIndex + 1]: true });
+                        } else {
+                          updateIsGradient({ [childIndex]: true });
+                        }
                       }}
                     >
                       {type === 1 &&

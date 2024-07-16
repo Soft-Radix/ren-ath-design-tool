@@ -21,6 +21,8 @@ const NameDecal = ({
   namePosition,
   modelNamePosition,
   setModelNamePosition,
+  fontSize = 0.6,
+  nameRotationAngle=0,
 }) => {
   const bindFront = useDrag(
     ({ offset: [x, y], down }) => {
@@ -52,15 +54,15 @@ const NameDecal = ({
           <PerspectiveCamera
             makeDefault
             manual
-            aspect={2}
-            position={[0, 0.1, 2.5]}
+            aspect={1}
+            position={[0, 0.1, 2]}
           />
           <GradientText
             {...bindFront()}
             onPointerEnter={toggleHovered}
             onPointerLeave={toggleHovered}
-            rotation={[0, 0, 0]}
-            fontSize={0.5}
+            rotation={[0, 0, -nameRotationAngle]}
+            fontSize={fontSize}
             color1={nameColor}
             color2={nameGradientColor}
             outlineColor={nameOutline}

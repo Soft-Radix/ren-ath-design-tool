@@ -116,7 +116,7 @@ const ProductView = () => {
                       ref={orbitalRef}
                       minPolarAngle={Math.PI * 0.05}
                       maxPolarAngle={Math.PI * 0.55}
-                      enableZoom={true}
+                      enableZoom={false}
                     />
                   </Canvas>
                 </Suspense>

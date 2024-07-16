@@ -43,6 +43,8 @@ const Name = () => {
     handleModelRotation,
     setNames,
     names,
+    updateNameRotation,
+    nameRotation,
   } = useProductStore((state) => state);
 
   const [type, setType] = useState({ 0: 1, 1: 1, 2: 1, 3: 1 });
@@ -247,6 +249,22 @@ const Name = () => {
                     }}
                   />
                 </div>
+                <div className={styles.sliderWrap}>
+                  <span>Rotate</span>
+                  <Slider
+                    min={
+                      namePositions[name] === 3 || namePositions[name] === 4
+                        ? -0.3
+                        : 0
+                    }
+                    max={6.0}
+                    step={0.1}
+                    value={nameRotation[name]}
+                    onChange={(e) => {
+                      updateNameRotation({ [name]: e });
+                    }}
+                  />
+                </div>
               </div>
             </>
 
@@ -343,7 +361,7 @@ const Name = () => {
                     <Slider
                       min={0.1}
                       max={1}
-                      step={0.01}
+                      step={0.1}
                       value={nameGradientScale[name]}
                       onChange={(e) => {
                         updateNameGradientScale({ [name]: e });
@@ -354,8 +372,8 @@ const Name = () => {
                     <span>Rotate</span>
                     <Slider
                       min={0}
-                      max={180}
-                      step={5}
+                      max={270}
+                      step={30}
                       value={nameGradientAngle[name]}
                       onChange={(e) => {
                         updateNameGradientAngle({ [name]: e });
