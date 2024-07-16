@@ -25,6 +25,7 @@ const SleeveDecalName = ({
   font,
   toggleHovered,
   orbitalRef,
+  nameRotationAngle = 0.2,
 }) => {
   const bind = useDrag(
     ({ offset: [x, y], down }) => {
@@ -32,7 +33,7 @@ const SleeveDecalName = ({
       orbitalRef.current.cursor = "pointer";
 
       const xPos = -(x * 0.01); // Clamp x to be non-positive only if namePosition is 3
-      const yPos = -(y * 0.02);
+      const yPos = -(y * 0.01);
 
       const finalPosition = [
         xPos < 2.5 && xPos > -2.5 ? xPos : nameDecalPosition[index][0],
@@ -44,7 +45,6 @@ const SleeveDecalName = ({
     { pointerEvents: true }
   );
 
-  
   return (
     <Decal
       position={nameDecalPosition}
@@ -59,16 +59,16 @@ const SleeveDecalName = ({
           <PerspectiveCamera
             makeDefault
             manual
-            aspect={1.4}
-            position={[0, 0.1, 2.5]}
+            aspect={1.2} // set camera  aspect ration responsible for text visual appearance
+            position={[0.1, 0, 2.2]}
           />
           <Text
             {...bind()}
             onPointerEnter={toggleHovered}
             onPointerLeave={toggleHovered}
-            rotation={[320, 360, 0]}
-            fontSize={0.5}
-            position={[0, 0, -0.9]}
+            rotation={[320, 360, -nameRotationAngle]} // rotation of text
+            fontSize={0.4}
+            position={[0, 0, -0.8]}
             font={font}
             color={nameColor}
             renderOrder={999}
@@ -77,23 +77,6 @@ const SleeveDecalName = ({
           >
             {item}
           </Text>
-          {/* <GradientText
-            {...bind()}
-            onPointerEnter={toggleHovered}
-            onPointerLeave={toggleHovered}
-            color1={nameColor}
-            color2={nameGradientColor}
-            outlineColor={nameOutline}
-            gradientRotation={nameGradientAngle}
-            gradientScale={nameGradientScale}
-            isNumberGradientColor={isNameGradientColor}
-            rotation={[320, 360, 0]}  
-            fontSize={0.5}
-            position={[0, 0, -0.9]}
-            font={font}
-          >
-            {item}
-          </GradientText> */}
         </RenderTexture>
       </meshStandardMaterial>
     </Decal>

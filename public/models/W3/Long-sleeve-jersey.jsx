@@ -8,9 +8,7 @@ import { motion } from "framer-motion-3d";
 import { useProductStore } from "../../../src/store";
 
 // ----------------------------- Utils function imports -------------------------
-import {
-  calculateScale
-} from "../../../src/utils/funtions";
+import { calculateScale } from "../../../src/utils/funtions";
 
 // ----------------------------- Components import ------------------------------
 import GradientText from "../../../src/components/common/gradientText/GradientText";
@@ -176,6 +174,7 @@ export function Model(props) {
     updatedLogos,
     updatedNames,
     patternRotationDeegre,
+    nameRotation,
   } = useProductStore((state) => state);
 
   // Load 3D model and textures
@@ -260,7 +259,7 @@ export function Model(props) {
       primaryTexture.repeat.set(1, 1);
       primaryTexture.rotation = 0;
       primaryTexture.encoding = Three.sRGBEncoding;
-  
+
       const createMaterial = (
         secondaryTexture,
         secondaryColor,
@@ -323,16 +322,16 @@ export function Model(props) {
             value: secondaryTextureTranslation || new Three.Vector2(0, 0),
           }, // Add this uniform
         };
-  
+
         if (newColor) {
           uniforms.newColor = { value: new Three.Color(newColor) };
         }
-  
+
         if (secondaryTexture) {
           secondaryTexture.wrapS = secondaryTexture.wrapT =
             Three.ClampToEdgeWrapping;
         }
-  
+
         return new ShaderMaterial({
           uniforms,
           vertexShader: `
@@ -476,13 +475,13 @@ export function Model(props) {
           side: Three.DoubleSide,
         });
       };
-  
+
       const mapRange = (value, newMin, newMax) => {
         const normalizedValue = (value - 0.1) / (1.0 - 0.1);
         const mappedValue = 0.1 + normalizedValue * (newMax - newMin);
         return mappedValue.toFixed(2);
       };
-  
+
       modelRef.current.children.forEach((child, index) => {
         if (child.isMesh) {
           const isSelectedLayer = index === colorIndex;
@@ -503,20 +502,20 @@ export function Model(props) {
               : index === 1
               ? mapRange(gradientScale[1], 1.0, 2.5)
               : gradientScale[index];
-  
+
           const rotationAngle = gradientAngle[index] * (Math.PI / 180);
           const rotationAngle2 = designGradientAngle[index] * (Math.PI / 180);
           const designcolor = designColor[index];
           const isPattern = secondaryTextures[index] ? true : false;
-  
+
           const dynamicGradientStart = index === 6 || index === 7 ? 0.6 : 0.15;
-  
+
           const secondaryTextureRotationAngle =
             (patternRotationDeegre[index] || 0) * (Math.PI / 180); // Convert degrees to radians
-  
+
           // Define the translation vector for the secondary texture
           const secondaryTextureTranslation = index === 1 ? new Three.Vector2(0, -0.22) : new Three.Vector2(0, 0); // Adjust the position as needed
-  
+
           const patternScales = patternScale[index];
           const material = createMaterial(
             secondaryTexture,
@@ -541,7 +540,7 @@ export function Model(props) {
             secondaryTextureTranslation, // Pass the translation vector here
             index
           );
-  
+
           child.material = material;
         }
       });
@@ -572,7 +571,7 @@ export function Model(props) {
   ]);
   
 
-  useEffect(() => {
+ useEffect(() => {
     camera.position.set(0, 2, 8);
     camera.lookAt(0, 0, 0);
 
@@ -861,6 +860,7 @@ export function Model(props) {
               combinedNames?.[3]?.map((item, index) => {
                 return (
                   <SleeveDecalName
+                    nameRotationAngle={nameRotation[item]}
                     item={item}
                     namePosition={3}
                     toggleHovered={toggleHovered}
@@ -983,6 +983,7 @@ export function Model(props) {
               combinedNames?.[4]?.map((item, index) => {
                 return (
                   <SleeveDecalName
+                    nameRotationAngle={nameRotation[item]}
                     item={item}
                     nameDecalPosition={nameDecalPositions4[index]}
                     namePosition={4}
@@ -995,7 +996,7 @@ export function Model(props) {
                       newPositions[index] = position;
                       setNameDecalPositions4(newPositions);
                     }}
-                    nameRotation={[180, 180, -20.5]}
+                    nameRotation={[180, 180, -20.3999]}
                     nameScale={[nameScale[item] ?? 3, nameScale[item] ?? 3, 10]}
                     origin={[0, 0, 0]}
                     nameColor={nameColor[item]}
@@ -1139,6 +1140,7 @@ export function Model(props) {
               combinedNames?.[1]?.map((item, index) => {
                 return (
                   <NameDecal
+                    nameRotationAngle={nameRotation[item]}
                     modelNamePosition={nameDecalPositions1[index]}
                     toggleHovered={toggleHovered}
                     index={index}
@@ -1283,6 +1285,7 @@ export function Model(props) {
               combinedNames?.[2]?.map((item, index) => {
                 return (
                   <NameDecal
+                    nameRotationAngle={nameRotation[item]}
                     fontSize={0.3}
                     modelNamePosition={nameDecalPositions2[index]}
                     toggleHovered={toggleHovered}

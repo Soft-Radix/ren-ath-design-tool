@@ -84,6 +84,7 @@ export const useProductStore = create((set) => ({
     2: 4,
     3: 4,
   },
+  nameRotation: {},
   nameGradientColor: {},
   nameGradientScale: {},
   nameGradientAngle: {},
@@ -314,7 +315,10 @@ export const useProductStore = create((set) => ({
     set((state) => ({
       nameScale: { ...state.nameScale, ...scale },
     })),
-
+  updateNameRotation: (rotation) =>
+    set((state) => ({
+      nameRotation: { ...state.nameRotation, ...rotation },
+    })),
   updateLogo: (imageFile) =>
     set(() => ({
       logo: imageFile ? URL.createObjectURL(imageFile) : null,
