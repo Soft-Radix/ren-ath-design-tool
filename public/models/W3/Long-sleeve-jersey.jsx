@@ -106,7 +106,7 @@ export function Model(props) {
     [[-0, 0, 0.333333]] // Initialize positions array with default values
   );
   const [decalPositions4, setDecalPositions4] = useState(
-    [[1, 0.5, 0.111111]] // Initialize positions array with default values
+    [[1, 0.5, 0.2222]] // Initialize positions array with default values
   );
 
   const [nameDecalPositions1, setNameDecalPositions1] = useState(

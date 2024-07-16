@@ -29,14 +29,48 @@ const LogoDecal = ({
       const yPos = -(y * 0.02);
 
       const finalPosition = [
-        xPos < 2.5 && xPos > -2.5 ? xPos : modelLogoPosition[index][0],
-        yPos < 6.5 && yPos > -7 ? yPos : modelLogoPosition[index][1],
-        modelLogoPosition[2],
+        xPos < 5 && xPos > -4.5 ? xPos : modelLogoPosition[index][0],
+        yPos < 6.5 && yPos > -10 ? yPos : modelLogoPosition[index][1],
+        changeZPosition(yPos) ? changeZPosition(yPos) : modelLogoPosition[2],
       ];
       setModelLogoPosition(finalPosition);
     },
     { pointerEvents: true }
   );
+
+  function changeZPosition(zPosition) {
+    if (logoPosition === 3) {
+      switch (true) {
+        case zPosition < -2.0:
+          return 0.8888;
+        case zPosition < -1.78:
+          return 0.7777;
+        case zPosition < -1.08:
+          return 0.6666;
+        case zPosition < -0.6:
+          return 0.5555;
+        default:
+          return 0.3333;
+      }
+    } else if (logoPosition === 4) {
+      switch (true) {
+        case zPosition < -2.0:
+          return 0.8888;
+        case zPosition < -1.6:
+          return 0.7777;
+        case zPosition < -1.1:
+          return 0.6666;
+        case zPosition < -0.7:
+          return 0.5555;
+        case zPosition < -0.38:
+          return 0.4444;
+        case zPosition < 0.12:
+          return 0.3333;
+        default:
+          return 0.2222;
+      }
+    }
+  }
 
   return (
     <Decal
@@ -46,11 +80,15 @@ const LogoDecal = ({
       scale={
         logoPosition === 4 || logoPosition === 3
           ? [
-              (logoScale[item] || 0.5) * 1.2222,
-              (logoScale[item] || 0.5) * 1.2222,
+              ((logoScale[item] ?? 0.4) || 0.5) * 1.2222,
+              ((logoScale[item] ?? 0.4) || 0.5) * 1.2222,
               8,
             ]
-          : [(logoScale[item] || 0.3) * 2, (logoScale[item] || 0.5) * 4, 4]
+          : [
+              ((logoScale[item] ?? 0.4) || 0.3) * 2,
+              ((logoScale[item] ?? 0.4) || 0.5) * 4,
+              4,
+            ]
       }
       position={modelLogoPosition}
       rotation={logoRotation}
