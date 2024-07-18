@@ -31,7 +31,9 @@ export const useProductStore = create((set) => ({
   pattern: null,
   patternScale: {},
   patternAngle: {},
-  patternRotationDeegre: {},
+  patternRotationDeegre: {
+    0:180,1:180
+  },
 
   color: {},
   colorIndex: null,

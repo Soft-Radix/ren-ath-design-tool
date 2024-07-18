@@ -1,15 +1,19 @@
+import React, { useEffect, useState, useMemo } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Slider from "rc-slider";
-import React, { useEffect, useState } from "react";
 import { useProductStore } from "../../../store";
-
 import { IconButton, Tooltip } from "@mui/material";
 import loaderGif from "../../../assets/gif/loader.gif";
 import resetIcon from "../../../assets/svg/reset.svg";
 import styles from "./properties.module.scss";
+import {
+  LazyLoadImage,
+  trackWindowScroll,
+} from "react-lazy-load-image-component";
+import { Grid } from "react-virtualized";
 
 import pattern1 from "../../../../public/textures/pattern1.png";
 import pattern10 from "../../../../public/textures/pattern10.png";
@@ -42,10 +46,7 @@ import pattern7 from "../../../../public/textures/pattern7.png";
 import pattern8 from "../../../../public/textures/pattern8.png";
 import pattern9 from "../../../../public/textures/pattern9.png";
 import loading from "../../../assets/images/load.png";
-import {
-  LazyLoadImage,
-  trackWindowScroll,
-} from "react-lazy-load-image-component";
+
 const patterns = [
   pattern1,
   pattern2,
@@ -83,10 +84,10 @@ const Pattern = () => {
   const ref = useProductStore((state) => state.ref);
   const [loader, setLoader] = useState(false);
   const [count, setCount] = useState(0);
+  const [loadedImages, setLoadedImages] = useState({});
 
   const children = ref?.current?.children || [];
   const {
-    color,
     updatePattern,
     updateLayer,
     patternScale,
@@ -101,126 +102,142 @@ const Pattern = () => {
     setExpanded(isExpanded ? panel : false);
   };
 
-  useEffect(() => {
-    if (expanded) {
-      setCount((prev) => prev + 1);
-      preloadImages();
-    }
-  }, [expanded]);
-
   const preloadImages = () => {
     setLoader(true);
 
-    patterns.forEach((pattern) => {
-      const img = new Image();
-      img.src = pattern;
-    });
     setTimeout(() => {
       setLoader(false);
     }, 10000);
   };
 
-  return (
-    <div className={`${styles.colorWrap} ${styles.patternWrap}`}>
-      {children?.map((item, childIndex) => {
-        if (childIndex !== 4 && childIndex !== 5) {
-          return (
-            <Accordion
-              key={item.uuid}
-              onChange={handleChange(item?.uuid)}
-              expanded={expanded === item?.uuid}
-            >
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <div
-                  style={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  {item.name}
-                  <Tooltip title="Reset Pattern" placement="right-start">
-                    <IconButton
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        updatePattern(31);
-                        updateLayer(childIndex);
-                      }}
-                    >
-                      <img src={resetIcon} alt="Reset Pattern" />
-                    </IconButton>
-                  </Tooltip>
-                </div>
-              </AccordionSummary>
-              <AccordionDetails>
-                <div className={styles.scaleAngleWrap}>
-                  <div className={styles.sliderWrap}>
-                    <span>Scale</span>
-                    <Slider
-                      min={1}
-                      max={5}
-                      step={0.5}
-                      value={patternScale[childIndex]}
-                      onChange={(e) => updatePatternScale({ [childIndex]: e })}
-                    />
-                    <span>{patternScale[childIndex]}</span>
-                  </div>
-                  <div className={styles.sliderWrap}>
-                    <span>Rotate</span>
-                    <Slider
-                      min={0}
-                      max={360}
-                      step={30}
-                      value={patternRotationDeegre[childIndex]}
-                      onChange={(e) =>
-                        updatePatternRotationDeegre({ [childIndex]: e })
-                      }
-                    />
-                    <span>{patternRotationDeegre[childIndex]}</span>
-                  </div>
-                </div>
-                <div className={styles.contentWrap}>
-                  {count <= 1 && loader ? (
-                    <div
-                      className="modelLoader"
-                      style={{
-                        display: "flex",
-                        width: "100%",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <img src={loaderGif} alt="" />
-                    </div>
-                  ) : (
-                    patterns?.map((pattern, index) => (
-                      <div
-                        key={index + 1}
-                        className={`${styles.imgWrap}`}
-                        onClick={() => {
-                          updatePattern(index + 1);
+  const cellRenderer = ({ columnIndex, key, rowIndex, style }) => {
+    const index = rowIndex * 3 + columnIndex;
+    if (index >= patterns.length) {
+      return (
+        <div key={key} style={style} className={`${styles.imgWrap}`}>
+          <img src={loading} alt="placeholder" />
+        </div>
+      );
+    }
+
+    const pattern = patterns[index];
+    return (
+      <div
+        key={key}
+        style={style}
+        className={`${styles.imgWrap}`}
+        onClick={() => {
+          updatePattern(index + 1);
+          updateLayer(index);
+        }}
+      >
+        <LazyLoadImage
+          src={pattern}
+          alt={`pattern${index + 1}`}
+          effect="opacity"
+          placeholderSrc={loading}
+          visibleByDefault={loadedImages[index]}
+        />
+      </div>
+    );
+  };
+
+  const memoizedPatternComponent = useMemo(() => {
+    return (
+      <div className={`${styles.colorWrap} ${styles.patternWrap}`}>
+        {children?.map((item, childIndex) => {
+          if (childIndex !== 4 && childIndex !== 5) {
+            return (
+              <Accordion
+                key={item.uuid}
+                onChange={handleChange(item?.uuid)}
+                expanded={expanded === item?.uuid}
+              >
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <div
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    {item.name}
+                    <Tooltip title="Reset Pattern" placement="right-start">
+                      <IconButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          updatePattern(31);
                           updateLayer(childIndex);
                         }}
                       >
-                        <LazyLoadImage
-                          src={pattern}
-                          alt={`pattern${index + 1}`}
-                          effect="opacity"
-                          placeholderSrc={loading}
-                          visibleByDefault={true}
-                        />
-                      </div>
-                    ))
-                  )}
-                </div>
-              </AccordionDetails>
-            </Accordion>
-          );
-        }
-      })}
-    </div>
-  );
-};
-export default trackWindowScroll(Pattern);
+                        <img src={resetIcon} alt="Reset Pattern" />
+                      </IconButton>
+                    </Tooltip>
+                  </div>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <div className={styles.scaleAngleWrap}>
+                    <div className={styles.sliderWrap}>
+                      <span>Scale</span>
+                      <Slider
+                        min={1}
+                        max={5}
+                        step={0.5}
+                        value={patternScale[childIndex]}
+                        onChange={(e) =>
+                          updatePatternScale({ [childIndex]: e })
+                        }
+                      />
+                      <span>{patternScale[childIndex]}</span>
+                    </div>
+                    <div className={styles.sliderWrap}>
+                      <span>Rotate</span>
+                      <Slider
+                        min={0}
+                        max={360}
+                        step={30}
+                        value={patternRotationDeegre[childIndex]}
+                        onChange={(e) =>
+                          updatePatternRotationDeegre({ [childIndex]: e })
+                        }
+                      />
+                      <span>{patternRotationDeegre[childIndex]}</span>
+                    </div>
+                  </div>
+                  <div className={styles.contentWrap}>
+                    <Grid
+                      cellRenderer={cellRenderer}
+                      columnCount={3}
+                      columnWidth={125}
+                      height={300}
+                      rowCount={Math.ceil(patterns.length / 3)}
+                      rowHeight={120}
+                      width={390}
+                    />
+                  </div>
+                </AccordionDetails>
+              </Accordion>
+            );
+          }
+          return null;
+        })}
+      </div>
+    );
+  }, [
+    children,
+    expanded,
+    loader,
+    count,
+    loadedImages,
+    patternScale,
+    patternRotationDeegre,
+    updatePattern,
+    updateLayer,
+    handleChange,
+  ]);
 
-// export default Pattern;
+  return memoizedPatternComponent;
+};
+
+export default trackWindowScroll(Pattern);
