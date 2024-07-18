@@ -280,7 +280,7 @@ export function Model(props) {
         isPattern,
         dynamicGradientStart,
         secondaryTextureRotationAngle,
-        secondaryTextureTranslation, // Add this parameter
+        secondaryTextureTranslation,
         index
       ) => {
         const uniforms = {
@@ -320,7 +320,8 @@ export function Model(props) {
           },
           secondaryTextureTranslation: {
             value: secondaryTextureTranslation || new Three.Vector2(0, 0),
-          }, // Add this uniform
+          },
+          zoomScale: { value: 4.0 }, // Add zoom scale uniform
         };
 
         if (newColor) {
@@ -329,7 +330,7 @@ export function Model(props) {
 
         if (secondaryTexture) {
           secondaryTexture.wrapS = secondaryTexture.wrapT =
-            Three.ClampToEdgeWrapping;
+            Three.RepeatWrapping;
         }
 
         return new ShaderMaterial({
@@ -340,12 +341,12 @@ export function Model(props) {
             varying vec3 vViewPosition;
             varying vec3 vTangent;
             varying vec3 vBitangent;
-      
+  
             attribute vec4 tangent;
-      
+  
             void main() {
               vUv = uv;
-      
+  
               vNormal = normalize(normalMatrix * normal);
               vTangent = normalize(normalMatrix * tangent.xyz);
               vBitangent = normalize(cross(vNormal, vTangent) * tangent.w);
@@ -382,82 +383,83 @@ export function Model(props) {
             uniform float primaryGradientRotationAngle;
             uniform float dynamicGradientStart;
             uniform float secondaryTextureRotationAngle;
-            uniform vec2 secondaryTextureTranslation; // Add this uniform
-      
+            uniform vec2 secondaryTextureTranslation;
+            uniform float zoomScale; // Add zoom scale uniform
+  
             varying vec2 vUv;
             varying vec3 vNormal;
             varying vec3 vViewPosition;
             varying vec3 vTangent;
             varying vec3 vBitangent;
-      
+  
             void main() {
               vec4 primaryTexColor = texture2D(primaryTexture, vUv);
-      
+  
               vec4 coloredPrimaryTexColor = primaryTexColor;
               if (hasPrimaryColor) {
                 vec4 primaryColColor = vec4(primaryColor, 1.0);
                 coloredPrimaryTexColor = vec4(mix(primaryTexColor.rgb, primaryColColor.rgb, primaryTexColor.a), primaryTexColor.a);
               }
-      
+  
               if (isPrimaryGradient) {
                 float cosThetaPrimary = cos(primaryGradientRotationAngle);
                 float sinThetaPrimary = sin(primaryGradientRotationAngle);
                 mat2 rotationMatrixPrimary = mat2(cosThetaPrimary, -sinThetaPrimary, sinThetaPrimary, cosThetaPrimary);
                 vec2 rotatedUvPrimary = (rotationMatrixPrimary * (vUv - 0.5)) + 0.5;
-      
+  
                 float gradientPosition = smoothstep(dynamicGradientStart * gradientScale, 0.75 * gradientScale, rotatedUvPrimary.y);
                 vec3 gradientColor = mix(primaryGradientColor1, primaryGradientColor2, gradientPosition);
                 vec4 gradientColorWithAlpha = vec4(gradientColor, 1.0);
                 coloredPrimaryTexColor = mix(coloredPrimaryTexColor, gradientColorWithAlpha, coloredPrimaryTexColor.a);
               }
-      
+  
               vec2 scaledUv = vUv / patternScale;
-      
-              // Apply rotation and translation to the secondary texture UV coordinates
+  
+              // Apply zoom, rotation, and translation to the secondary texture UV coordinates
               float cosThetaSecondary = cos(secondaryTextureRotationAngle);
               float sinThetaSecondary = sin(secondaryTextureRotationAngle);
               mat2 rotationMatrixSecondary = mat2(cosThetaSecondary, -sinThetaSecondary, sinThetaSecondary, cosThetaSecondary);
-              vec2 rotatedUvSecondary = (rotationMatrixSecondary * (scaledUv - 0.5)) + 0.5 + secondaryTextureTranslation;
-      
+              vec2 rotatedUvSecondary = (rotationMatrixSecondary * ((scaledUv * zoomScale) - 0.5)) + 0.5 + secondaryTextureTranslation;
+  
               vec4 secondaryTexColor = hasSecondaryTexture ? texture2D(secondaryTexture, rotatedUvSecondary) : vec4(1.0);
               secondaryTexColor.a = isPattern ? secondaryTexColor.a : 1.0 - secondaryTexColor.a;
-      
+  
               vec4 coloredSecondaryTexColor = secondaryTexColor;
               if (newColor != vec3(0.0)) {
                 vec4 newColColor = vec4(newColor, 1.0);
                 coloredSecondaryTexColor = vec4(mix(secondaryTexColor.rgb, newColColor.rgb, secondaryTexColor.a), secondaryTexColor.a);
               }
-      
+  
               vec4 secondaryColColor = hasSecondaryColor ? vec4(secondaryColor, 1.0) : vec4(1.0);
               vec4 finalSecondaryColor = mix(secondaryColColor, coloredSecondaryTexColor, coloredSecondaryTexColor.a);
-      
+  
               vec4 baseColor = vec4(defaultColor, 1.0);
-      
+  
               vec3 normal = normalize(vNormal);
               vec3 tangent = normalize(vTangent);
               vec3 bitangent = normalize(vBitangent);
               mat3 tbnMatrix = mat3(tangent, bitangent, normal);
               vec3 perturbedNormal = texture2D(normalMap, vUv).rgb * 2.0 - 1.0;
               perturbedNormal = normalize(tbnMatrix * perturbedNormal);
-      
+  
               vec3 lightDir = normalize(directionalLightDirection);
               float diff = max(dot(perturbedNormal, lightDir), 0.0);
               vec3 diffuse = diff * directionalLightColor * 0.7;
               vec3 ambient = ambientLightColor * 0.7;
-      
+  
               vec3 lighting = ambient + diffuse;
-      
+  
               vec4 finalColor = baseColor;
-      
+  
               if (selectedLayer == 1) {
                 if (isGradient) {
                   float cosTheta = cos(gradientRotationAngle);
                   float sinTheta = sin(gradientRotationAngle);
                   mat2 rotationMatrix = mat2(cosTheta, -sinTheta, sinTheta, cosTheta);
                   vec2 rotatedUv = (rotationMatrix * (vUv - 0.5)) + 0.5;
-      
+  
                   float gradientPosition = smoothstep(dynamicGradientStart * gradientScale, 0.75 * gradientScale, rotatedUv.y);
-      
+  
                   vec3 gradientColor = mix(gradientColor1, gradientColor2, gradientPosition);
                   vec4 gradientColorWithAlpha = vec4(gradientColor, 1.0);
                   vec4 blendedColor = mix(finalSecondaryColor, gradientColorWithAlpha, 1.0 - coloredSecondaryTexColor.a);
@@ -468,7 +470,7 @@ export function Model(props) {
               } else {
                 finalColor = vec4(mix(finalSecondaryColor.rgb, coloredPrimaryTexColor.rgb, coloredPrimaryTexColor.a), 1.0);
               }
-      
+  
               gl_FragColor = vec4(finalColor.rgb * lighting, finalColor.a);
             }
           `,
@@ -514,7 +516,12 @@ export function Model(props) {
             (patternRotationDeegre[index] || 0) * (Math.PI / 180); // Convert degrees to radians
 
           // Define the translation vector for the secondary texture
-          const secondaryTextureTranslation = index === 1 ? new Three.Vector2(0, -0.22) : new Three.Vector2(0, 0); // Adjust the position as needed
+          const secondaryTextureTranslation =
+            index === 1
+              ? new Three.Vector2(0, -1.9)
+              : index === 2
+              ? new Three.Vector2(0, -1.3)
+              : new Three.Vector2(0, 0); // Adjust the position as needed            
 
           const patternScales = patternScale[index];
           const material = createMaterial(
@@ -537,7 +544,7 @@ export function Model(props) {
             isPattern,
             dynamicGradientStart,
             secondaryTextureRotationAngle,
-            secondaryTextureTranslation, // Pass the translation vector here
+            secondaryTextureTranslation,
             index
           );
 
@@ -569,9 +576,8 @@ export function Model(props) {
     loading,
     patternRotationDeegre,
   ]);
-  
 
- useEffect(() => {
+  useEffect(() => {
     camera.position.set(0, 2, 8);
     camera.lookAt(0, 0, 0);
 
