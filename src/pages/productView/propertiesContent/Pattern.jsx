@@ -110,7 +110,8 @@ const Pattern = () => {
     }, 10000);
   };
 
-  const cellRenderer = ({ columnIndex, key, rowIndex, style }) => {
+  const cellRenderer = ({ columnIndex, key, rowIndex, style, parent }) => {
+    const childIndex = parent.props.childIndex; // Retrieve childIndex from Grid's parent props
     const index = rowIndex * 3 + columnIndex;
     if (index >= patterns.length) {
       return (
@@ -127,8 +128,8 @@ const Pattern = () => {
         style={style}
         className={`${styles.imgWrap}`}
         onClick={() => {
-          updatePattern(index + 1);
-          updateLayer(index);
+          updatePattern(index + 1); // Use index + 1 as the pattern ID
+          updateLayer(childIndex);
         }}
       >
         <LazyLoadImage
@@ -214,6 +215,7 @@ const Pattern = () => {
                       rowCount={Math.ceil(patterns.length / 3)}
                       rowHeight={120}
                       width={390}
+                      childIndex={childIndex} // Pass childIndex to Grid
                     />
                   </div>
                 </AccordionDetails>
