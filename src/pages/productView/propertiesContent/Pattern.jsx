@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -9,11 +9,8 @@ import { IconButton, Tooltip } from "@mui/material";
 import loaderGif from "../../../assets/gif/loader.gif";
 import resetIcon from "../../../assets/svg/reset.svg";
 import styles from "./properties.module.scss";
-import {
-  LazyLoadImage,
-  trackWindowScroll,
-} from "react-lazy-load-image-component";
-import { Grid } from "react-virtualized";
+import { LazyLoadImage, trackWindowScroll } from "react-lazy-load-image-component";
+import { Grid, CellMeasurer, CellMeasurerCache } from "react-virtualized";
 
 import pattern1 from "../../../../public/textures/pattern1.png";
 import pattern10 from "../../../../public/textures/pattern10.png";
@@ -80,22 +77,26 @@ const patterns = [
   pattern30,
 ];
 
+const cache = new CellMeasurerCache({
+  defaultHeight: 120,
+  fixedWidth: true,
+});
+
 const Pattern = () => {
   const ref = useProductStore((state) => state.ref);
   const [loader, setLoader] = useState(false);
   const [count, setCount] = useState(0);
   const [loadedImages, setLoadedImages] = useState({});
-
-  const children = ref?.current?.children || [];
+  const [children, setChildren] = useState();
   const {
     updatePattern,
     updateLayer,
     patternScale,
     updatePatternScale,
     updatePatternRotationDeegre,
+    setModelLoading,
     patternRotationDeegre,
   } = useProductStore((state) => state);
-
   const [expanded, setExpanded] = useState(false);
 
   const handleChange = (panel) => (event, isExpanded) => {
@@ -110,7 +111,12 @@ const Pattern = () => {
     }, 10000);
   };
 
-  const cellRenderer = ({ columnIndex, key, rowIndex, style, parent }) => {
+  useEffect(() => {
+    const getChildren = sessionStorage.getItem("ref");
+    setChildren(JSON.parse(getChildren));
+  }, []);
+
+  const cellRenderer = useCallback(({ columnIndex, key, rowIndex, style, parent }) => {
     const childIndex = parent.props.childIndex; // Retrieve childIndex from Grid's parent props
     const index = rowIndex * 3 + columnIndex;
     if (index >= patterns.length) {
@@ -122,26 +128,41 @@ const Pattern = () => {
     }
 
     const pattern = patterns[index];
+
     return (
-      <div
+      <CellMeasurer
+        cache={cache}
+        columnIndex={columnIndex}
         key={key}
-        style={style}
-        className={`${styles.imgWrap}`}
-        onClick={() => {
-          updatePattern(index + 1); // Use index + 1 as the pattern ID
-          updateLayer(childIndex);
-        }}
+        parent={parent}
+        rowIndex={rowIndex}
       >
-        <LazyLoadImage
-          src={pattern}
-          alt={`pattern${index + 1}`}
-          effect="opacity"
-          placeholderSrc={loading}
-          visibleByDefault={loadedImages[index]}
-        />
-      </div>
+        <div
+          key={key}
+          style={style}
+          className={`${styles.imgWrap}`}
+          onClick={() => {
+            updatePattern(index + 1); // Use index + 1 as the pattern ID
+            updateLayer(childIndex);
+            setModelLoading(true);
+            const time = setTimeout(() => {
+              setModelLoading(false);
+            }, 2000);
+            return () => clearTimeout(time);
+          }}
+        >
+          <LazyLoadImage
+            src={pattern}
+            alt={`pattern${index + 1}`}
+            effect="opacity"
+            placeholderSrc={loading}
+            visibleByDefault={loadedImages[index]}
+            afterLoad={() => setLoadedImages((prev) => ({ ...prev, [index]: true }))}
+          />
+        </div>
+      </CellMeasurer>
     );
-  };
+  }, [loadedImages, updateLayer, updatePattern]);
 
   const memoizedPatternComponent = useMemo(() => {
     return (
@@ -216,6 +237,7 @@ const Pattern = () => {
                       rowHeight={120}
                       width={390}
                       childIndex={childIndex} // Pass childIndex to Grid
+                      deferredMeasurementCache={cache} // Add this line
                     />
                   </div>
                 </AccordionDetails>

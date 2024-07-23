@@ -447,7 +447,7 @@ export function Model(props) {
               vec3 diffuse = diff * directionalLightColor * 0.7;
               vec3 ambient = ambientLightColor * 0.7;
   
-              vec3 lighting = ambient + diffuse;
+              vec3 lighting = ambient + diffuse; 
   
               vec4 finalColor = baseColor;
   
@@ -521,7 +521,7 @@ export function Model(props) {
               ? new Three.Vector2(0, -1.9)
               : index === 2
               ? new Three.Vector2(0, -1.3)
-              : new Three.Vector2(0, 0); // Adjust the position as needed            
+              : new Three.Vector2(0, 0); // Adjust the position as needed
 
           const patternScales = patternScale[index];
           const material = createMaterial(
@@ -732,6 +732,15 @@ export function Model(props) {
       });
       // Update reference in the store
       updateRef(modelRef);
+      const modelChildrenData = Array.from(modelRef.current.children).map(
+        (child) => ({
+          id: child.id,
+          uuid: child.uuid,
+          name: child.name,
+        })
+      );
+
+      sessionStorage.setItem("ref", JSON.stringify(modelChildrenData));
     }
   }, []);
 
@@ -1152,6 +1161,7 @@ export function Model(props) {
                     index={index}
                     isNameGradientColor={isNameGradientColor}
                     name={item}
+                    fontSize={0.3}
                     nameColor={nameColor[item]}
                     nameFont={
                       nameFont[item] == 1
