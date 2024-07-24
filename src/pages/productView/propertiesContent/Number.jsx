@@ -41,7 +41,13 @@ const Number = () => {
     setExpanded(isExpanded ? panel : false);
   };
 
-  const children = ref?.current?.children || [];
+  // const children = ref?.current?.children || [];
+  const [children, setChildren] = useState();
+
+  useEffect(() => {
+    const getChildren = sessionStorage.getItem("ref");
+    setChildren(JSON.parse(getChildren));
+  }, [ref]);
   const [type, setType] = useState({
     2: 1,
     3: 1,

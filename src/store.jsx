@@ -100,7 +100,7 @@ export const useProductStore = create((set) => ({
 
   isDesign: false,
 
-  modelLoading: true,
+  modelLoading: false,
   isGradient: null,
   updatedLogos: {},
   names: [],

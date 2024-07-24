@@ -21,9 +21,10 @@ const NameDecal = ({
   namePosition,
   modelNamePosition,
   setModelNamePosition,
-  fontSize = 0.6,
+  fontSize = 0.3,
   nameRotationAngle=0,
 }) => {
+  console.log("🚀 ~ fontSize:", fontSize)
   const bindFront = useDrag(
     ({ offset: [x, y], down }) => {
       orbitalRef.current.enabled = !down;
@@ -54,7 +55,7 @@ const NameDecal = ({
           <PerspectiveCamera
             makeDefault
             manual
-            aspect={1}
+            aspect={1.6}
             position={[0, 0.1, 2]}
           />
           <GradientText

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -9,11 +9,9 @@ import { IconButton, Tooltip } from "@mui/material";
 import loaderGif from "../../../assets/gif/loader.gif";
 import resetIcon from "../../../assets/svg/reset.svg";
 import styles from "./properties.module.scss";
-import {
-  LazyLoadImage,
-  trackWindowScroll,
-} from "react-lazy-load-image-component";
-import { Grid } from "react-virtualized";
+import { LazyLoadImage, trackWindowScroll } from "react-lazy-load-image-component";
+import { Grid, CellMeasurer, CellMeasurerCache } from "react-virtualized";
+
 
 import pattern1 from "../../../../public/textures/pattern1.png";
 import pattern10 from "../../../../public/textures/pattern10.png";
@@ -80,68 +78,106 @@ const patterns = [
   pattern30,
 ];
 
+const cache = new CellMeasurerCache({
+  defaultHeight: 120,
+  fixedWidth: true,
+});
+
+const useImageLoader = (patterns) => {
+  const [loadedImages, setLoadedImages] = useState({});
+
+  useEffect(() => {
+    const imageLoadHandler = (index) => {
+      setLoadedImages((prev) => ({ ...prev, [index]: true }));
+    };
+
+    patterns.forEach((pattern, index) => {
+      if (!loadedImages[index]) {
+        const img = new Image();
+        img.src = pattern;
+        img.onload = () => imageLoadHandler(index);
+      }
+    });
+  }, [patterns, loadedImages]);
+
+  return loadedImages;
+};
+
 const Pattern = () => {
   const ref = useProductStore((state) => state.ref);
   const [loader, setLoader] = useState(false);
-  const [count, setCount] = useState(0);
-  const [loadedImages, setLoadedImages] = useState({});
-
-  const children = ref?.current?.children || [];
+  const [children, setChildren] = useState();
   const {
     updatePattern,
     updateLayer,
     patternScale,
     updatePatternScale,
     updatePatternRotationDeegre,
+    setModelLoading,
     patternRotationDeegre,
   } = useProductStore((state) => state);
-
   const [expanded, setExpanded] = useState(false);
+  const loadedImages = useImageLoader(patterns);
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
 
-  const preloadImages = () => {
-    setLoader(true);
+  useEffect(() => {
+    const getChildren = sessionStorage.getItem("ref");
+    setChildren(JSON.parse(getChildren));
+  }, []);
 
-    setTimeout(() => {
-      setLoader(false);
-    }, 10000);
-  };
+  const cellRenderer = useCallback(
+    ({ columnIndex, key, rowIndex, style, parent }) => {
+      const childIndex = parent.props.childIndex; // Retrieve childIndex from Grid's parent props
+      const index = rowIndex * 3 + columnIndex;
+      if (index >= patterns.length) {
+        return (
+          <div key={key} style={style} className={`${styles.imgWrap}`}>
+            <img src={loading} alt="placeholder" />
+          </div>
+        );
+      }
 
-  const cellRenderer = ({ columnIndex, key, rowIndex, style, parent }) => {
-    const childIndex = parent.props.childIndex; // Retrieve childIndex from Grid's parent props
-    const index = rowIndex * 3 + columnIndex;
-    if (index >= patterns.length) {
+      const pattern = patterns[index];
+
       return (
-        <div key={key} style={style} className={`${styles.imgWrap}`}>
-          <img src={loading} alt="placeholder" />
-        </div>
+        <CellMeasurer
+          cache={cache}
+          columnIndex={columnIndex}
+          key={key}
+          parent={parent}
+          rowIndex={rowIndex}
+        >
+          <div
+            key={key}
+            style={style}
+            className={`${styles.imgWrap}`}
+            onClick={() => {
+              updatePattern(index + 1); // Use index + 1 as the pattern ID
+              updateLayer(childIndex);
+              setModelLoading(true);
+              const time = setTimeout(() => {
+                setModelLoading(false);
+              }, 2000);
+              return () => clearTimeout(time);
+            }}
+          >
+            <LazyLoadImage
+              src={pattern}
+              alt={`pattern${index + 1}`}
+              effect="opacity"
+              placeholderSrc={loading}
+              visibleByDefault={loadedImages[index]}
+              afterLoad={() => setLoadedImages((prev) => ({ ...prev, [index]: true }))}
+            />
+          </div>
+        </CellMeasurer>
       );
-    }
-
-    const pattern = patterns[index];
-    return (
-      <div
-        key={key}
-        style={style}
-        className={`${styles.imgWrap}`}
-        onClick={() => {
-          updatePattern(index + 1); // Use index + 1 as the pattern ID
-          updateLayer(childIndex);
-        }}
-      >
-        <LazyLoadImage
-          src={pattern}
-          alt={`pattern${index + 1}`}
-          effect="opacity"
-          placeholderSrc={loading}
-          visibleByDefault={loadedImages[index]}
-        />
-      </div>
-    );
-  };
+    },
+    [loadedImages, updateLayer, updatePattern]
+  );
 
   const memoizedPatternComponent = useMemo(() => {
     return (
@@ -186,9 +222,7 @@ const Pattern = () => {
                         max={5}
                         step={0.5}
                         value={patternScale[childIndex]}
-                        onChange={(e) =>
-                          updatePatternScale({ [childIndex]: e })
-                        }
+                        onChange={(e) => updatePatternScale({ [childIndex]: e })}
                       />
                       <span>{patternScale[childIndex]}</span>
                     </div>
@@ -199,9 +233,7 @@ const Pattern = () => {
                         max={360}
                         step={30}
                         value={patternRotationDeegre[childIndex]}
-                        onChange={(e) =>
-                          updatePatternRotationDeegre({ [childIndex]: e })
-                        }
+                        onChange={(e) => updatePatternRotationDeegre({ [childIndex]: e })}
                       />
                       <span>{patternRotationDeegre[childIndex]}</span>
                     </div>
@@ -216,6 +248,7 @@ const Pattern = () => {
                       rowHeight={120}
                       width={390}
                       childIndex={childIndex} // Pass childIndex to Grid
+                      deferredMeasurementCache={cache} // Add this line
                     />
                   </div>
                 </AccordionDetails>
@@ -230,7 +263,6 @@ const Pattern = () => {
     children,
     expanded,
     loader,
-    count,
     loadedImages,
     patternScale,
     patternRotationDeegre,

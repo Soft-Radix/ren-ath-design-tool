@@ -182,7 +182,7 @@ const Name = () => {
                   namePositions[name] === 1 ? styles.selected : ""
                 }`}
                 onClick={() => {
-                  handleModelRotation(0);
+                  // handleModelRotation(0);
                   updateNamesWithPosition(1, name, index);
                 }}
               >
@@ -193,7 +193,7 @@ const Name = () => {
                   namePositions[name] === 2 ? styles.selected : ""
                 }`}
                 onClick={() => {
-                  handleModelRotation(180);
+                  // handleModelRotation(180);
                   updateNamesWithPosition(2, name, index);
                   updateNameScale({ [name]: 4 });
                 }}
@@ -205,7 +205,7 @@ const Name = () => {
                   namePositions[name] === 3 ? styles.selected : ""
                 }`}
                 onClick={() => {
-                  handleModelRotation(90);
+                  // handleModelRotation(90);
                   updateNamesWithPosition(3, name, index);
                 }}
               >
@@ -216,7 +216,7 @@ const Name = () => {
                   namePositions[name] === 4 ? styles.selected : ""
                 }`}
                 onClick={() => {
-                  handleModelRotation(270);
+                  // handleModelRotation(270);
                   updateNamesWithPosition(4, name, index);
                 }}
               >
