@@ -175,6 +175,7 @@ export function Model(props) {
     updatedNames,
     patternRotationDeegre,
     nameRotation,
+    setModelLoading,
   } = useProductStore((state) => state);
 
   // Load 3D model and textures
@@ -255,6 +256,7 @@ export function Model(props) {
   useEffect(() => {
     if (modelRef.current) {
       // Set up primary texture
+      setModelLoading(true);
       primaryTexture.wrapS = primaryTexture.wrapT = Three.RepeatWrapping;
       primaryTexture.repeat.set(1, 1);
       primaryTexture.rotation = 0;
@@ -550,6 +552,7 @@ export function Model(props) {
 
           child.material = material;
         }
+        setModelLoading(false);
       });
     }
   }, [

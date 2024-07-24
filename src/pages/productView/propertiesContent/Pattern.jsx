@@ -12,6 +12,7 @@ import styles from "./properties.module.scss";
 import { LazyLoadImage, trackWindowScroll } from "react-lazy-load-image-component";
 import { Grid, CellMeasurer, CellMeasurerCache } from "react-virtualized";
 
+
 import pattern1 from "../../../../public/textures/pattern1.png";
 import pattern10 from "../../../../public/textures/pattern10.png";
 import pattern11 from "../../../../public/textures/pattern11.png";
@@ -82,11 +83,29 @@ const cache = new CellMeasurerCache({
   fixedWidth: true,
 });
 
+const useImageLoader = (patterns) => {
+  const [loadedImages, setLoadedImages] = useState({});
+
+  useEffect(() => {
+    const imageLoadHandler = (index) => {
+      setLoadedImages((prev) => ({ ...prev, [index]: true }));
+    };
+
+    patterns.forEach((pattern, index) => {
+      if (!loadedImages[index]) {
+        const img = new Image();
+        img.src = pattern;
+        img.onload = () => imageLoadHandler(index);
+      }
+    });
+  }, [patterns, loadedImages]);
+
+  return loadedImages;
+};
+
 const Pattern = () => {
   const ref = useProductStore((state) => state.ref);
   const [loader, setLoader] = useState(false);
-  const [count, setCount] = useState(0);
-  const [loadedImages, setLoadedImages] = useState({});
   const [children, setChildren] = useState();
   const {
     updatePattern,
@@ -98,17 +117,10 @@ const Pattern = () => {
     patternRotationDeegre,
   } = useProductStore((state) => state);
   const [expanded, setExpanded] = useState(false);
+  const loadedImages = useImageLoader(patterns);
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
-  };
-
-  const preloadImages = () => {
-    setLoader(true);
-
-    setTimeout(() => {
-      setLoader(false);
-    }, 10000);
   };
 
   useEffect(() => {
@@ -116,53 +128,56 @@ const Pattern = () => {
     setChildren(JSON.parse(getChildren));
   }, []);
 
-  const cellRenderer = useCallback(({ columnIndex, key, rowIndex, style, parent }) => {
-    const childIndex = parent.props.childIndex; // Retrieve childIndex from Grid's parent props
-    const index = rowIndex * 3 + columnIndex;
-    if (index >= patterns.length) {
+  const cellRenderer = useCallback(
+    ({ columnIndex, key, rowIndex, style, parent }) => {
+      const childIndex = parent.props.childIndex; // Retrieve childIndex from Grid's parent props
+      const index = rowIndex * 3 + columnIndex;
+      if (index >= patterns.length) {
+        return (
+          <div key={key} style={style} className={`${styles.imgWrap}`}>
+            <img src={loading} alt="placeholder" />
+          </div>
+        );
+      }
+
+      const pattern = patterns[index];
+
       return (
-        <div key={key} style={style} className={`${styles.imgWrap}`}>
-          <img src={loading} alt="placeholder" />
-        </div>
-      );
-    }
-
-    const pattern = patterns[index];
-
-    return (
-      <CellMeasurer
-        cache={cache}
-        columnIndex={columnIndex}
-        key={key}
-        parent={parent}
-        rowIndex={rowIndex}
-      >
-        <div
+        <CellMeasurer
+          cache={cache}
+          columnIndex={columnIndex}
           key={key}
-          style={style}
-          className={`${styles.imgWrap}`}
-          onClick={() => {
-            updatePattern(index + 1); // Use index + 1 as the pattern ID
-            updateLayer(childIndex);
-            setModelLoading(true);
-            const time = setTimeout(() => {
-              setModelLoading(false);
-            }, 2000);
-            return () => clearTimeout(time);
-          }}
+          parent={parent}
+          rowIndex={rowIndex}
         >
-          <LazyLoadImage
-            src={pattern}
-            alt={`pattern${index + 1}`}
-            effect="opacity"
-            placeholderSrc={loading}
-            visibleByDefault={loadedImages[index]}
-            afterLoad={() => setLoadedImages((prev) => ({ ...prev, [index]: true }))}
-          />
-        </div>
-      </CellMeasurer>
-    );
-  }, [loadedImages, updateLayer, updatePattern]);
+          <div
+            key={key}
+            style={style}
+            className={`${styles.imgWrap}`}
+            onClick={() => {
+              updatePattern(index + 1); // Use index + 1 as the pattern ID
+              updateLayer(childIndex);
+              setModelLoading(true);
+              const time = setTimeout(() => {
+                setModelLoading(false);
+              }, 2000);
+              return () => clearTimeout(time);
+            }}
+          >
+            <LazyLoadImage
+              src={pattern}
+              alt={`pattern${index + 1}`}
+              effect="opacity"
+              placeholderSrc={loading}
+              visibleByDefault={loadedImages[index]}
+              afterLoad={() => setLoadedImages((prev) => ({ ...prev, [index]: true }))}
+            />
+          </div>
+        </CellMeasurer>
+      );
+    },
+    [loadedImages, updateLayer, updatePattern]
+  );
 
   const memoizedPatternComponent = useMemo(() => {
     return (
@@ -207,9 +222,7 @@ const Pattern = () => {
                         max={5}
                         step={0.5}
                         value={patternScale[childIndex]}
-                        onChange={(e) =>
-                          updatePatternScale({ [childIndex]: e })
-                        }
+                        onChange={(e) => updatePatternScale({ [childIndex]: e })}
                       />
                       <span>{patternScale[childIndex]}</span>
                     </div>
@@ -220,9 +233,7 @@ const Pattern = () => {
                         max={360}
                         step={30}
                         value={patternRotationDeegre[childIndex]}
-                        onChange={(e) =>
-                          updatePatternRotationDeegre({ [childIndex]: e })
-                        }
+                        onChange={(e) => updatePatternRotationDeegre({ [childIndex]: e })}
                       />
                       <span>{patternRotationDeegre[childIndex]}</span>
                     </div>
@@ -252,7 +263,6 @@ const Pattern = () => {
     children,
     expanded,
     loader,
-    count,
     loadedImages,
     patternScale,
     patternRotationDeegre,
