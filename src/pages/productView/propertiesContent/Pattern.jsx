@@ -12,7 +12,6 @@ import styles from "./properties.module.scss";
 import { LazyLoadImage, trackWindowScroll } from "react-lazy-load-image-component";
 import { Grid, CellMeasurer, CellMeasurerCache } from "react-virtualized";
 
-
 import pattern1 from "../../../../public/textures/pattern1.png";
 import pattern10 from "../../../../public/textures/pattern10.png";
 import pattern11 from "../../../../public/textures/pattern11.png";
@@ -118,20 +117,30 @@ const Pattern = () => {
   } = useProductStore((state) => state);
   const [expanded, setExpanded] = useState(false);
   const loadedImages = useImageLoader(patterns);
-
-  const handleChange = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-  };
+  const [showDummyImages, setShowDummyImages] = useState(true);
 
   useEffect(() => {
     const getChildren = sessionStorage.getItem("ref");
     setChildren(JSON.parse(getChildren));
   }, []);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowDummyImages(false);
+    }, 3000); // 3 to 4 seconds
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
+
   const cellRenderer = useCallback(
     ({ columnIndex, key, rowIndex, style, parent }) => {
       const childIndex = parent.props.childIndex; // Retrieve childIndex from Grid's parent props
       const index = rowIndex * 3 + columnIndex;
+
       if (index >= patterns.length) {
         return (
           <div key={key} style={style} className={`${styles.imgWrap}`}>
@@ -164,19 +173,23 @@ const Pattern = () => {
               return () => clearTimeout(time);
             }}
           >
-            <LazyLoadImage
-              src={pattern}
-              alt={`pattern${index + 1}`}
-              effect="opacity"
-              placeholderSrc={loading}
-              visibleByDefault={loadedImages[index]}
-              afterLoad={() => setLoadedImages((prev) => ({ ...prev, [index]: true }))}
-            />
+            {showDummyImages ? (
+              <img src={loading} alt="placeholder" />
+            ) : (
+              <LazyLoadImage
+                src={pattern}
+                alt={`pattern${index + 1}`}
+                effect="opacity"
+                placeholderSrc={loading}
+                visibleByDefault={loadedImages[index]}
+                afterLoad={() => setLoadedImages((prev) => ({ ...prev, [index]: true }))}
+              />
+            )}
           </div>
         </CellMeasurer>
       );
     },
-    [loadedImages, updateLayer, updatePattern]
+    [loadedImages, updateLayer, updatePattern, showDummyImages]
   );
 
   const memoizedPatternComponent = useMemo(() => {
@@ -269,6 +282,7 @@ const Pattern = () => {
     updatePattern,
     updateLayer,
     handleChange,
+    showDummyImages,
   ]);
 
   return memoizedPatternComponent;
