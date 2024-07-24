@@ -285,6 +285,7 @@ export function Model(props) {
         secondaryTextureTranslation,
         index
       ) => {
+        console.log("🚀 ~ useEffect ~ isPattern:", isPattern)
         const uniforms = {
           primaryTexture: { value: primaryTexture },
           secondaryTexture: { value: secondaryTexture },
