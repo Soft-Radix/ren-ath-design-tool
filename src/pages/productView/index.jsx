@@ -110,32 +110,32 @@ const ProductView = () => {
                   </Canvas>
                 </Suspense>
               )}
+              <ButtonGroup
+                orientation="vertical"
+                id="modelControls"
+                aria-label="Vertical button group"
+              >
+                <Button
+                  key="rotate"
+                  className="btn1"
+                  onClick={() => {
+                    handleModelRotation(modelRotation + 20);
+                  }}
+                >
+                  <ThreeSixty fontSize="large" />
+                </Button>
+                <Button
+                  key="one"
+                  className="btn2"
+                  onClick={() => handleZoomIn(orbitalRef)}
+                >
+                  <ZoomIn fontSize="large" />
+                </Button>
+                <Button key="three" onClick={() => handleZoomOut(orbitalRef)}>
+                  <ZoomOut fontSize="large" />
+                </Button>
+              </ButtonGroup>
             </div>
-            <ButtonGroup
-              orientation="vertical"
-              id="modelControls"
-              aria-label="Vertical button group"
-            >
-              <Button
-                key="rotate"
-                className="btn1"
-                onClick={() => {
-                  handleModelRotation(modelRotation + 20);
-                }}
-              >
-                <ThreeSixty fontSize="large" />
-              </Button>
-              <Button
-                key="one"
-                className="btn2"
-                onClick={() => handleZoomIn(orbitalRef)}
-              >
-                <ZoomIn fontSize="large" />
-              </Button>
-              <Button key="three" onClick={() => handleZoomOut(orbitalRef)}>
-                <ZoomOut fontSize="large" />
-              </Button>
-            </ButtonGroup>
           </div>
         </div>
       </div>

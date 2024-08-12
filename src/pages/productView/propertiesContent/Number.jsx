@@ -48,6 +48,7 @@ const Number = () => {
     const getChildren = sessionStorage.getItem("ref");
     setChildren(JSON.parse(getChildren));
   }, [ref]);
+
   const [type, setType] = useState({
     2: 1,
     3: 1,
@@ -82,6 +83,11 @@ const Number = () => {
     };
     loadImages();
   }, [id]);
+
+  const handleBothLayersForNumber = (e, handleFunction, index) => {
+    handleFunction({ [2]: e });
+    handleFunction({ [3]: e });
+  };
 
   return (
     <div className={styles.numberWrap}>
@@ -204,7 +210,12 @@ const Number = () => {
                       step={0.1}
                       value={numberScale[childIndex]}
                       onChange={(e) => {
-                        updateNumberScale({ [childIndex]: e });
+                        handleBothLayersForNumber(
+                          e,
+                          updateNumberScale,
+                          childIndex
+                        );
+                        // updateNumberScale({ [childIndex]: e });
                       }}
                     />
                   </div>
@@ -216,7 +227,12 @@ const Number = () => {
                       step={30}
                       value={numberAngle[childIndex]}
                       onChange={(e) => {
-                        updateNumberAngle({ [childIndex]: e });
+                        handleBothLayersForNumber(
+                          e,
+                          updateNumberAngle,
+                          childIndex
+                        );
+                        // updateNumberAngle({ [childIndex]: e });
                       }}
                     />
                   </div>
@@ -288,10 +304,22 @@ const Number = () => {
                             updateIsNumberGradient(true);
                           }
                           type[childIndex] == 1
-                            ? updateNumberColor({ [childIndex]: itemColor })
+                            ? handleBothLayersForNumber(
+                                itemColor,
+                                updateNumberColor,
+                                childIndex
+                              )
                             : type[childIndex] == 3
-                            ? updateNumberGradient({ [childIndex]: itemColor })
-                            : updateNumberOutline({ [childIndex]: itemColor });
+                            ? handleBothLayersForNumber(
+                                itemColor,
+                                updateNumberGradient,
+                                childIndex
+                              )
+                            : handleBothLayersForNumber(
+                                itemColor,
+                                updateNumberOutline,
+                                childIndex
+                              );
                         }}
                       >
                         {type[childIndex] == 1

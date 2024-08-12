@@ -28,6 +28,7 @@
 }
 
 .canvasWrap {
+  position: relative;
   flex-grow: 1;
   background: $canvasBg;
 }

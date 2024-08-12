@@ -42,6 +42,16 @@ const Gradient = () => {
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
+
+  const handleGradientScaleForBoth = (handleDesign, e, index) => {
+    // debugger;
+    if (index === 0 || index % 2 == 0) {
+      handleDesign({ [index]: e });
+      handleDesign({ [index + 1]: e });
+    } else {
+      handleDesign({ [index]: e });
+    }
+  };
   const DesignGradient = ({ childIndex }) => {
     return (
       <>
@@ -162,7 +172,14 @@ const Gradient = () => {
                       max={1.0}
                       step={0.1}
                       value={gradientScale[childIndex]}
-                      onChange={(e) => updateGradientScale({ [childIndex]: e })}
+                      onChange={(e) => {
+                        handleGradientScaleForBoth(
+                          updateGradientScale,
+                          e,
+                          childIndex
+                        );
+                        // updateGradientScale({ [childIndex]: e });
+                      }}
                     />
                   </div>
                   <div className={styles.sliderWrap}>
@@ -172,7 +189,14 @@ const Gradient = () => {
                       max={360}
                       step={30}
                       value={gradientAngle[childIndex]}
-                      onChange={(e) => updateGradientAngle({ [childIndex]: e })}
+                      onChange={(e) => {
+                        handleGradientScaleForBoth(
+                          updateGradientAngle,
+                          e,
+                          childIndex
+                        );
+                        // updateGradientAngle({ [childIndex]: e });
+                      }}
                     />
                   </div>
                 </div>

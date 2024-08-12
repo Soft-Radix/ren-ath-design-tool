@@ -63,7 +63,7 @@ export default function GradientText({
   gradientScale,
   gradientRotation,
   outlineColor = null,
-  outlineWidth = 0.05,
+  outlineWidth = 0.01,
   isNumberGradientColor,
     ...props
 }) {
@@ -117,7 +117,7 @@ export default function GradientText({
         color={color1}
         outlineColor={outlineColor}
         
-        outlineWidth={outlineColor ? outlineWidth : 0}
+        outlineWidth={outlineColor ? 0.01 : 0}
       >
         {children}
       </Text>
