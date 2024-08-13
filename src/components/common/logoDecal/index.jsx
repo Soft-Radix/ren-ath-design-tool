@@ -1,6 +1,7 @@
 import { Decal } from "@react-three/drei";
 import { useDrag } from "@use-gesture/react";
 import React from "react";
+import { handleDragLimitX, handleDragLimitY } from "../../../utils/funtions";
 
 const LogoDecal = ({
   logoScale,
@@ -29,8 +30,12 @@ const LogoDecal = ({
       const yPos = -(y * 0.02);
 
       const finalPosition = [
-        xPos < 5 && xPos > -4.5 ? xPos : modelLogoPosition[index][0],
-        yPos < 6.5 && yPos > -10 ? yPos : modelLogoPosition[index][1],
+        handleDragLimitX(xPos)
+          ? handleDragLimitX(xPos)
+          : modelLogoPosition[index][0],
+        handleDragLimitY(yPos)
+          ? handleDragLimitY(yPos)
+          : modelLogoPosition[index][1],
         changeZPosition(yPos) ? changeZPosition(yPos) : modelLogoPosition[2],
       ];
       setModelLogoPosition(finalPosition);

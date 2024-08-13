@@ -39,3 +39,51 @@ export const calculateScale = (value) => {
     return minScale.map((min, i) => min + factor * (maxScale[i] - min));
   }
 };
+
+export const handleDragLimitY = (yPos) => {
+  let newYPosition = yPos;
+  if (yPos > 2.5) {
+    newYPosition = 2.5;
+  } else if (yPos < -2.52) {
+    newYPosition = -2.52;
+  } else {
+    newYPosition = yPos;
+  }
+  return newYPosition;
+};
+
+export const handleDragLimitX = (xPos) => {
+  let newXPosition = xPos;
+  if (xPos > 1.2) {
+    newXPosition = 1.2;
+  } else if (xPos < -1.3) {
+    newXPosition = -1.3;
+  } else {
+    newXPosition = xPos;
+  }
+  return newXPosition;
+};
+
+export const handleDragLimitSeleeveX = (xPos) => {
+  let newXPosition = xPos;
+  if (xPos > 2.4) {
+    newXPosition = 2.4;
+  } else if (xPos < -0.9) {
+    newXPosition = -0.9;
+  } else {
+    newXPosition = xPos;
+  }
+  return newXPosition;
+};
+
+export const handleDragLimitSeleeveY = (yPos) => {
+  let newYPosition = yPos;
+  if (yPos > 3.75) {
+    newYPosition = 3.75;
+  } else if (yPos < -1.27) {
+    newYPosition = -1.27;
+  } else {
+    newYPosition = yPos;
+  }
+  return newYPosition;
+};

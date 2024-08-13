@@ -100,10 +100,10 @@ export function Model(props) {
   const [decalPositions2, setDecalPositions2] = useState(
     [[0, 0, 1]] // Initialize positions array with default values
   );
-  const [decalPositions3, setDecalPositions3] = useState(
+  const [decalPositions4, setDecalPositions4] = useState(
     [[-0, 0, 0.333333]] // Initialize positions array with default values
   );
-  const [decalPositions4, setDecalPositions4] = useState(
+  const [decalPositions3, setDecalPositions3] = useState(
     [[1, 0.5, 0.2222]] // Initialize positions array with default values
   );
 
@@ -113,10 +113,10 @@ export function Model(props) {
   const [nameDecalPositions2, setNameDecalPositions2] = useState(
     [[0, 0, 1]] // Initialize positions array with default values
   );
-  const [nameDecalPositions3, setNameDecalPositions3] = useState(
+  const [nameDecalPositions4, setNameDecalPositions4] = useState(
     [[0.5, 1.8, 1]] // Initialize positions array with default values
   );
-  const [nameDecalPositions4, setNameDecalPositions4] = useState(
+  const [nameDecalPositions3, setNameDecalPositions3] = useState(
     [[0.6, -1.2, 1.1]] // Initialize positions array with default values
   );
   const normal = useTexture("./model-designs/W3/normal.png");
@@ -257,8 +257,6 @@ export function Model(props) {
         });
     }
   }, [secondaryTextureUrl, layer]);
-
-
 
   useEffect(() => {
     if (modelRef.current) {
@@ -510,7 +508,7 @@ export function Model(props) {
           const gradientscale =
             index === 6 || index === 7
               ? mapRange(gradientScale[index], 0.5, 2.0)
-              : index === 1
+              : index === 0
               ? mapRange(gradientScale[1], 1.0, 2.5)
               : gradientScale[index];
 
@@ -526,7 +524,7 @@ export function Model(props) {
 
           // Define the translation vector for the secondary texture
           const secondaryTextureTranslation =
-            index === 1
+            index === 0
               ? new Three.Vector2(0, -1.9)
               : index === 2
               ? new Three.Vector2(0, -1.3)
@@ -845,19 +843,10 @@ export function Model(props) {
         >
           {/* Individual meshes of the model */}
           <mesh
-            geometry={nodes.Dress_1_Group6255_0005_1.geometry}
-            material={materials.blinn2}
+            geometry={nodes.Dress_1_Group6255_0005_7.geometry}
+            material={materials.blinn4}
             name="Left Sleeve Upper"
           >
-            {gradient[0] && !isDesign && (
-              <meshStandardMaterial side={DoubleSide}>
-                <GradientTexture
-                  stops={[0.5, gradientScale[0] || 0.1]} // As many stops as you want
-                  colors={[color[0] || "transparent", gradient[0]]} // Colors need to match the number of stops
-                  size={1024} // Size is optional, default = 1024
-                />
-              </meshStandardMaterial>
-            )}
             {combinedLogos?.[3]?.length > 0 &&
               combinedLogos?.[3]?.map((item, index) => {
                 return (
@@ -871,7 +860,7 @@ export function Model(props) {
                     item={item}
                     orbitalRef={orbitalRef}
                     logoPosition={3}
-                    logoRotation={[0, degToRad(270), 0]}
+                    logoRotation={[0, degToRad(90), 0]}
                     setModelLogoPosition={(position) => {
                       const newPositions = [...decalPositions3];
                       newPositions[index] = position;
@@ -887,6 +876,7 @@ export function Model(props) {
                   <SleeveDecalName
                     nameRotationAngle={nameRotation[item]}
                     item={item}
+                    nameDecalPosition={nameDecalPositions3[index]}
                     namePosition={3}
                     toggleHovered={toggleHovered}
                     index={index}
@@ -897,7 +887,104 @@ export function Model(props) {
                       newPositions[index] = position;
                       setNameDecalPositions3(newPositions);
                     }}
-                    nameDecalPosition={nameDecalPositions3[index]}
+                    nameRotation={[180, 180, -20.3999]}
+                    nameScale={[nameScale[item] ?? 3, nameScale[item] ?? 3, 10]}
+                    origin={[0, 0, 0]}
+                    nameColor={nameColor[item]}
+                    nameGradientColor={nameGradientColor[item]}
+                    nameOutline={nameOutline[item]}
+                    nameGradientAngle={nameGradientAngle[item]}
+                    nameGradientScale={nameGradientScale[item]}
+                    isNameGradientColor={isNameGradientColor}
+                    font={
+                      nameFont[item] == 1
+                        ? font1
+                        : nameFont[item] == 2
+                        ? font8
+                        : nameFont[item] == 3
+                        ? font3
+                        : nameFont[item] == 4
+                        ? font4
+                        : nameFont[item] == 5
+                        ? font5
+                        : nameFont[item] == 6
+                        ? font6
+                        : nameFont[item] == 7
+                        ? font7
+                        : nameFont[item] == 8
+                        ? font8
+                        : nameFont[item] == 9
+                        ? font9
+                        : font1
+                    }
+                  />
+                );
+              })}
+
+            {gradient[0] && !isDesign && (
+              <meshStandardMaterial side={DoubleSide}>
+                <GradientTexture
+                  stops={[0.5, gradientScale[0] || 0.1]} // As many stops as you want
+                  colors={[color[0] || "transparent", gradient[0]]} // Colors need to match the number of stops
+                  size={1024} // Size is optional, default = 1024
+                />
+              </meshStandardMaterial>
+            )}
+          </mesh>
+          <mesh
+            geometry={nodes.Dress_1_Group6255_0005_1.geometry}
+            material={materials.blinn2}
+            name="Right Sleeve Upper"
+          >
+            {gradient[1] && !isDesign && (
+              <meshStandardMaterial side={DoubleSide}>
+                <GradientTexture
+                  stops={[0.5, gradientScale[1] || 0.1]} // As many stops as you want
+                  colors={[color[1] || "transparent", gradient[1]]} // Colors need to match the number of stops
+                  size={1024} // Size is optional, default = 1024
+                />
+              </meshStandardMaterial>
+            )}
+            {combinedLogos?.[4]?.length > 0 &&
+              combinedLogos?.[4]?.map((item, index) => {
+                return (
+                  <LogoDecal
+                    index={index}
+                    key={index + item}
+                    logoScale={logoScale}
+                    toggleHovered={toggleHovered}
+                    logoTexture={logoTexture4}
+                    modelLogoPosition={decalPositions4[index]}
+                    item={item}
+                    orbitalRef={orbitalRef}
+                    logoPosition={4}
+                    logoRotation={[0, degToRad(270), 0]}
+                    setModelLogoPosition={(position) => {
+                      const newPositions = [...decalPositions4];
+                      newPositions[index] = position;
+                      setDecalPositions4(newPositions);
+                    }}
+                  />
+                );
+              })}
+
+            {combinedNames?.[4]?.length > 0 &&
+              combinedNames?.[4]?.map((item, index) => {
+                return (
+                  <SleeveDecalName
+                    nameRotationAngle={nameRotation[item]}
+                    item={item}
+                    namePosition={4}
+                    toggleHovered={toggleHovered}
+                    index={index}
+                    key={index + item}
+                    orbitalRef={orbitalRef}
+                    setNameDecalPosition={(position) => {
+                      const newPositions = [...nameDecalPositions4];
+                      newPositions[index] = position;
+                      setNameDecalPositions4(newPositions);
+                    }}
+                    nameDecalPosition={nameDecalPositions4[index]}
                     nameRotation={[90, 90, -90]}
                     nameScale={[nameScale[item] ?? 3, nameScale[item] ?? 3, 10]}
                     origin={[0, 0, 0]}
@@ -976,95 +1063,7 @@ export function Model(props) {
                 );
               })}
           </mesh>
-          <mesh
-            geometry={nodes.Dress_1_Group6255_0005_7.geometry}
-            material={materials.blinn4}
-            name="Right Sleeve Upper"
-          >
-            {combinedLogos?.[4]?.length > 0 &&
-              combinedLogos?.[4]?.map((item, index) => {
-                return (
-                  <LogoDecal
-                    index={index}
-                    key={index + item}
-                    logoScale={logoScale}
-                    toggleHovered={toggleHovered}
-                    logoTexture={logoTexture4}
-                    modelLogoPosition={decalPositions4[index]}
-                    item={item}
-                    orbitalRef={orbitalRef}
-                    logoPosition={4}
-                    logoRotation={[0, degToRad(90), 0]}
-                    setModelLogoPosition={(position) => {
-                      const newPositions = [...decalPositions4];
-                      newPositions[index] = position;
-                      setDecalPositions4(newPositions);
-                    }}
-                  />
-                );
-              })}
 
-            {combinedNames?.[4]?.length > 0 &&
-              combinedNames?.[4]?.map((item, index) => {
-                return (
-                  <SleeveDecalName
-                    nameRotationAngle={nameRotation[item]}
-                    item={item}
-                    nameDecalPosition={nameDecalPositions4[index]}
-                    namePosition={4}
-                    toggleHovered={toggleHovered}
-                    index={index}
-                    key={index + item}
-                    orbitalRef={orbitalRef}
-                    setNameDecalPosition={(position) => {
-                      const newPositions = [...nameDecalPositions4];
-                      newPositions[index] = position;
-                      setNameDecalPositions4(newPositions);
-                    }}
-                    nameRotation={[180, 180, -20.3999]}
-                    nameScale={[nameScale[item] ?? 3, nameScale[item] ?? 3, 10]}
-                    origin={[0, 0, 0]}
-                    nameColor={nameColor[item]}
-                    nameGradientColor={nameGradientColor[item]}
-                    nameOutline={nameOutline[item]}
-                    nameGradientAngle={nameGradientAngle[item]}
-                    nameGradientScale={nameGradientScale[item]}
-                    isNameGradientColor={isNameGradientColor}
-                    font={
-                      nameFont[item] == 1
-                        ? font1
-                        : nameFont[item] == 2
-                        ? font8
-                        : nameFont[item] == 3
-                        ? font3
-                        : nameFont[item] == 4
-                        ? font4
-                        : nameFont[item] == 5
-                        ? font5
-                        : nameFont[item] == 6
-                        ? font6
-                        : nameFont[item] == 7
-                        ? font7
-                        : nameFont[item] == 8
-                        ? font8
-                        : nameFont[item] == 9
-                        ? font9
-                        : font1
-                    }
-                  />
-                );
-              })}
-
-            {gradient[1] && !isDesign && (
-              <meshStandardMaterial side={DoubleSide}>
-                <GradientTexture
-                  stops={[0.5, gradientScale[1] || 0.1]} // As many stops as you want
-                  colors={[color[1] || "transparent", gradient[1]]} // Colors need to match the number of stops
-                  size={1024} // Size is optional, default = 1024
-                />
-              </meshStandardMaterial>
-            )}
-          </mesh>
           <mesh
             geometry={nodes.Dress_1_Group6255_0005_4.geometry}
             material={materials.blinn3}

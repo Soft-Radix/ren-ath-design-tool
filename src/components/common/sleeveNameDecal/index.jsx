@@ -7,6 +7,10 @@ import {
 import React from "react";
 import GradientText from "../gradientText/GradientText";
 import { useDrag } from "@use-gesture/react";
+import {
+  handleDragLimitSeleeveX,
+  handleDragLimitSeleeveY,
+} from "../../../utils/funtions";
 
 const SleeveDecalName = ({
   namePosition,
@@ -34,10 +38,16 @@ const SleeveDecalName = ({
 
       const xPos = -(x * 0.01); // Clamp x to be non-positive only if namePosition is 3
       const yPos = -(y * 0.01);
+      console.log("🚀 ~ xPos:", xPos);
+      console.log("🚀 ~ yPos:", yPos);
 
       const finalPosition = [
-        xPos < 2.5 && xPos > -2.5 ? xPos : nameDecalPosition[index][0],
-        yPos < 6.5 && yPos > -7 ? yPos : nameDecalPosition[index][1],
+        handleDragLimitSeleeveX(xPos)
+          ? handleDragLimitSeleeveX(xPos)
+          : nameDecalPosition[index][0],
+        handleDragLimitSeleeveY(yPos)
+          ? handleDragLimitSeleeveY(yPos)
+          : nameDecalPosition[index][1],
         nameDecalPosition[2],
       ];
       setNameDecalPosition(finalPosition);

@@ -245,22 +245,22 @@ const Logo = () => {
                   </div>
                   <div
                     className={`${styles.imgWrap} ${
-                      logoPositions[logoKey] === 3 ? styles.selected : ""
+                      logoPositions[logoKey] === 4 ? styles.selected : ""
                     }`}
                     onClick={() => {
                       handleModelRotation(90);
-                      updateLogosWithPosition(3, logo, logoKey);
+                      updateLogosWithPosition(4, logo, logoKey);
                     }}
                   >
                     <img src={images.chest_left} alt="" />
                   </div>
                   <div
                     className={`${styles.imgWrap} ${
-                      logoPositions[logoKey] === 4 ? styles.selected : ""
+                      logoPositions[logoKey] === 3 ? styles.selected : ""
                     }`}
                     onClick={() => {
                       handleModelRotation(270);
-                      updateLogosWithPosition(4, logo, logoKey);
+                      updateLogosWithPosition(3, logo, logoKey);
                     }}
                   >
                     <img src={images.chest_right} alt="" />

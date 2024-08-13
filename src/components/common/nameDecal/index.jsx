@@ -3,6 +3,7 @@ import { useDrag } from "@use-gesture/react";
 import React from "react";
 import GradientText from "../gradientText/GradientText";
 import { degToRad } from "three/src/math/MathUtils.js";
+import { handleDragLimitX, handleDragLimitY } from "../../../utils/funtions";
 
 const NameDecal = ({
   nameScale,
@@ -22,9 +23,9 @@ const NameDecal = ({
   modelNamePosition,
   setModelNamePosition,
   fontSize = 0.3,
-  nameRotationAngle=0,
+  nameRotationAngle = 0,
 }) => {
-  console.log("🚀 ~ fontSize:", fontSize)
+  console.log("🚀 ~ fontSize:", fontSize);
   const bindFront = useDrag(
     ({ offset: [x, y], down }) => {
       orbitalRef.current.enabled = !down;
@@ -32,10 +33,15 @@ const NameDecal = ({
 
       const xPos = namePosition === 1 ? x * 0.01 : -(x * 0.01);
       const yPos = -(y * 0.02);
+      // console.log("🚀 ~ xPos:", xPos);
 
       const finalPosition = [
-        xPos < 2 && xPos > -2 ? xPos : modelNamePosition[index][0],
-        yPos < 6.5 && yPos > -7 ? yPos : modelNamePosition[index][1],
+        handleDragLimitX(xPos)
+          ? handleDragLimitX(xPos)
+          : modelNamePosition[index][0],
+        handleDragLimitY(yPos)
+          ? handleDragLimitY(yPos)
+          : modelNamePosition[index][1],
         modelNamePosition[2],
       ];
 
@@ -43,6 +49,9 @@ const NameDecal = ({
     },
     { pointerEvents: true }
   );
+
+ 
+
   return (
     <Decal
       position={modelNamePosition}
