@@ -32,7 +32,8 @@ export const useProductStore = create((set) => ({
   patternScale: {},
   patternAngle: {},
   patternRotationDeegre: {
-    0:180,1:180
+    0: 180,
+    1: 180,
   },
 
   color: {},
@@ -105,7 +106,11 @@ export const useProductStore = create((set) => ({
   updatedLogos: {},
   names: [],
   logos: [],
-
+  resetLogoIndex: null,
+  setResetLogoIndex: (logoIndex) =>
+    set(() => ({
+      resetLogoIndex: logoIndex,
+    })),
   setNames: (names) =>
     set(() => ({
       names: names,
@@ -354,7 +359,10 @@ export const useProductStore = create((set) => ({
   },
   updatePatternRotationDeegre: (patternRotationDeegre) => {
     set((state) => ({
-      patternRotationDeegre: { ...state.patternRotationDeegre, ...patternRotationDeegre },
+      patternRotationDeegre: {
+        ...state.patternRotationDeegre,
+        ...patternRotationDeegre,
+      },
     }));
-  }
+  },
 }));

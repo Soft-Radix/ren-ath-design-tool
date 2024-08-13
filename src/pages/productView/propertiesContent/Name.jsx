@@ -202,22 +202,22 @@ const Name = () => {
               </div>
               <div
                 className={`${styles.imgWrap} ${
-                  namePositions[name] === 3 ? styles.selected : ""
+                  namePositions[name] === 4 ? styles.selected : ""
                 }`}
                 onClick={() => {
                   // handleModelRotation(90);
-                  updateNamesWithPosition(3, name, index);
+                  updateNamesWithPosition(4, name, index);
                 }}
               >
                 <img src={images.chest_left} alt="chest left" />
               </div>
               <div
                 className={`${styles.imgWrap} ${
-                  namePositions[name] === 4 ? styles.selected : ""
+                  namePositions[name] === 3 ? styles.selected : ""
                 }`}
                 onClick={() => {
                   // handleModelRotation(270);
-                  updateNamesWithPosition(4, name, index);
+                  updateNamesWithPosition(3, name, index);
                 }}
               >
                 <img src={images.chest_right} alt="chest right" />
