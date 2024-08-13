@@ -8,10 +8,13 @@ import { useProductStore } from "../../../store";
 import { IconButton, Tooltip } from "@mui/material";
 import resetIcon from "../../../assets/svg/reset.svg";
 import styles from "./properties.module.scss";
-import { LazyLoadImage, trackWindowScroll } from "react-lazy-load-image-component";
+import {
+  LazyLoadImage,
+  trackWindowScroll,
+} from "react-lazy-load-image-component";
 import { Grid, AutoSizer } from "react-virtualized";
 import loading from "../../../assets/images/load.png";
-import patternPaths from './images';
+import patternPaths from "./images";
 
 const Pattern = () => {
   const ref = useProductStore((state) => state.ref);
@@ -79,86 +82,85 @@ const Pattern = () => {
     return (
       <div className={`${styles.colorWrap} ${styles.patternWrap}`}>
         {children?.map((item, childIndex) => {
-          if (childIndex !== 4 && childIndex !== 5) {
-            return (
-              <Accordion
-                key={item.uuid}
-                onChange={handleChange(item?.uuid)}
-                expanded={expanded === item?.uuid}
+          return (
+            <Accordion
+              key={item.uuid}
+              onChange={handleChange(item?.uuid)}
+              expanded={expanded === item?.uuid}
+            >
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <div
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  {item.name}
+                  <Tooltip title="Reset Pattern" placement="right-start">
+                    <IconButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        updatePattern(31);
+                        updateLayer(childIndex);
+                      }}
+                    >
+                      <img src={resetIcon} alt="Reset Pattern" />
+                    </IconButton>
+                  </Tooltip>
+                </div>
+              </AccordionSummary>
+              <AccordionDetails
+                sx={{
+                  padding: 0,
+                }}
               >
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <div
-                    style={{
-                      width: "100%",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    {item.name}
-                    <Tooltip title="Reset Pattern" placement="right-start">
-                      <IconButton
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          updatePattern(31);
-                          updateLayer(childIndex);
-                        }}
-                      >
-                        <img src={resetIcon} alt="Reset Pattern" />
-                      </IconButton>
-                    </Tooltip>
+                <div className={styles.scaleAngleWrap}>
+                  <div className={styles.sliderWrap}>
+                    <span>Scale</span>
+                    <Slider
+                      min={1}
+                      max={5}
+                      step={0.5}
+                      value={patternScale[childIndex]}
+                      onChange={(e) => updatePatternScale({ [childIndex]: e })}
+                    />
+                    <span>{patternScale[childIndex]}</span>
                   </div>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <div className={styles.scaleAngleWrap}>
-                    <div className={styles.sliderWrap}>
-                      <span>Scale</span>
-                      <Slider
-                        min={1}
-                        max={5}
-                        step={0.5}
-                        value={patternScale[childIndex]}
-                        onChange={(e) =>
-                          updatePatternScale({ [childIndex]: e })
-                        }
+                  <div className={styles.sliderWrap}>
+                    <span>Rotate</span>
+                    <Slider
+                      min={0}
+                      max={360}
+                      step={30}
+                      value={patternRotationDeegre[childIndex]}
+                      onChange={(e) =>
+                        updatePatternRotationDeegre({ [childIndex]: e })
+                      }
+                    />
+                    <span>{patternRotationDeegre[childIndex]}</span>
+                  </div>
+                </div>
+                <div className={styles.contentWrap}>
+                  <AutoSizer disableHeight>
+                    {({ width }) => (
+                      <Grid
+                        cellRenderer={cellRenderer}
+                        columnCount={3}
+                        columnWidth={125}
+                        height={300}
+                        rowCount={Math.ceil(patternPaths.length / 3)}
+                        rowHeight={120}
+                        width={width}
+                        childIndex={childIndex}
                       />
-                      <span>{patternScale[childIndex]}</span>
-                    </div>
-                    <div className={styles.sliderWrap}>
-                      <span>Rotate</span>
-                      <Slider
-                        min={0}
-                        max={360}
-                        step={30}
-                        value={patternRotationDeegre[childIndex]}
-                        onChange={(e) =>
-                          updatePatternRotationDeegre({ [childIndex]: e })
-                        }
-                      />
-                      <span>{patternRotationDeegre[childIndex]}</span>
-                    </div>
-                  </div>
-                  <div className={styles.contentWrap}>
-                    <AutoSizer disableHeight>
-                      {({ width }) => (
-                        <Grid
-                          cellRenderer={cellRenderer}
-                          columnCount={3}
-                          columnWidth={125}
-                          height={300}
-                          rowCount={Math.ceil(patternPaths.length / 3)}
-                          rowHeight={120}
-                          width={width}
-                          childIndex={childIndex}
-                        />
-                      )}
-                    </AutoSizer>
-                  </div>
-                </AccordionDetails>
-              </Accordion>
-            );
-          }
-          return null;
+                    )}
+                  </AutoSizer>
+                </div>
+              </AccordionDetails>
+            </Accordion>
+          );
         })}
       </div>
     );

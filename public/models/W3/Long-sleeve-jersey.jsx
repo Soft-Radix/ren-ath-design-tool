@@ -241,7 +241,12 @@ export function Model(props) {
         .then((texture) => {
           setLoading({ ...loading, [layer]: true });
           const textures = [...secondaryTextures];
-          textures[layer] = texture;
+          if (layer == 0 || layer % 2 == 0) {
+            textures[layer + 1] = texture;
+            textures[layer] = texture;
+          } else {
+            textures[layer] = texture;
+          }
           setSecondaryTextures(textures);
           setTimeout(() => {
             setLoading({ ...loading, [layer]: false });
@@ -252,6 +257,8 @@ export function Model(props) {
         });
     }
   }, [secondaryTextureUrl, layer]);
+
+
 
   useEffect(() => {
     if (modelRef.current) {
@@ -285,7 +292,6 @@ export function Model(props) {
         secondaryTextureTranslation,
         index
       ) => {
-        console.log("🚀 ~ useEffect ~ isPattern:", isPattern)
         const uniforms = {
           primaryTexture: { value: primaryTexture },
           secondaryTexture: { value: secondaryTexture },
@@ -484,7 +490,7 @@ export function Model(props) {
       const mapRange = (value, newMin, newMax) => {
         const normalizedValue = (value - 0.1) / (1.0 - 0.1);
         const mappedValue = 0.1 + normalizedValue * (newMax - newMin);
-        return mappedValue.toFixed(2);
+        return mappedValue.toFixed(1);
       };
 
       modelRef.current.children.forEach((child, index) => {
@@ -1306,7 +1312,7 @@ export function Model(props) {
                 return (
                   <NameDecal
                     nameRotationAngle={nameRotation[item]}
-                    fontSize={0.3}
+                    fontSize={0.2}
                     modelNamePosition={nameDecalPositions2[index]}
                     toggleHovered={toggleHovered}
                     index={index}
