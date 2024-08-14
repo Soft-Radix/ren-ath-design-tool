@@ -87,3 +87,5 @@ export const handleDragLimitSeleeveY = (yPos) => {
   }
   return newYPosition;
 };
+
+export const nonRepeatingPatterns = [3, 5, 6, 7, 8, 9,15, 16];
