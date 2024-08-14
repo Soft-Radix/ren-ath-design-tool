@@ -15,6 +15,7 @@ import {
 import { Grid, AutoSizer } from "react-virtualized";
 import loading from "../../../assets/images/load.png";
 import patternPaths from "./images";
+import { nonRepeatingPatterns } from "../../../utils/funtions";
 
 const Pattern = () => {
   const ref = useProductStore((state) => state.ref);
@@ -24,6 +25,7 @@ const Pattern = () => {
   const children = ref?.current?.children || [];
   const {
     updatePattern,
+    pattern,
     updateLayer,
     patternScale,
     updatePatternScale,
@@ -62,6 +64,8 @@ const Pattern = () => {
           style={style}
           className={`${styles.imgWrap}`}
           onClick={() => {
+            console.log("index", index + 1);
+
             updatePattern(index + 1);
             updateLayer(childIndex);
           }}
@@ -121,6 +125,7 @@ const Pattern = () => {
                     <span>Scale</span>
                     <Slider
                       min={1}
+                      disabled={nonRepeatingPatterns.includes(pattern)}
                       max={5}
                       step={0.5}
                       value={patternScale[childIndex]}
