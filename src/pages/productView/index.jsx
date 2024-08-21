@@ -7,7 +7,7 @@ import { Model as M1 } from "../../../public/models/M1/Flex-custom-board-shorts"
 import { Model as M6 } from "../../../public/models/M6/Sleeveless-jersey";
 import { Model as W1 } from "../../../public/models/W1/Long-sleeve-hitting-tees-with-hood";
 import { Model as W2 } from "../../../public/models/W2/Long-sleeve-hitting-tees-without-hood";
-import { Model as W3 } from "../../../public/models/W3/Long-sleeve-jersey";
+import { Model as W3 } from "../../../public/models/W3/Long-sleeve-jersey2";
 import { Model as W4 } from "../../../public/models/W4/Short-sleeve-hitting-tee";
 import { Model as W6 } from "../../../public/models/W6/Sleeveless-jersey-with-sleeve";
 import { Model as W7 } from "../../../public/models/W7/Sleeveless-jersey-without-sleeve";

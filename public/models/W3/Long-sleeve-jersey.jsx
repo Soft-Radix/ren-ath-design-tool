@@ -295,7 +295,6 @@ export function Model(props) {
         pattern,
         layer
       ) => {
-        console.log("🚀 ~ useEffect ~ layer :", layer);
         const uniforms = {
           primaryTexture: { value: primaryTexture },
           secondaryTexture: { value: secondaryTexture },
@@ -524,13 +523,13 @@ export function Model(props) {
           const gradientBool = isGradient ? isGradient[index] : false;
           const primaryGradientColor1 = new Three.Color(designGradient1[index]);
           const primaryGradientColor2 = new Three.Color(designGradient2[index]);
-          const gradientscale =
-            index === 6 || index === 7
-              ? mapRange(gradientScale[index], 0.8, 1.2)
-              : index === 0
-              ? mapRange(gradientScale[0], 1.0, 1.5)
-              : gradientScale[index];
-
+          // const gradientscale =
+          //   index === 6 || index === 7
+          //     ? mapRange(gradientScale[index], 0.8, 1.2)
+          //     : index === 0
+          //     ? mapRange(gradientScale[0], 1.0, 1.5)
+          //     : gradientScale[index];
+          const gradientscale = gradientScale[index];
           const rotationAngle = gradientAngle[index] * (Math.PI / 180);
           const rotationAngle2 = designGradientAngle[index] * (Math.PI / 180);
           const designcolor = designColor[index];
@@ -954,6 +953,7 @@ export function Model(props) {
               </meshStandardMaterial>
             )}
           </mesh>
+          
           <mesh
             geometry={nodes.Dress_1_Group6255_0005_1.geometry}
             material={materials.blinn2}
@@ -1233,6 +1233,7 @@ export function Model(props) {
                 );
               })}
           </mesh>
+
           <mesh
             geometry={nodes.Dress_1_Group6255_0005_2.geometry}
             material={materials.blinn1}
@@ -1437,6 +1438,7 @@ export function Model(props) {
                 );
               })}
           </mesh>
+
           <mesh
             geometry={nodes.Dress_1_Group6255_0005_6.geometry}
             material={materials.lambert3}
@@ -1452,6 +1454,7 @@ export function Model(props) {
               </meshStandardMaterial>
             )}
           </mesh>
+
           <mesh
             geometry={nodes.Dress_1_Group6255_0005_5.geometry}
             material={materials.blinn5}
@@ -1483,6 +1486,7 @@ export function Model(props) {
               </meshStandardMaterial>
             )}
           </mesh>
+
           <mesh
             geometry={nodes.Dress_1_Group6255_0005_8.geometry}
             material={materials.Dress_1_Gr}

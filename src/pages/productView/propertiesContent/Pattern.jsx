@@ -64,8 +64,6 @@ const Pattern = () => {
           style={style}
           className={`${styles.imgWrap}`}
           onClick={() => {
-            console.log("index", index + 1);
-
             updatePattern(index + 1);
             updateLayer(childIndex);
           }}
@@ -129,7 +127,14 @@ const Pattern = () => {
                       max={5}
                       step={0.5}
                       value={patternScale[childIndex]}
-                      onChange={(e) => updatePatternScale({ [childIndex]: e })}
+                      onChange={(e) => {
+                        if (childIndex === 0 || childIndex % 2 == 0) {
+                          updatePatternScale({ [childIndex]: e });
+                          updatePatternScale({ [childIndex + 1]: e });
+                        } else {
+                          updatePatternScale({ [childIndex]: e });
+                        }
+                      }}
                     />
                     <span>{patternScale[childIndex]}</span>
                   </div>
@@ -140,9 +145,14 @@ const Pattern = () => {
                       max={360}
                       step={30}
                       value={patternRotationDeegre[childIndex]}
-                      onChange={(e) =>
-                        updatePatternRotationDeegre({ [childIndex]: e })
-                      }
+                      onChange={(e) => {
+                        if (childIndex === 0 || childIndex % 2 == 0) {
+                          updatePatternRotationDeegre({ [childIndex]: e });
+                          updatePatternRotationDeegre({ [childIndex + 1]: e });
+                        } else {
+                          updatePatternRotationDeegre({ [childIndex]: e });
+                        }
+                      }}
                     />
                     <span>{patternRotationDeegre[childIndex]}</span>
                   </div>
