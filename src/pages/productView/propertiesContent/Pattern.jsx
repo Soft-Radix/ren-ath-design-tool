@@ -124,7 +124,7 @@ const Pattern = () => {
                     <Slider
                       min={1}
                       disabled={nonRepeatingPatterns.includes(pattern)}
-                      max={5}
+                      max={2}
                       step={0.5}
                       value={patternScale[childIndex]}
                       onChange={(e) => {
