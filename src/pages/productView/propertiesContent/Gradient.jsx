@@ -296,11 +296,18 @@ const Gradient = () => {
                     <div className={styles.sliderWrap}>
                       <span>Scale</span>
                       <Slider
-                        min={0.1}
-                        max={1}
+                        min={0.07}
+                        max={1.0}
                         step={0.01}
                         value={designScale[childIndex]}
-                        onChange={(e) => handleDesignScale({ [childIndex]: e })}
+                        onChange={(e) => {
+                          handleGradientScaleForBoth(
+                            handleDesignScale,
+                            e,
+                            childIndex
+                          );
+                          // handleDesignScale({ [childIndex]: e });
+                        }}
                       />
                     </div>
                     <div className={styles.sliderWrap}>
@@ -310,9 +317,14 @@ const Gradient = () => {
                         max={180}
                         step={5}
                         value={designGradientAngle[childIndex]}
-                        onChange={(e) =>
-                          updateDesignGradientAngle({ [childIndex]: e })
-                        }
+                        onChange={(e) => {
+                          handleGradientScaleForBoth(
+                            updateDesignGradientAngle,
+                            e,
+                            childIndex
+                          );
+                          // updateDesignGradientAngle({ [childIndex]: e });
+                        }}
                       />
                     </div>
                   </div>
@@ -359,9 +371,31 @@ const Gradient = () => {
                         style={{ backgroundColor: itemColor }}
                         onClick={() => {
                           if (designType === 1) {
-                            handleDesignGradient1({ [childIndex]: itemColor });
+                            if (childIndex === 0 || childIndex % 2 === 0) {
+                              handleDesignGradient1({
+                                [childIndex]: itemColor,
+                              });
+                              handleDesignGradient1({
+                                [childIndex + 1]: itemColor,
+                              });
+                            } else {
+                              handleDesignGradient1({
+                                [childIndex]: itemColor,
+                              });
+                            }
                           } else {
-                            handleDesignGradient2({ [childIndex]: itemColor });
+                            if (childIndex === 0 || childIndex % 2 === 0) {
+                              handleDesignGradient2({
+                                [childIndex]: itemColor,
+                              });
+                              handleDesignGradient2({
+                                [childIndex + 1]: itemColor,
+                              });
+                            } else {
+                              handleDesignGradient2({
+                                [childIndex]: itemColor,
+                              });
+                            }
                           }
                           handleIsDesignGradientEnabled(true);
                         }}
@@ -386,95 +420,6 @@ const Gradient = () => {
           );
         }
       })}
-      {/* <Accordion
-        onChange={handleChange("design_gradient")}
-        expanded={expanded === "design_gradient"}
-      >
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <div
-            className={`${styles.colorViewer} ${styles.mainColorViewer}`}
-            style={{
-              background: `linear-gradient(110deg, ${
-                designGradient1 || "transparent"
-              }, ${designGradient2 || "transparent"})`,
-            }}
-          />
-          Design Gradient
-        </AccordionSummary>
-        <AccordionDetails>
-          <div className={styles.scaleAngleWrap}>
-            <div className={styles.sliderWrap}>
-              <span>Scale</span>
-              <Slider
-                min={0.1}
-                max={1}
-                step={0.01}
-                value={designScale}
-                onChange={(e) => handleDesignScale(e)}
-              />
-            </div>
-          </div>
-          <div className={styles.buttonWrap}>
-            <ThemeButton
-              onClick={() => {
-                // updateGradientScale({ [childIndex]: 0.91 });
-                setDesignType(1);
-                //updateIsGradient(true);
-              }}
-              variant={designType === 2 ? "outlined" : "contained"}
-            >
-              Color
-            </ThemeButton>
-            <ThemeButton
-              onClick={() => {
-                // updateGradientScale({ [childIndex]: 0.91 });
-                setDesignType(2);
-                //updateIsGradient(true);
-              }}
-              variant={designType === 1 ? "outlined" : "contained"}
-            >
-              Gradient
-            </ThemeButton>
-            <div
-              className={styles.gradientViewer}
-              style={{
-                background: `linear-gradient(110deg, ${
-                  designGradient1 || "transparent"
-                }, ${designGradient2 || "transparent"})`,
-              }}
-            />
-          </div>
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: 10,
-            }}
-          >
-            {colorList.map((itemColor, index) => (
-              <div
-                className={styles.colorViewer}
-                style={{ backgroundColor: itemColor }}
-                onClick={() => {
-                  if (designType === 1) {
-                    handleDesignGradient1(itemColor);
-                  } else {
-                    handleDesignGradient2(itemColor);
-                  }
-                  handleIsDesignGradientEnabled(true);
-                }}
-              >
-                {designType === 1 &&
-                  designGradient1 &&
-                  designGradient1 === itemColor && <TickIcon />}
-                {designType === 2 &&
-                  designGradient2 &&
-                  designGradient2 === itemColor && <TickIcon />}
-              </div>
-            ))}
-          </div>
-        </AccordionDetails>
-      </Accordion> */}
     </div>
   );
 };

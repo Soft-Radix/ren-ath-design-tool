@@ -95,17 +95,17 @@ const Color = () => {
                   )}
                 </div>
               ))}
-              {childIndex !== 4 && childIndex !== 5 && (
-                <div>
-                  <h4>Pattern Colors</h4>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexWrap: "wrap",
-                      gap: 10,
-                    }}
-                  >
-                    {/* <div
+
+              <div>
+                <h4>Pattern Colors</h4>
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: 10,
+                  }}
+                >
+                  {/* <div
                     className={styles.colorViewer}
                     style={{ backgroundColor: "transparent" }}
                     onClick={() => {
@@ -114,24 +114,22 @@ const Color = () => {
                   >
                     <CrossIcon />
                   </div> */}
-                    {colorList.map((itemColor, index) => (
-                      <div
-                        key={index}
-                        className={styles.colorViewer}
-                        style={{ backgroundColor: itemColor }}
-                        onClick={() => {
-                          handlePatternColor({ [childIndex]: itemColor });
-                        }}
-                      >
-                        {patternColor[childIndex] &&
-                          patternColor[childIndex] === itemColor && (
-                            <TickIcon />
-                          )}
-                      </div>
-                    ))}
-                  </div>
+                  {colorList.map((itemColor, index) => (
+                    <div
+                      key={index}
+                      className={styles.colorViewer}
+                      style={{ backgroundColor: itemColor }}
+                      onClick={() => {
+                        handlePatternColor({ [childIndex]: itemColor });
+                      }}
+                    >
+                      {patternColor[childIndex] &&
+                        patternColor[childIndex] === itemColor && <TickIcon />}
+                    </div>
+                  ))}
                 </div>
-              )}
+              </div>
+
               <h3>Design Color</h3>
               <div className={styles.colorPalletWrap}>
                 {/* <div
