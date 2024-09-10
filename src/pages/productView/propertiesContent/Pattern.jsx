@@ -15,7 +15,10 @@ import {
 import { Grid, AutoSizer } from "react-virtualized";
 import loading from "../../../assets/images/load.png";
 import patternPaths from "./images";
-import { nonRepeatingPatterns } from "../../../utils/funtions";
+import {
+  modelRotationValue,
+  nonRepeatingPatterns,
+} from "../../../utils/funtions";
 
 const Pattern = () => {
   const ref = useProductStore((state) => state.ref);
@@ -31,6 +34,7 @@ const Pattern = () => {
     updatePatternScale,
     updatePatternRotationDeegre,
     patternRotationDeegre,
+    handleModelRotation,
   } = useProductStore((state) => state);
 
   const handleChange = (panel) => (event, isExpanded) => {
@@ -97,6 +101,9 @@ const Pattern = () => {
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
+                  }}
+                  onClick={() => {
+                    handleModelRotation(modelRotationValue(childIndex));
                   }}
                 >
                   {item.name}

@@ -11,12 +11,12 @@ import styles from "./properties.module.scss";
 import { colorList } from "../../../components/data/colors";
 import { TextField } from "@mui/material";
 import Slider from "rc-slider";
+import { modelRotationValue } from "../../../utils/funtions";
 const Number = () => {
   const {
     number,
     updateNumber,
-    numberPosition,
-    updateNumberPosition,
+    handleModelRotation,
     numberFont,
     updateNumberFont,
     numberColor,
@@ -99,7 +99,12 @@ const Number = () => {
               onChange={handleChange(child?.uuid)}
               expanded={expanded === child?.uuid}
             >
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                onClick={() => {
+                  handleModelRotation(modelRotationValue(childIndex));
+                }}
+              >
                 {child.name}
               </AccordionSummary>
               <AccordionDetails>

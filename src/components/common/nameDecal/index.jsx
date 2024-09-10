@@ -25,7 +25,6 @@ const NameDecal = ({
   fontSize = 0.3,
   nameRotationAngle = 0,
 }) => {
-  console.log("🚀 ~ fontSize:", fontSize);
   const bindFront = useDrag(
     ({ offset: [x, y], down }) => {
       orbitalRef.current.enabled = !down;
@@ -33,7 +32,6 @@ const NameDecal = ({
 
       const xPos = namePosition === 1 ? x * 0.01 : -(x * 0.01);
       const yPos = -(y * 0.02);
-      // console.log("🚀 ~ xPos:", xPos);
 
       const finalPosition = [
         handleDragLimitX(xPos)

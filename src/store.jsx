@@ -2,6 +2,7 @@ import { create } from "zustand";
 
 // Save data as cookies in browser
 import Cookies from "universal-cookie";
+import { modelRotationValue } from "./utils/funtions";
 const cookies = new Cookies(null, { path: "/" });
 const { id, name, designCount } = cookies.get("productDetails") || {
   id: "W1",
@@ -113,7 +114,7 @@ export const useProductStore = create((set) => ({
   names: [],
   logos: [],
   resetLogoIndex: null,
-    setResetLogoIndex: (logoIndex) =>
+  setResetLogoIndex: (logoIndex) =>
     set(() => ({
       resetLogoIndex: logoIndex,
     })),
@@ -158,7 +159,7 @@ export const useProductStore = create((set) => ({
       patternColor: { ...state.patternColor, ...color },
     })),
   handleModelRotation: (rotation) =>
-    set(() => ({
+    set((state) => ({
       modelRotation: rotation,
     })),
   setModelLoading: (loading) => set({ modelLoading: loading }),

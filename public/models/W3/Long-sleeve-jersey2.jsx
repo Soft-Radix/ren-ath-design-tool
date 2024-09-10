@@ -752,6 +752,7 @@ export function Model(props) {
       modelRef.current.children.forEach((element) => {
         element.material.side = DoubleSide;
       });
+
       // Update reference in the store
       updateRef(modelRef);
       const modelChildrenData = Array.from(modelRef.current.children).map(

@@ -10,10 +10,6 @@ const Header = () => {
   const id = useProductStore((state) => state.id);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   console.log("id ==> ", id);
-  // }, [id]);
-
   return (
     <div className={styles.mainWrap}>
       <div className={styles.leftWrap}>

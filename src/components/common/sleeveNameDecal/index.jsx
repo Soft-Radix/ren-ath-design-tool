@@ -38,8 +38,6 @@ const SleeveDecalName = ({
 
       const xPos = -(x * 0.01); // Clamp x to be non-positive only if namePosition is 3
       const yPos = -(y * 0.01);
-      console.log("🚀 ~ xPos:", xPos);
-      console.log("🚀 ~ yPos:", yPos);
 
       const finalPosition = [
         handleDragLimitSeleeveX(xPos)
