@@ -1,23 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { useProductStore } from "../../../store";
-import styles from "./properties.module.scss";
-import Skeleton from "@mui/material/Skeleton";
+import React from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Grid } from "react-virtualized";
+import { useProductStore } from "../../../store";
+import styles from "./properties.module.scss";
 
 const Design = () => {
   const { id, designCount } = useProductStore((state) => state);
   const { designType, updateDesignType, updateIsDesign, isDesign } =
     useProductStore((state) => state);
-
-  // const [loading, setLoading] = useState(true);
-
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     setLoading(false);
-  //   }, 1000);
-  //   return () => clearTimeout(timer);
-  // }, []);
 
   const cellRenderer = ({ columnIndex, key, rowIndex, style }) => {
     const index = rowIndex * 2 + columnIndex + 1;

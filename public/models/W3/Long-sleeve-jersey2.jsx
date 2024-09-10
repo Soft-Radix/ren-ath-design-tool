@@ -296,7 +296,9 @@ export function Model(props) {
         layer
       ) => {
         const uniforms = {
-          primaryTexture: { value: primaryTexture },
+          primaryTexture: {
+            value: designType !== 10 ? primaryTexture : null,
+          },
           secondaryTexture: { value: secondaryTexture },
           secondaryColor: { value: secondaryColor },
           hasSecondaryTexture: { value: !!secondaryTexture },

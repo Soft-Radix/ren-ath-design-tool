@@ -84,7 +84,7 @@ const Home = () => {
                 image={womenImg3}
                 title="Long Sleeve Jersey"
                 id="W3"
-                designCount={9}
+                designCount={10}
               />
               <ProductCard
                 image={womenImg5}

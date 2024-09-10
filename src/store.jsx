@@ -113,7 +113,7 @@ export const useProductStore = create((set) => ({
   names: [],
   logos: [],
   resetLogoIndex: null,
-  setResetLogoIndex: (logoIndex) =>
+    setResetLogoIndex: (logoIndex) =>
     set(() => ({
       resetLogoIndex: logoIndex,
     })),
