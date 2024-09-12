@@ -34,7 +34,7 @@ export const useProductStore = create((set) => ({
   },
   isDesignGradientEnabled: false,
   designCount: designCount,
-  designType: 0,
+  designType: 10,
 
   patternColor: {},
   pattern: null,
@@ -158,7 +158,7 @@ export const useProductStore = create((set) => ({
       patternColor: { ...state.patternColor, ...color },
     })),
   handleModelRotation: (rotation) =>
-    set(() => ({
+    set((state) => ({
       modelRotation: rotation,
     })),
   setModelLoading: (loading) => set({ modelLoading: loading }),

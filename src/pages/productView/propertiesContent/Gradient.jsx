@@ -10,6 +10,7 @@ import ThemeButton from "../../../components/common/ThemeButton";
 import { colorList } from "../../../components/data/colors";
 import { useProductStore } from "../../../store";
 import styles from "./properties.module.scss";
+import { modelRotationValue } from "../../../utils/funtions";
 
 const Gradient = () => {
   const ref = useProductStore((state) => state.ref);
@@ -33,6 +34,7 @@ const Gradient = () => {
     handleDesignScale,
     updateDesignGradientAngle,
     designGradientAngle,
+    handleModelRotation,
   } = useProductStore((state) => state);
 
   const children = ref?.current?.children || [];
@@ -151,7 +153,12 @@ const Gradient = () => {
               onChange={handleChange(item?.uuid)}
               expanded={expanded === item?.uuid}
             >
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                onClick={() => {
+                  handleModelRotation(modelRotationValue(childIndex));
+                }}
+              >
                 <div
                   className={`${styles.colorViewer} ${styles.mainColorViewer}`}
                   style={{

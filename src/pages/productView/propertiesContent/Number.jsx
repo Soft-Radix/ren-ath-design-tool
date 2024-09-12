@@ -11,12 +11,12 @@ import styles from "./properties.module.scss";
 import { colorList } from "../../../components/data/colors";
 import { TextField } from "@mui/material";
 import Slider from "rc-slider";
+import { modelRotationValue } from "../../../utils/funtions";
 const Number = () => {
   const {
     number,
     updateNumber,
-    numberPosition,
-    updateNumberPosition,
+    handleModelRotation,
     numberFont,
     updateNumberFont,
     numberColor,
@@ -85,8 +85,12 @@ const Number = () => {
   }, [id]);
 
   const handleBothLayersForNumber = (e, handleFunction, index) => {
-    handleFunction({ [2]: e });
-    handleFunction({ [3]: e });
+    if (index == 0 || index % 2 === 0) {
+      handleFunction({ [2]: e });
+      handleFunction({ [3]: e });
+    } else {
+      handleFunction({ [index]: e });
+    }
   };
 
   return (
@@ -99,7 +103,12 @@ const Number = () => {
               onChange={handleChange(child?.uuid)}
               expanded={expanded === child?.uuid}
             >
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                onClick={() => {
+                  handleModelRotation(modelRotationValue(childIndex));
+                }}
+              >
                 {child.name}
               </AccordionSummary>
               <AccordionDetails>
@@ -122,7 +131,14 @@ const Number = () => {
                     className={`${styles.fontItem1} ${
                       numberFont[childIndex] == 1 ? styles.selected : ""
                     }`}
-                    onClick={() => updateNumberFont({ [childIndex]: 1 })}
+                    onClick={() => {
+                      if (childIndex == 0 || childIndex % 2 === 0) {
+                        updateNumberFont({ [childIndex]: 1 });
+                        updateNumberFont({ [childIndex + 1]: 1 });
+                      } else {
+                        updateNumberFont({ [childIndex]: 1 });
+                      }
+                    }}
                     whileHover={{ scale: 1.02 }}
                   >
                     F1 0123456789
@@ -131,7 +147,14 @@ const Number = () => {
                     className={`${styles.fontItem2} ${
                       numberFont[childIndex] == 2 ? styles.selected : ""
                     }`}
-                    onClick={() => updateNumberFont({ [childIndex]: 2 })}
+                    onClick={() => {
+                      if (childIndex == 0 || childIndex % 2 === 0) {
+                        updateNumberFont({ [childIndex]: 2 });
+                        updateNumberFont({ [childIndex + 1]: 2 });
+                      } else {
+                        updateNumberFont({ [childIndex]: 2 });
+                      }
+                    }}
                     whileHover={{ scale: 1.02 }}
                   >
                     F2 0123456789
@@ -140,7 +163,14 @@ const Number = () => {
                     className={`${styles.fontItem3} ${
                       numberFont[childIndex] == 3 ? styles.selected : ""
                     }`}
-                    onClick={() => updateNumberFont({ [childIndex]: 3 })}
+                    onClick={() => {
+                      if (childIndex == 0 || childIndex % 2 === 0) {
+                        updateNumberFont({ [childIndex]: 3 });
+                        updateNumberFont({ [childIndex + 1]: 3 });
+                      } else {
+                        updateNumberFont({ [childIndex]: 3 });
+                      }
+                    }}
                     whileHover={{ scale: 1.02 }}
                   >
                     F3 0123456789
@@ -149,7 +179,14 @@ const Number = () => {
                     className={`${styles.fontItem4} ${
                       numberFont[childIndex] == 4 ? styles.selected : ""
                     }`}
-                    onClick={() => updateNumberFont({ [childIndex]: 4 })}
+                    onClick={() => {
+                      if (childIndex == 0 || childIndex % 2 === 0) {
+                        updateNumberFont({ [childIndex]: 4 });
+                        updateNumberFont({ [childIndex + 1]: 4 });
+                      } else {
+                        updateNumberFont({ [childIndex]: 4 });
+                      }
+                    }}
                     whileHover={{ scale: 1.02 }}
                   >
                     F4 0123456789
@@ -158,7 +195,14 @@ const Number = () => {
                     className={`${styles.fontItem5} ${
                       numberFont[childIndex] == 5 ? styles.selected : ""
                     }`}
-                    onClick={() => updateNumberFont({ [childIndex]: 5 })}
+                    onClick={() => {
+                      if (childIndex == 0 || childIndex % 2 === 0) {
+                        updateNumberFont({ [childIndex]: 5 });
+                        updateNumberFont({ [childIndex + 1]: 5 });
+                      } else {
+                        updateNumberFont({ [childIndex]: 5 });
+                      }
+                    }}
                     whileHover={{ scale: 1.02 }}
                   >
                     F5 0123456789
@@ -167,7 +211,14 @@ const Number = () => {
                     className={`${styles.fontItem6} ${
                       numberFont[childIndex] == 6 ? styles.selected : ""
                     }`}
-                    onClick={() => updateNumberFont({ [childIndex]: 6 })}
+                    onClick={() => {
+                      if (childIndex == 0 || childIndex % 2 === 0) {
+                        updateNumberFont({ [childIndex]: 6 });
+                        updateNumberFont({ [childIndex + 1]: 6 });
+                      } else {
+                        updateNumberFont({ [childIndex]: 6 });
+                      }
+                    }}
                     whileHover={{ scale: 1.02 }}
                   >
                     F6 0123456789
@@ -176,7 +227,14 @@ const Number = () => {
                     className={`${styles.fontItem7} ${
                       numberFont[childIndex] == 7 ? styles.selected : ""
                     }`}
-                    onClick={() => updateNumberFont({ [childIndex]: 7 })}
+                    onClick={() => {
+                      if (childIndex == 0 || childIndex % 2 === 0) {
+                        updateNumberFont({ [childIndex]: 7 });
+                        updateNumberFont({ [childIndex + 1]: 7 });
+                      } else {
+                        updateNumberFont({ [childIndex]: 7 });
+                      }
+                    }}
                     whileHover={{ scale: 1.02 }}
                   >
                     F7 0123456789
@@ -185,7 +243,14 @@ const Number = () => {
                     className={`${styles.fontItem8} ${
                       numberFont[childIndex] == 8 ? styles.selected : ""
                     }`}
-                    onClick={() => updateNumberFont({ [childIndex]: 8 })}
+                    onClick={() => {
+                      if (childIndex == 0 || childIndex % 2 === 0) {
+                        updateNumberFont({ [childIndex]: 8 });
+                        updateNumberFont({ [childIndex + 1]: 8 });
+                      } else {
+                        updateNumberFont({ [childIndex]: 8 });
+                      }
+                    }}
                     whileHover={{ scale: 1.02 }}
                   >
                     F8 0123456789
@@ -194,7 +259,14 @@ const Number = () => {
                     className={`${styles.fontItem9} ${
                       numberFont[childIndex] == 9 ? styles.selected : ""
                     }`}
-                    onClick={() => updateNumberFont({ [childIndex]: 9 })}
+                    onClick={() => {
+                      if (childIndex == 0 || childIndex % 2 === 0) {
+                        updateNumberFont({ [childIndex]: 9 });
+                        updateNumberFont({ [childIndex + 1]: 9 });
+                      } else {
+                        updateNumberFont({ [childIndex]: 9 });
+                      }
+                    }}
                     whileHover={{ scale: 1.02 }}
                   >
                     F9 0123456789
@@ -223,8 +295,8 @@ const Number = () => {
                     <span>Rotate</span>
                     <Slider
                       min={0}
-                      max={270}
-                      step={30}
+                      max={360}
+                      step={15}
                       value={numberAngle[childIndex]}
                       onChange={(e) => {
                         handleBothLayersForNumber(

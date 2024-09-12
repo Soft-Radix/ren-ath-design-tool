@@ -83,9 +83,7 @@ export function Model(props) {
   }, [pattern]);
 
   useEffect(() => {
-    // console.log("🚀 ~ useEffect ~ layerTexture:", layerTexture);
-    // console.log("modelRef ==> ", modelRef.current.children[1]);
-    // console.log("layerTexture ==> ", layerTexture);
+   
     // layerTexture.wrapS = layerTexture.wrapT = RepeatWrapping;
     // layerTexture.repeat.set(6,6); // add scale to texture
     // layerTexture.rotation = 0;

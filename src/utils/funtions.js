@@ -67,7 +67,7 @@ export const handleDragLimitX = (xPos) => {
 export const handleDragLimitSeleeveX = (xPos) => {
   let newXPosition = xPos;
   if (xPos > 2.4) {
-    newXPosition = 2.4;
+    newXPosition = 2.5;
   } else if (xPos < -0.9) {
     newXPosition = -0.9;
   } else {
@@ -79,13 +79,29 @@ export const handleDragLimitSeleeveX = (xPos) => {
 export const handleDragLimitSeleeveY = (yPos) => {
   let newYPosition = yPos;
   if (yPos > 3.75) {
-    newYPosition = 3.75;
+    newYPosition = 3.76;
   } else if (yPos < -1.27) {
-    newYPosition = -1.27;
+    newYPosition = -1.28;
   } else {
     newYPosition = yPos;
   }
   return newYPosition;
 };
 
-export const nonRepeatingPatterns = [3, 5, 6, 7, 8, 9,15, 16];
+export const nonRepeatingPatterns = [3, 5, 6, 7, 8, 9, 15, 16];
+
+export const modelRotationValue = (layerIndex) => {
+  if (layerIndex === 0) {
+    return 90;
+  } else if (layerIndex === 6) {
+    return 45;
+  } else if (layerIndex === 7) {
+    return -45;
+  } else if (layerIndex === 1) {
+    return 270;
+  } else if (layerIndex === 2 || layerIndex === 4) {
+    return 0;
+  } else if (layerIndex === 3 || layerIndex === 5) {
+    return 180;
+  }
+};

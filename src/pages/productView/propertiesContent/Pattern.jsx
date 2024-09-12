@@ -15,7 +15,10 @@ import {
 import { Grid, AutoSizer } from "react-virtualized";
 import loading from "../../../assets/images/load.png";
 import patternPaths from "./images";
-import { nonRepeatingPatterns } from "../../../utils/funtions";
+import {
+  modelRotationValue,
+  nonRepeatingPatterns,
+} from "../../../utils/funtions";
 
 const Pattern = () => {
   const ref = useProductStore((state) => state.ref);
@@ -31,6 +34,7 @@ const Pattern = () => {
     updatePatternScale,
     updatePatternRotationDeegre,
     patternRotationDeegre,
+    handleModelRotation,
   } = useProductStore((state) => state);
 
   const handleChange = (panel) => (event, isExpanded) => {
@@ -98,6 +102,9 @@ const Pattern = () => {
                     justifyContent: "space-between",
                     alignItems: "center",
                   }}
+                  onClick={() => {
+                    handleModelRotation(modelRotationValue(childIndex));
+                  }}
                 >
                   {item.name}
                   <Tooltip title="Reset Pattern" placement="right-start">
@@ -122,10 +129,10 @@ const Pattern = () => {
                   <div className={styles.sliderWrap}>
                     <span>Scale</span>
                     <Slider
-                      min={1}
+                      min={0.5}
                       disabled={nonRepeatingPatterns.includes(pattern)}
                       max={2}
-                      step={0.5}
+                      step={0.2}
                       value={patternScale[childIndex]}
                       onChange={(e) => {
                         if (childIndex === 0 || childIndex % 2 == 0) {

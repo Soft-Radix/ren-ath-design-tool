@@ -14,7 +14,6 @@ import { useProductStore } from "../../store";
 
 const Scene = () => {
   const productId = useProductStore((state) => state.id);
-  // console.log("🚀 ~ Scene ~ productId:", productId);
 
   const Loader = () => {
     return (

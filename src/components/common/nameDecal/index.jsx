@@ -25,7 +25,6 @@ const NameDecal = ({
   fontSize = 0.3,
   nameRotationAngle = 0,
 }) => {
-  console.log("🚀 ~ fontSize:", fontSize);
   const bindFront = useDrag(
     ({ offset: [x, y], down }) => {
       orbitalRef.current.enabled = !down;
@@ -33,15 +32,10 @@ const NameDecal = ({
 
       const xPos = namePosition === 1 ? x * 0.01 : -(x * 0.01);
       const yPos = -(y * 0.02);
-      // console.log("🚀 ~ xPos:", xPos);
 
       const finalPosition = [
-        handleDragLimitX(xPos)
-          ? handleDragLimitX(xPos)
-          : modelNamePosition[index][0],
-        handleDragLimitY(yPos)
-          ? handleDragLimitY(yPos)
-          : modelNamePosition[index][1],
+        handleDragLimitX(xPos),
+        handleDragLimitY(yPos),
         modelNamePosition[2],
       ];
 
@@ -49,8 +43,6 @@ const NameDecal = ({
     },
     { pointerEvents: true }
   );
-
- 
 
   return (
     <Decal
@@ -69,6 +61,7 @@ const NameDecal = ({
           />
           <GradientText
             {...bindFront()}
+            outlineWidth={0.01}
             onPointerEnter={toggleHovered}
             onPointerLeave={toggleHovered}
             rotation={[0, 0, -nameRotationAngle]}

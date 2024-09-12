@@ -8,6 +8,7 @@ import { useProductStore } from "../../../store";
 import { Color as ParceColor } from "three";
 import styles from "./properties.module.scss";
 import { colorList } from "../../../components/data/colors";
+import { modelRotationValue } from "../../../utils/funtions";
 
 const Color = () => {
   const ref = useProductStore((state) => state.ref);
@@ -23,6 +24,7 @@ const Color = () => {
     patternColor,
     handlePatternColor,
     handleIsDesignGradientEnabled,
+    handleModelRotation,
   } = useProductStore((state) => state);
 
   const [expanded, setExpanded] = React.useState(false > false);
@@ -38,7 +40,12 @@ const Color = () => {
           onChange={handleChange(item?.uuid)}
           expanded={expanded === item?.uuid}
         >
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            onClick={() => {
+              handleModelRotation(modelRotationValue(childIndex));
+            }}
+          >
             <div
               className={`${styles.colorViewer} ${styles.mainColorViewer}`}
               style={{ backgroundColor: color[childIndex] }}
