@@ -129,10 +129,10 @@ const Pattern = () => {
                   <div className={styles.sliderWrap}>
                     <span>Scale</span>
                     <Slider
-                      min={1}
+                      min={0.5}
                       disabled={nonRepeatingPatterns.includes(pattern)}
                       max={2}
-                      step={0.5}
+                      step={0.2}
                       value={patternScale[childIndex]}
                       onChange={(e) => {
                         if (childIndex === 0 || childIndex % 2 == 0) {

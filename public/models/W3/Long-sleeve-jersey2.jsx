@@ -314,6 +314,9 @@ export function Model(props) {
           directionalLightColor: { value: new Three.Color(0xf3f3f3) },
           directionalLightDirection: { value: new Three.Vector3(-9, 9, 11) },
           patternScale: { value: patternScale || 1 },
+          patternScaleFactor: {
+            value: nonRepeatingPatterns.includes(pattern) ? 2.0 : 0.6,
+          }, // Adjust the factor here dynamically
           isPrimaryGradient: { value: isPrimaryGradient },
           primaryGradientColor1: { value: primaryGradientColor1 },
           primaryGradientColor2: { value: primaryGradientColor2 },
@@ -337,7 +340,7 @@ export function Model(props) {
             value: secondaryTextureTranslation || new Three.Vector2(0, 0),
           },
           zoomScale: {
-            value: index === 6 || index === 7 ? 7.0 : 4.0,
+            value: index === 6 || index === 7 ? 7.0 : 5.0,
           },
         };
         if (newColor) {
@@ -403,6 +406,7 @@ export function Model(props) {
   uniform vec2 secondaryTextureTranslation;
   uniform float zoomScale; // Add zoom scale uniform
   uniform int index; // Add index to control UV scaling
+  uniform float patternScaleFactor; // Define a new uniform for the factor
 
   varying vec2 vUv;
   varying vec3 vNormal;
@@ -437,13 +441,14 @@ export function Model(props) {
       coloredPrimaryTexColor = mix(coloredPrimaryTexColor, gradientColorWithAlpha, coloredPrimaryTexColor.a);
     }
 
-    vec2 scaledUv = modifiedUv / patternScale;
+    // Apply fine-tuned scaling
+      vec2 scaledUv = modifiedUv / (patternScale * patternScaleFactor);
 
-    // Apply zoom, rotation, and translation to the secondary texture UV coordinates
+    // Continue with the rotation and translation logic
     float cosThetaSecondary = cos(secondaryTextureRotationAngle);
     float sinThetaSecondary = sin(secondaryTextureRotationAngle);
     mat2 rotationMatrixSecondary = mat2(cosThetaSecondary, -sinThetaSecondary, sinThetaSecondary, cosThetaSecondary);
-    vec2 rotatedUvSecondary = (rotationMatrixSecondary * ((scaledUv * zoomScale) - 0.5)) + 0.5 ;
+    vec2 rotatedUvSecondary = (rotationMatrixSecondary * ((scaledUv * zoomScale) - 0.5)) + 0.5;
 
     vec4 secondaryTexColor = hasSecondaryTexture ? texture2D(secondaryTexture, rotatedUvSecondary) : vec4(1.0);
     secondaryTexColor.a = isPattern ? secondaryTexColor.a : 1.0 - secondaryTexColor.a;
@@ -1096,6 +1101,8 @@ export function Model(props) {
                       position={[0, 0.1, 2.5]}
                     />
                     <GradientText
+                      onPointerEnter={toggleHovered}
+                      onPointerLeave={toggleHovered}
                       rotation={[0, 0, 0]}
                       fontSize={1.1}
                       color1={numberColor[2]}
@@ -1252,6 +1259,8 @@ export function Model(props) {
                       position={[0, 0.1, 2.3]}
                     />
                     <GradientText
+                      onPointerEnter={toggleHovered}
+                      onPointerLeave={toggleHovered}
                       rotation={[0, 0, 0]}
                       fontSize={1.6}
                       color1={numberColor[3]}

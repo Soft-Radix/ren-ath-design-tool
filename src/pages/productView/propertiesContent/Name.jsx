@@ -186,7 +186,8 @@ const Name = () => {
                   updateNamesWithPosition(1, name, index);
                 }}
               >
-                <img src={images.front} alt="front" />
+                {/* <img src={images.front} alt="front" /> */}
+                Front
               </div>
               <div
                 className={`${styles.imgWrap} ${
@@ -198,7 +199,8 @@ const Name = () => {
                   updateNameScale({ [name]: 4 });
                 }}
               >
-                <img src={images.back} alt="back" />
+                {/* <img src={images.back} alt="back" /> */}
+                Back
               </div>
               <div
                 className={`${styles.imgWrap} ${
@@ -209,7 +211,8 @@ const Name = () => {
                   updateNamesWithPosition(4, name, index);
                 }}
               >
-                <img src={images.chest_left} alt="chest left" />
+                Left
+                {/* <img src={images.chest_left} alt="chest left" /> */}
               </div>
               <div
                 className={`${styles.imgWrap} ${
@@ -220,7 +223,8 @@ const Name = () => {
                   updateNamesWithPosition(3, name, index);
                 }}
               >
-                <img src={images.chest_right} alt="chest right" />
+                Right
+                {/* <img src={images.chest_right} alt="chest right" /> */}
               </div>
             </div>
 

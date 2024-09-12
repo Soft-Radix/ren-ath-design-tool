@@ -65,7 +65,9 @@ export default function GradientText({
   outlineColor = null,
   outlineWidth = 0.01,
   isNumberGradientColor,
-    ...props
+  onPointerEnter,
+  onPointerLeave,
+  ...props
 }) {
   const material = useMemo(
     () =>
@@ -74,7 +76,8 @@ export default function GradientText({
           uColor1: { value: new THREE.Color(color1) ?? threeJsColor },
           uColor2: { value: new THREE.Color(color2) ?? threeJsColor },
           uGradientScale: { value: gradientScale || 0.48 },
-          uRotation: { value: gradientRotation || 60 },
+          uRotation: { value: gradientRotation ?? 0 },
+          // uRotation: { value: 0 },
         },
         vertexShader: `
           varying vec2 vUv;
@@ -112,12 +115,13 @@ export default function GradientText({
   return (
     <>
       <Text
+        onPointerEnter={onPointerEnter}
+        onPointerLeave={onPointerLeave}
         {...props}
         renderOrder={999}
         color={color1}
         outlineColor={outlineColor}
-        
-        outlineWidth={outlineColor ? 0.01 : 0}
+        outlineWidth={outlineColor ? 0.04 : 0}
       >
         {children}
       </Text>

@@ -230,7 +230,8 @@ const Logo = () => {
                       updateLogosWithPosition(1, logo, logoKey);
                     }}
                   >
-                    <img src={images.front} alt="" />
+                    Front
+                    {/* <img src={images.front} alt="" /> */}
                   </div>
                   <div
                     className={`${styles.imgWrap} ${
@@ -241,7 +242,8 @@ const Logo = () => {
                       updateLogosWithPosition(2, logo, logoKey);
                     }}
                   >
-                    <img src={images.back} alt="" />
+                    Back
+                    {/* <img src={images.back} alt="" /> */}
                   </div>
                   <div
                     className={`${styles.imgWrap} ${
@@ -252,7 +254,8 @@ const Logo = () => {
                       updateLogosWithPosition(4, logo, logoKey);
                     }}
                   >
-                    <img src={images.chest_left} alt="" />
+                    Left
+                    {/* <img src={images.chest_left} alt="" /> */}
                   </div>
                   <div
                     className={`${styles.imgWrap} ${
@@ -263,7 +266,8 @@ const Logo = () => {
                       updateLogosWithPosition(3, logo, logoKey);
                     }}
                   >
-                    <img src={images.chest_right} alt="" />
+                    Right
+                    {/* <img src={images.chest_right} alt="" /> */}
                   </div>
                 </div>
               </div>
