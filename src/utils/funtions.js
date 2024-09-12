@@ -67,7 +67,7 @@ export const handleDragLimitX = (xPos) => {
 export const handleDragLimitSeleeveX = (xPos) => {
   let newXPosition = xPos;
   if (xPos > 2.4) {
-    newXPosition = 2.4;
+    newXPosition = 2.5;
   } else if (xPos < -0.9) {
     newXPosition = -0.9;
   } else {
@@ -79,9 +79,9 @@ export const handleDragLimitSeleeveX = (xPos) => {
 export const handleDragLimitSeleeveY = (yPos) => {
   let newYPosition = yPos;
   if (yPos > 3.75) {
-    newYPosition = 3.75;
+    newYPosition = 3.76;
   } else if (yPos < -1.27) {
-    newYPosition = -1.27;
+    newYPosition = -1.28;
   } else {
     newYPosition = yPos;
   }

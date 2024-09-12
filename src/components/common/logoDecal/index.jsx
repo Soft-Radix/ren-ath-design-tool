@@ -2,6 +2,7 @@ import { Decal } from "@react-three/drei";
 import { useDrag } from "@use-gesture/react";
 import React from "react";
 import { handleDragLimitX, handleDragLimitY } from "../../../utils/funtions";
+import * as THREE from "three";
 
 const LogoDecal = ({
   logoScale,
@@ -15,6 +16,17 @@ const LogoDecal = ({
   orbitalRef,
   logoPosition,
 }) => {
+  // Calculate texture aspect ratio
+  const texture = logoTexture[index];
+  let aspectRatio = 1; // Default aspect ratio
+
+  if (texture) {
+    texture.encoding = THREE.sRGBEncoding; // Use sRGB encoding for natural colors
+    if (texture.image) {
+      aspectRatio = texture.image.width / texture.image.height;
+    }
+  }
+
   // use drag hook
   const logoBind = useDrag(
     ({ offset: [x, y], down }) => {
@@ -77,29 +89,34 @@ const LogoDecal = ({
     }
   }
 
+  // Calculate the scale while preserving the aspect ratio
+  const decalScale = [
+    aspectRatio * ((logoScale[item] ?? 0.4) || 0.5) * 1.5, // Adjust width according to aspect ratio
+    ((logoScale[item] ?? 0.4) || 0.5) * 1.5, // Height
+    10, // Depth scale (Adjust if needed)
+  ];
+
   return (
     <Decal
       {...logoBind()}
       onPointerEnter={toggleHovered}
       onPointerLeave={toggleHovered}
-      scale={
-        logoPosition === 4 || logoPosition === 3
-          ? [
-              ((logoScale[item] ?? 0.4) || 0.5) * 1.2222,
-              ((logoScale[item] ?? 0.4) || 0.5) * 1.2222,
-              8,
-            ]
-          : [
-              ((logoScale[item] ?? 0.4) || 0.3) * 2,
-              ((logoScale[item] ?? 0.4) || 0.5) * 4,
-              4,
-            ]
-      }
+      scale={decalScale}
       position={modelLogoPosition}
       rotation={logoRotation}
-      map={logoTexture[index]}
       origin={[0, 0, 0]}
-    />
+    >
+      <meshBasicMaterial
+        map={texture} // Logo texture
+        transparent={true} // Enable transparency
+        opacity={1} // Full opacity for the visible part
+        alphaTest={0.5} // Remove pixels with low alpha values
+        color="#ffffff" // Set color to white to preserve natural colors
+        toneMapped={false} // Disable tone mapping to preserve natural colors
+        polygonOffset
+        polygonOffsetFactor={-1}
+      />
+    </Decal>
   );
 };
 

@@ -1326,7 +1326,7 @@ export function Model(props) {
                 return (
                   <NameDecal
                     nameRotationAngle={nameRotation[item]}
-                    fontSize={0.2}
+                    fontSize={0.3}
                     modelNamePosition={nameDecalPositions2[index]}
                     toggleHovered={toggleHovered}
                     index={index}

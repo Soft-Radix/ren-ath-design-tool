@@ -34,12 +34,8 @@ const NameDecal = ({
       const yPos = -(y * 0.02);
 
       const finalPosition = [
-        handleDragLimitX(xPos)
-          ? handleDragLimitX(xPos)
-          : modelNamePosition[index][0],
-        handleDragLimitY(yPos)
-          ? handleDragLimitY(yPos)
-          : modelNamePosition[index][1],
+        handleDragLimitX(xPos),
+        handleDragLimitY(yPos),
         modelNamePosition[2],
       ];
 
@@ -47,8 +43,6 @@ const NameDecal = ({
     },
     { pointerEvents: true }
   );
-
- 
 
   return (
     <Decal
@@ -67,6 +61,7 @@ const NameDecal = ({
           />
           <GradientText
             {...bindFront()}
+            outlineWidth={0.01}
             onPointerEnter={toggleHovered}
             onPointerLeave={toggleHovered}
             rotation={[0, 0, -nameRotationAngle]}

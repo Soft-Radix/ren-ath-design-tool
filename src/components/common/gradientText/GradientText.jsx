@@ -121,12 +121,12 @@ export default function GradientText({
         renderOrder={999}
         color={color1}
         outlineColor={outlineColor}
-        outlineWidth={outlineColor ? 0.04 : 0}
+        outlineWidth={outlineColor ? (outlineWidth ? outlineWidth : 0.04) : 0}
       >
         {children}
       </Text>
       {isNumberGradientColor && (
-        <Text {...props} material={material} renderOrder={999}>
+        <Text {...props} material={material} renderOrder={1}>
           {children}
         </Text>
       )}

@@ -274,8 +274,8 @@ const Logo = () => {
               <h3>Scale</h3>
               <div className={styles.sliderWrap}>
                 <Slider
-                  min={0.1}
-                  max={0.8}
+                  min={0.5}
+                  max={1.5}
                   step={0.1}
                   value={logoScale[logoKey]}
                   defaultValue={0.3}
