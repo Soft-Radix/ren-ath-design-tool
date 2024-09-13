@@ -473,8 +473,8 @@ export function Model(props) {
 
     vec3 lightDir = normalize(directionalLightDirection);
     float diff = max(dot(perturbedNormal, lightDir), 0.0);
-    vec3 diffuse = diff * directionalLightColor * 0.7;
-    vec3 ambient = ambientLightColor * 0.7;
+    vec3 diffuse = diff * directionalLightColor * 0.75;
+    vec3 ambient = ambientLightColor * 0.75;
 
     vec3 lighting = ambient + diffuse; 
 
