@@ -88,17 +88,17 @@ export const handleDragLimitSeleeveY = (yPos) => {
   return newYPosition;
 };
 
-export const nonRepeatingPatterns = [3, 5, 6, 7, 8, 9, 15, 16];
+export const nonRepeatingPatterns = [2,3, 5, 6, 7, 8, 9, 15, 16];
 
 export const modelRotationValue = (layerIndex) => {
   if (layerIndex === 0) {
-    return 90;
-  } else if (layerIndex === 6) {
-    return 45;
-  } else if (layerIndex === 7) {
-    return -45;
-  } else if (layerIndex === 1) {
     return 270;
+  } else if (layerIndex === 6) {
+    return -45;
+  } else if (layerIndex === 7) {
+    return 45;
+  } else if (layerIndex === 1) {
+    return 90;
   } else if (layerIndex === 2 || layerIndex === 4) {
     return 0;
   } else if (layerIndex === 3 || layerIndex === 5) {

@@ -93,6 +93,9 @@ const Pattern = () => {
               key={item.uuid}
               onChange={handleChange(item?.uuid)}
               expanded={expanded === item?.uuid}
+              onClick={() => {
+                handleModelRotation(modelRotationValue(childIndex));
+              }}
             >
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <div
@@ -101,9 +104,6 @@ const Pattern = () => {
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
-                  }}
-                  onClick={() => {
-                    handleModelRotation(modelRotationValue(childIndex));
                   }}
                 >
                   {item.name}

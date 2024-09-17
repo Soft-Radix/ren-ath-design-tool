@@ -313,9 +313,13 @@ export function Model(props) {
           ambientLightColor: { value: new Three.Color(0xf3f3f3) },
           directionalLightColor: { value: new Three.Color(0xf3f3f3) },
           directionalLightDirection: { value: new Three.Vector3(-9, 9, 11) },
-          patternScale: { value: patternScale || 1 },
+          patternScale: {
+            value: nonRepeatingPatterns.includes(pattern)
+              ? 1
+              : patternScale || 1,
+          },
           patternScaleFactor: {
-            value: nonRepeatingPatterns.includes(pattern) ? 2.0 : 0.6,
+            value: nonRepeatingPatterns.includes(pattern) ? 1.0 : 0.6,
           }, // Adjust the factor here dynamically
           isPrimaryGradient: { value: isPrimaryGradient },
           primaryGradientColor1: { value: primaryGradientColor1 },
@@ -340,7 +344,7 @@ export function Model(props) {
             value: secondaryTextureTranslation || new Three.Vector2(0, 0),
           },
           zoomScale: {
-            value: index === 6 || index === 7 ? 7.0 : 5.0,
+            value: index === 6 || index === 7 ? 7.0 : 4.0,
           },
         };
         if (newColor) {
@@ -547,6 +551,8 @@ export function Model(props) {
           const secondaryTextureTranslation = new Three.Vector2(0, 0); // Adjust the position as needed
 
           const patternScales = patternScale[index];
+          console.log("ss", index, patternScale[index]);
+
           const material = createMaterial(
             secondaryTexture,
             secondaryColor,
