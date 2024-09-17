@@ -247,11 +247,11 @@ const Logo = () => {
                   </div>
                   <div
                     className={`${styles.imgWrap} ${
-                      logoPositions[logoKey] === 4 ? styles.selected : ""
+                      logoPositions[logoKey] === 3 ? styles.selected : ""
                     }`}
                     onClick={() => {
-                      handleModelRotation(90);
-                      updateLogosWithPosition(4, logo, logoKey);
+                      handleModelRotation(270);
+                      updateLogosWithPosition(3, logo, logoKey);
                     }}
                   >
                     Left
@@ -259,11 +259,11 @@ const Logo = () => {
                   </div>
                   <div
                     className={`${styles.imgWrap} ${
-                      logoPositions[logoKey] === 3 ? styles.selected : ""
+                      logoPositions[logoKey] === 4 ? styles.selected : ""
                     }`}
                     onClick={() => {
-                      handleModelRotation(270);
-                      updateLogosWithPosition(3, logo, logoKey);
+                      handleModelRotation(90);
+                      updateLogosWithPosition(4, logo, logoKey);
                     }}
                   >
                     Right

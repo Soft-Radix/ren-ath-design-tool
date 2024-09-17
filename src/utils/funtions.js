@@ -49,7 +49,7 @@ export const handleDragLimitY = (yPos) => {
   } else {
     newYPosition = yPos;
   }
-  return newYPosition;
+  return yPos;
 };
 
 export const handleDragLimitX = (xPos) => {
