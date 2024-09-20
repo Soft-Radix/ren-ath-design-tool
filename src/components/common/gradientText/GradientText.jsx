@@ -63,7 +63,7 @@ export default function GradientText({
   gradientScale,
   gradientRotation,
   outlineColor = null,
-  outlineWidth = 0.01,
+  outlineWidth = 0.02,
   isNumberGradientColor,
   onPointerEnter,
   onPointerLeave,
@@ -126,7 +126,7 @@ export default function GradientText({
         {children}
       </Text>
       {isNumberGradientColor && (
-        <Text {...props} material={material} renderOrder={1}>
+        <Text {...props} material={material} renderOrder={999}>
           {children}
         </Text>
       )}
