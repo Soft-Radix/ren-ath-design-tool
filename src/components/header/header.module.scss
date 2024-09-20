@@ -4,6 +4,40 @@
   border-bottom: 0.5px solid $secondary;
 }
 
+.logoWrapper {
+  display: grid;
+  justify-content: center;
+  .headerTitle {
+    margin: 2rem 0;
+  }
+  img {
+    @include max(425) {
+      width: 100%;
+    }
+  }
+  h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: $primary;
+    text-align: center;
+    @include max(425) {
+      font-size: 18px;
+    }
+  }
+  p {
+    margin: 0;
+    text-align: center;
+    @include max(425) {
+      font-size: 14px;
+    }
+  }
+}
+.footerModal {
+  text-align: center;
+  color: $primary;
+  font-weight: 600;
+  cursor: pointer;
+}
 .innerWrap {
   display: flex;
   padding: 20px 0;

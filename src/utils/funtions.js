@@ -105,3 +105,5 @@ export const modelRotationValue = (layerIndex) => {
     return 180;
   }
 };
+
+export const removeInitialSpace = (value) => value.replace(/^\s+/g, "");

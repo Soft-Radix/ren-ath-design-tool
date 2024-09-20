@@ -49,7 +49,7 @@ button.btn {
 #modelControls {
   position: absolute;
   top: 50px;
-  left:30px;
+  left: 30px;
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
@@ -67,4 +67,327 @@ button.btn {
 
 .MuiMobileStepper-progress {
   display: none !important;
+}
+
+label.form_label {
+  font-size: var(--f14);
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: inherit;
+  line-height: 1.2;
+  display: block;
+
+  sup {
+    color: $error;
+    position: absolute;
+    top: 0;
+    line-height: 1;
+  }
+}
+
+.form_control {
+  position: relative;
+  word-break: break-all;
+
+  .form_input_wrap {
+    position: relative;
+    // margin-bottom: 14px;
+  }
+
+  .disabledState {
+    input {
+      cursor: not-allowed;
+    }
+  }
+
+  .input_prefix {
+    line-height: 1;
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    z-index: 2;
+  }
+
+  .form_input_icon {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    z-index: 2;
+  }
+
+  .form_input_icon_button {
+    cursor: pointer;
+    position: absolute;
+    top: 10%;
+    right: 10px;
+    transform: translateY(-50%);
+    z-index: 2;
+  }
+
+  .url_field_wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .url_input {
+      flex-grow: 1;
+    }
+  }
+
+  .input_field_wrap {
+    position: relative;
+    flex-grow: 1;
+  }
+
+  .form_input,
+  .form_select {
+    width: 100%;
+
+    .MuiInputBase-formControl {
+      background: #fff;
+      color: inherit;
+      border-radius: 8px;
+    }
+
+    .MuiAutocomplete-inputRoot {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    .MuiOutlinedInput-input {
+      // white-space: nowrap;
+      // margin-right: 10%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      height: 3rem;
+      border-radius: inherit;
+      // height: 100%;
+      box-sizing: inherit;
+      box-shadow: none;
+      color: $primary;
+      font-size: 1rem;
+      -webkit-box-shadow: 0 0 0 1000px #fff inset;
+
+      &:not(.MuiInputBase-inputMultiline, .MuiAutocomplete-input) {
+        padding: 12px 14px;
+      }
+
+      &::placeholder {
+        opacity: 0.75;
+      }
+    }
+
+    .MuiInputBase-multiline {
+      // padding: 0;
+      padding: 8px 6px;
+
+      textarea {
+        overflow-y: auto;
+        padding-right: 8px;
+        // padding: 12px 14px;
+      }
+    }
+
+    .MuiOutlinedInput-notchedOutline {
+      border-color: $primary;
+      border-radius: 8px;
+    }
+
+    .Mui-focused {
+      .MuiOutlinedInput-notchedOutline {
+        border-width: 1px;
+      }
+
+      &:not(.Mui-error) {
+        .MuiOutlinedInput-notchedOutline {
+          border-color: $black;
+        }
+      }
+    }
+
+    &.inputError {
+      .MuiOutlinedInput-notchedOutline {
+        border-color: $error;
+      }
+
+      .Mui-focused {
+        .MuiOutlinedInput-notchedOutline {
+          border-width: 1px;
+        }
+
+        &:not(.Mui-error) {
+          .MuiOutlinedInput-notchedOutline {
+            border-color: $error;
+          }
+        }
+      }
+    }
+
+    &.Mui-focused {
+      .MuiOutlinedInput-notchedOutline {
+        border-width: 1px;
+      }
+
+      &:not(.Mui-error) {
+        .MuiOutlinedInput-notchedOutline {
+          border-color: $black;
+        }
+      }
+    }
+
+    &.search_field {
+      .MuiOutlinedInput-input {
+        padding-left: 2.6rem;
+        font-size: inherit;
+      }
+    }
+
+    &.hasPrefix {
+      .MuiOutlinedInput-input {
+        padding-left: 2rem;
+      }
+    }
+
+    &.type_password {
+      .MuiOutlinedInput-input {
+        padding-right: 2.5rem;
+      }
+    }
+
+    &.placeholderSelected {
+      .MuiOutlinedInput-input {
+        color: #898888;
+        opacity: 0.75;
+      }
+    }
+
+    .options_content {
+      .edit_link {
+        display: none;
+      }
+    }
+  }
+
+  .add_select_wrap {
+    position: relative;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+
+    .input_field_wrap {
+      max-width: calc(100% - (1.5rem + 10px));
+    }
+
+    .addBtn {
+      min-width: 0;
+      padding: 0;
+      cursor: pointer;
+      height: 1.5rem;
+      width: 1.5rem;
+      @include flexCenter;
+      border: 1px solid $primary;
+      border-radius: 4px;
+      flex-shrink: 0;
+
+      svg {
+        width: 95%;
+        height: auto;
+        color: #898888;
+      }
+    }
+
+    .add_select_menu {
+      padding: 12px;
+      background-color: #fff;
+      z-index: 2;
+      position: absolute;
+      left: 0;
+      top: 100%;
+      width: 100%;
+      border: 1px solid $primary;
+      border-radius: 8px;
+      margin-top: 8px;
+      max-height: 180px;
+      overflow-y: auto;
+
+      .noData {
+        padding: 6px 0;
+        text-align: center;
+      }
+
+      .input_wrap {
+        position: relative;
+        margin-bottom: 12px;
+      }
+
+      input {
+        border: 1px solid $primary;
+        box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
+        border-radius: 4px;
+        width: 100%;
+        padding: 4px 6px;
+        font-size: 14px;
+        min-height: 32px;
+        outline: none;
+
+        &::placeholder {
+          opacity: 0.75;
+        }
+      }
+
+      .add_select_menuList {
+        display: flex;
+        flex-direction: column;
+        // max-height: 300px;
+        // overflow-y: auto;
+        gap: 10px;
+
+        .listItem {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          font-size: 14px;
+        }
+
+        .listTitle {
+          flex-grow: 1;
+          background: #ffffff;
+          box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
+          border-radius: 4px;
+          padding: 8px;
+          word-break: break-all;
+        }
+
+        .removeIcon {
+          min-height: 0;
+          min-width: 0;
+          height: 1.5rem;
+          width: 1.5rem;
+          padding: 4px;
+          flex-shrink: 0;
+
+          svg {
+            width: 0.85em;
+          }
+        }
+      }
+    }
+  }
+}
+.error {
+  position: absolute;
+  top: calc(100% + 2px);
+  right: 4px;
+  color: $error;
+  font-size: 12px;
+  font-weight: 400;
+}
+.error-custom {
+  text-align: center;
+  color: $error;
+  font-weight: 500;
 }
