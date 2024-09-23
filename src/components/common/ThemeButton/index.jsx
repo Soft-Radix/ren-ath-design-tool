@@ -1,14 +1,14 @@
 import { Button } from "@mui/material";
 import { motion } from "framer-motion";
 
-const ThemeButton = (props) => {
+const ThemeButton = ({ variant, className, ...rest }) => {
   return (
     <motion.span whileHover={{ scale: 1.03 }}>
       <Button
         className={`btn ${
-          props.variant === "outlined" ? "btn_outlined" : "btn_contained"
-        }`}
-        {...props}
+          variant === "outlined" ? "btn_outlined" : "btn_contained"
+        } ${className}`}
+        {...rest}
       />
     </motion.span>
   );

@@ -22,6 +22,7 @@ const SignUp = ({ setIsOpen }) => {
       firstName: "",
       lastName: "",
       email: "",
+      teamName: "",
       password: "",
       confirmPassword: "",
     },
@@ -31,6 +32,7 @@ const SignUp = ({ setIsOpen }) => {
         first_name: values.firstName,
         last_name: values.lastName,
         email: values.email,
+        team_name: values.teamName,
         password: values.password,
       };
       handleSignUp(params);
@@ -63,6 +65,7 @@ const SignUp = ({ setIsOpen }) => {
             name="firstName"
             placeholder="Enter first name"
             fullWidth
+            required
           />
         </div>
         <div className={styles.formControl}>
@@ -72,6 +75,7 @@ const SignUp = ({ setIsOpen }) => {
             name="lastName"
             placeholder="Enter last name"
             fullWidth
+            required
           />
         </div>
         <div className={styles.formControl}>
@@ -82,6 +86,17 @@ const SignUp = ({ setIsOpen }) => {
             type="email"
             placeholder="Enter email address"
             fullWidth
+            required
+          />
+        </div>
+        <div className={styles.formControl}>
+          <InputField
+            label="Team Name"
+            formik={formik}
+            name="teamName"
+            placeholder="Enter team name"
+            fullWidth
+            required
           />
         </div>
         <div className={styles.formControl}>
@@ -92,6 +107,7 @@ const SignUp = ({ setIsOpen }) => {
             type="password"
             placeholder="Enter password"
             fullWidth
+            required
           />
         </div>
         <div className={styles.formControl}>
@@ -102,6 +118,7 @@ const SignUp = ({ setIsOpen }) => {
             type="password"
             placeholder="Confirm password"
             fullWidth
+            required
           />
         </div>
         <div className={styles.formControl}>

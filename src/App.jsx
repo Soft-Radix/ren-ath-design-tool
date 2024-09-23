@@ -7,12 +7,14 @@ import "react-toastify/dist/ReactToastify.css";
 import { AuthProvider } from "./contexts/AuthContext";
 import ResetPassword from "./pages/ResetPassword";
 import Profile from "./pages/Profile";
+import EditProfile from "./pages/Profile/Edit";
 function App() {
   return (
     <div className="app">
       <Routes>
         <Route index element={<Home />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/edit-profile" element={<EditProfile />} />
         <Route path="/product-view" element={<ProductView />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
       </Routes>

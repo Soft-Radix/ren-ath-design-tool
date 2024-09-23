@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import MainLayout from "../../components/Layouts/MainLayout";
 import {
   Box,
@@ -9,11 +9,12 @@ import {
   Typography,
 } from "@mui/material";
 import styles from "./Profile.module.scss";
-import { AuthContext } from "../../contexts/AuthContext";
 import ThemeButton from "../../components/common/ThemeButton";
 import useFetch from "../../hook/CustomHook/usefetch";
 import { RotatingLines } from "react-loader-spinner";
+import { useNavigate } from "react-router-dom";
 const Profile = () => {
+  const navigate = useNavigate();
   const [userDetail, setUserDetail] = useState(null);
   const [loadQuery, { response, loading, error }] = useFetch(
     "/auth/my-account-information",
@@ -161,8 +162,8 @@ const Profile = () => {
                     disableGutters
                     secondaryAction={
                       <Typography className={styles.itemListValue}>
-                        {userDetail?.city && userDetail?.state?.name
-                          ? `${userDetail?.city}/${userDetail?.state?.name}`
+                        {userDetail?.city && userDetail?.state?.state_name
+                          ? `${userDetail?.city} / ${userDetail?.state?.state_name}`
                           : "N/A"}
                       </Typography>
                     }
@@ -175,7 +176,14 @@ const Profile = () => {
                 </List>
               </Box>
               <Box className={styles.contentWrapperFooter}>
-                <ThemeButton>Edit Profile</ThemeButton>
+                <ThemeButton
+                  className={styles.saveButton}
+                  onClick={() => {
+                    navigate("/edit-profile");
+                  }}
+                >
+                  Edit Profile
+                </ThemeButton>
               </Box>
             </>
           )}

@@ -10,6 +10,9 @@
   margin-top: -200px;
   padding: 5rem;
   border-radius: 5px;
+  @include max($sm) {
+    padding: 5rem 2rem;
+  }
   .headerTitleWrapper {
     text-align: center;
     .title {
@@ -23,10 +26,34 @@
     width: 50%;
     margin: 2rem auto 0;
     text-align: center;
+    @include max($md) {
+      width: 100%;
+    }
+    .saveButton {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+  }
+  .contentWrapperEdit {
+    width: 70%;
+    margin: 3rem auto 0;
+    @include max($md) {
+      width: 100%;
+    }
+    label {
+      color: #0e2b3a;
+      font-size: 14px;
+    }
+    .subHeading {
+      font-size: 18px;
+    }
   }
   .contentWrapper {
     width: 50%;
     margin: 2rem auto 0;
+    @include max($md) {
+      width: 100%;
+    }
     .itemListValue {
       color: $secondary;
     }
