@@ -73,6 +73,11 @@ export const signUpSchema = yup.object().shape({
     .trim()
     .email("Please enter valid email address")
     .required("Please enter your email address"),
+  teamName: yup
+    .string()
+    .trim()
+    .max(20, "Maximum 20 characters")
+    .required("Please enter your team name"),
   password: yup
     .string()
     .trim()
