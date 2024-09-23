@@ -99,6 +99,7 @@ const SignUp = ({ setIsOpen }) => {
             required
           />
         </div>
+
         <div className={styles.formControl}>
           <InputField
             label="Password"
