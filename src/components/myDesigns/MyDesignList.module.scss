@@ -1,0 +1,73 @@
+@import "/src/scss/var";
+
+.designWrap {
+  margin: auto;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding-top: 60px;
+  place-items: center;
+  max-width: 1240px;
+  gap: 50px;
+  @include max($lg) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  @include max(918) {
+    grid-template-columns: 1fr 1fr;
+  }
+  @include max($sm) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.designCard {
+  width: 282px;
+  border-radius: 8px;
+  border: 1px solid $secondary;
+  .imgContainer {
+    position: relative;
+    background: rgba(118, 143, 153, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 208px;
+    img {
+      max-height: 198px;
+    }
+    .actionBtn {
+      top: 0;
+      right: 0;
+      display: flex;
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+      gap: 10px;
+      cursor: pointer;
+    }
+  }
+
+  .title {
+    font-weight: $fontBold;
+    height: 67px;
+    text-align: center;
+    border-bottom: 1px solid $secondary;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20%;
+  }
+
+  .btnWrap {
+    padding: 16px;
+    :global(.btn) {
+      width: 100%;
+    }
+    span {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+  }
+}
