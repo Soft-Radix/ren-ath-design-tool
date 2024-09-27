@@ -391,3 +391,15 @@ label.form_label {
   color: $error;
   font-weight: 500;
 }
+
+.MuiDialog-paper {
+  padding: 20px 10px;
+  min-width: 500px;
+  overflow: hidden;
+  min-height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+}

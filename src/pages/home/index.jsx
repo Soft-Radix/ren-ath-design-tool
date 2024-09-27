@@ -1,35 +1,29 @@
 import { Container } from "@mui/material";
+import { Fragment, useState } from "react";
 import bgImage from "../../assets/images/home/bgImage.png";
 import category1 from "../../assets/images/home/category1.png";
 import category2 from "../../assets/images/home/category2.png";
-import globalIcon from "../../assets/svg/global.svg";
-import instagramIcon from "../../assets/svg/instagram.svg";
 import ProductCard from "../../components/common/productCard";
 import SectionHeading from "../../components/common/sectionHeading";
-import Footer from "../../components/footer";
-import Header from "../../components/header";
+import Tabs from "../../components/common/tabs";
+import MainLayout from "../../components/Layouts/MainLayout";
 import styles from "./home.module.scss";
 import {
+  cover_up_short,
   menImg1,
-  menImg7,
   menImg2,
   menImg3,
   menImg4,
   menImg5,
   menImg6,
+  menImg7,
   womenImg1,
   womenImg2,
   womenImg3,
   womenImg4,
   womenImg5,
-  womenImg6,
-  womenImg7,
-  womenImg8,
-  cover_up_short,
+  womenImg6
 } from "./images";
-import Tabs from "../../components/common/tabs";
-import { Fragment, useState } from "react";
-import MainLayout from "../../components/Layouts/MainLayout";
 
 const Home = () => {
   const [womenTabValue, setWomenTabValue] = useState("1");
