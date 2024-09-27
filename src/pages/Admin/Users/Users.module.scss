@@ -1,0 +1,18 @@
+@import "./../../../scss/var";
+.tableWrap {
+  margin-top: 1rem;
+}
+.pagination {
+  .pagination_type_mobile {
+    width: 130px;
+    height: 30px;
+    border-radius: 4px;
+    margin-top: 2rem;
+    padding: 0 6px;
+  }
+}
+:global {
+  .pageHeadCustom {
+    margin-bottom: 0 !important;
+  }
+}

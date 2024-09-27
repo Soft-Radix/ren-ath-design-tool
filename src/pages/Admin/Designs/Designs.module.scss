@@ -1,0 +1,32 @@
+@import "./../../../scss/var";
+.tableWrap {
+  margin-top: 1rem;
+  .chipCustomSuccess {
+    background-color: #d8fff1 !important;
+    color: #07cd86 !important;
+  }
+  .chipCustomPending {
+    background-color: #d09f412e !important;
+    color: #d78100 !important;
+  }
+  .exportBtn {
+    min-height: 24px;
+    padding: 0 10px;
+    min-width: 50px;
+    font-size: 12px;
+  }
+}
+.pagination {
+  .pagination_type_mobile {
+    width: 130px;
+    height: 30px;
+    border-radius: 4px;
+    margin-top: 2rem;
+    padding: 0 6px;
+  }
+}
+:global {
+  .pageHeadCustom {
+    margin-bottom: 0 !important;
+  }
+}
