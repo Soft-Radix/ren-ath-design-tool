@@ -24,6 +24,19 @@
     margin-top: 2rem;
     padding: 0 6px;
   }
+  :global {
+    .form_control {
+      .form_input,
+      .form_select {
+        .MuiOutlinedInput-input {
+          &:not(.MuiAutocomplete-input, .MuiInputBase-inputMultiline) {
+            padding: 5px 14px;
+            height: 100%;
+          }
+        }
+      }
+    }
+  }
 }
 :global {
   .pageHeadCustom {

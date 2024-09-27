@@ -172,8 +172,8 @@ label.form_label {
       font-size: 1rem;
       -webkit-box-shadow: 0 0 0 1000px #fff inset;
 
-      &:not(.MuiInputBase-inputMultiline, .MuiAutocomplete-input) {
-        padding: 5px 14px;
+      &:not(.MuiAutocomplete-input, .MuiInputBase-inputMultiline) {
+        padding: 14px 14px;
         height: 100%;
       }
 
