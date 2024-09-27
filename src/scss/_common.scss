@@ -477,3 +477,15 @@ label.form_label {
     }
   }
 }
+
+.MuiDialog-paper {
+  padding: 20px 10px;
+  min-width: 500px;
+  overflow: hidden;
+  min-height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+}

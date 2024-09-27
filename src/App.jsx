@@ -12,6 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Dashboard from "./pages/Admin/Dashboard";
 import Users from "./pages/Admin/Users";
 import Designs from "./pages/Admin/Designs";
+import Mydesign from "./pages/myDesign";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
       <Routes>
         <Route index element={<Home />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/my-design" element={<Mydesign />} />
         <Route path="/edit-profile" element={<EditProfile />} />
         <Route path="/product-view" element={<ProductView />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
