@@ -41,6 +41,7 @@ export const useProductStore = create((set) => ({
   patternScale: {},
   patternAngle: {},
   patternRotationDeegre: {},
+  patternLayers: {},
 
   color: {},
   colorIndex: null,
@@ -113,6 +114,10 @@ export const useProductStore = create((set) => ({
   names: [],
   logos: [],
   resetLogoIndex: null,
+  updatePatternLayers: (layers) =>
+    set((state) => ({
+      patternLayers: { ...state.patternLayers, ...layers },
+    })),
   setResetLogoIndex: (logoIndex) =>
     set(() => ({
       resetLogoIndex: logoIndex,

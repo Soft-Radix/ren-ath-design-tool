@@ -15,15 +15,16 @@ import DeleteIcon from "@mui/icons-material/Delete";
 const Logo = () => {
   const {
     updateLogo,
-    id,
-    updatedLogos,
-    setUpdatedLogos,
     logoScale,
+    logos,
+    id,
+    setUpdatedLogos,
     updateLogoScale,
     handleModelRotation,
-    logos,
     setLogos,
+    updatedLogos,
   } = useProductStore((state) => state);
+    console.log("🚀 ~ Logo ~ logos:", logos)
 
   const [expanded, setExpanded] = React.useState(false);
 

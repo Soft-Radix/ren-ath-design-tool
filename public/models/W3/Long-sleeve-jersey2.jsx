@@ -10,6 +10,7 @@ import { useProductStore } from "../../../src/store";
 // ----------------------------- Utils function imports -------------------------
 import {
   calculateScale,
+  handleAddNewUniform,
   nonRepeatingPatterns,
 } from "../../../src/utils/funtions";
 
@@ -62,6 +63,7 @@ export function Model(props) {
 
   // React useState
   const [secondaryTextures, setSecondaryTextures] = useState([]);
+  // console.log("🚀 ~ Model ~ secondaryTextures:", secondaryTextures);
   const [secondaryColors, setSecondaryColors] = useState([]);
 
   const [modelLogoPosition, setModelLogoPosition] = useState([
@@ -176,6 +178,7 @@ export function Model(props) {
     updatedLogos,
     updatedNames,
     patternRotationDeegre,
+    patternLayers,
     nameRotation,
     setModelLoading,
   } = useProductStore((state) => state);
@@ -259,6 +262,46 @@ export function Model(props) {
         });
     }
   }, [secondaryTextureUrl, layer]);
+
+  useEffect(() => {
+    handleAddNewUniform("logo", {
+      combinedLogos,
+      logoScale,
+    });
+  }, [combinedLogos, logoScale]);
+
+  useEffect(() => {
+    handleAddNewUniform("pattern", {
+      secondaryTextures,
+      patternRotationDeegre,
+      patternScale,
+      patternLayers,
+    });
+  }, [secondaryTextures, patternLayers, patternRotationDeegre, patternScale]);
+
+  useEffect(() => {
+    handleAddNewUniform("name", {
+      nameFont,
+      nameRotation,
+      nameColor,
+      combinedNames,
+      nameOutline,
+      nameGradientAngle,
+      nameGradientColor,
+      nameScale,
+      nameGradientScale,
+    });
+  }, [
+    nameFont,
+    nameRotation,
+    nameColor,
+    combinedNames,
+    nameOutline,
+    nameGradientAngle,
+    nameGradientColor,
+    nameScale,
+    nameGradientScale,
+  ]);
 
   useEffect(() => {
     if (modelRef.current) {
@@ -551,7 +594,6 @@ export function Model(props) {
           const secondaryTextureTranslation = new Three.Vector2(0, 0); // Adjust the position as needed
 
           const patternScales = patternScale[index];
-          console.log("ss", index, patternScale[index]);
 
           const material = createMaterial(
             secondaryTexture,
@@ -1033,49 +1075,6 @@ export function Model(props) {
                         : font1
                     }
                   />
-
-                  /* <NameDecal
-                    modelNamePosition={nameDecalPositions3[index]}
-                    toggleHovered={toggleHovered}
-                    index={index}
-                    isNameGradientColor={isNameGradientColor}
-                    name={item}
-                    nameColor={nameColor[item]}
-                    nameFont={
-                      nameFont[item] == 1
-                        ? font1
-                        : nameFont[item] == 2
-                        ? font8
-                        : nameFont[item] == 3
-                        ? font3
-                        : nameFont[item] == 4
-                        ? font4
-                        : nameFont[item] == 5
-                        ? font5
-                        : nameFont[item] == 6
-                        ? font6
-                        : nameFont[item] == 7
-                        ? font7
-                        : nameFont[item] == 8
-                        ? font8
-                        : nameFont[item] == 9
-                        ? font9
-                        : font1
-                    }
-                    nameGradientAngle={nameGradientAngle[item]}
-                    nameGradientColor={nameGradientColor[item]}
-                    nameGradientScale={nameGradientScale[item]}
-                    nameScale={name1Scale}
-                    nameOutline={nameOutline[item]}
-                    orbitalRef={orbitalRef}
-                    key={item + index}
-                    setModelNamePosition={(position) => {
-                      const newPositions = [...nameDecalPositions3];
-                      newPositions[index] = position;
-                      setNameDecalPositions3(newPositions);
-                    }}
-                    namePosition={3}
-                  /> */
                 );
               })}
           </mesh>
@@ -1374,64 +1373,6 @@ export function Model(props) {
                     }}
                     namePosition={2}
                   />
-                  // <Decal
-                  //   {...bindBack()}
-                  //   onPointerEnter={toggleHovered}
-                  //   onPointerLeave={toggleHovered}
-                  //   position={name2Position}
-                  //   rotation={[0, degToRad(180), 0]}
-                  //   scale={calculateScale(nameScale[item])}
-                  //   origin={[0, 0, 0]}
-                  // >
-                  //   <meshStandardMaterial
-                  //     transparent
-                  //     polygonOffset
-                  //     polygonOffsetFactor={-1}
-                  //   >
-                  //     <RenderTexture attach="map">
-                  //       <PerspectiveCamera
-                  //         makeDefault
-                  //         manual
-                  //         aspect={2}
-                  //         position={[0, 0.1, 2.5]}
-                  //       />
-
-                  //       <GradientText
-                  //         color1={nameColor[item]}
-                  //         color2={nameGradientColor[item]}
-                  //         outlineColor={nameOutline[item]}
-                  //         isNumberGradientColor={isNameGradientColor}
-                  //         rotation={[0, 0, 0]}
-                  //         fontSize={0.5}
-                  //         gradientRotation={nameGradientAngle[item]}
-                  //         gradientScale={nameGradientScale[item]}
-                  //         font={
-                  //           nameFont[item] == 1
-                  //             ? font1
-                  //             : nameFont[item] == 2
-                  //             ? font8
-                  //             : nameFont[item] == 3
-                  //             ? font3
-                  //             : nameFont[item] == 4
-                  //             ? font4
-                  //             : nameFont[item] == 5
-                  //             ? font5
-                  //             : nameFont[item] == 6
-                  //             ? font6
-                  //             : nameFont[item] == 7
-                  //             ? font7
-                  //             : nameFont[item] == 8
-                  //             ? font8
-                  //             : nameFont[item] == 9
-                  //             ? font9
-                  //             : font1
-                  //         }
-                  //       >
-                  //         {item}
-                  //       </GradientText>
-                  //     </RenderTexture>
-                  //   </meshStandardMaterial>
-                  // </Decal>
                 );
               })}
           </mesh>

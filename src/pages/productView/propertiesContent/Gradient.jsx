@@ -4,23 +4,31 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CrossIcon, TickIcon } from "../../../assets/svg/icons";
 import ThemeButton from "../../../components/common/ThemeButton";
 import { colorList } from "../../../components/data/colors";
 import { useProductStore } from "../../../store";
 import styles from "./properties.module.scss";
-import { modelRotationValue } from "../../../utils/funtions";
+import {
+  handleAddNewUniform,
+  modelRotationValue,
+} from "../../../utils/funtions";
 
 const Gradient = () => {
   const ref = useProductStore((state) => state.ref);
   const {
     gradient,
     gradient2,
-    updateGradient,
-    updateGradient2,
     gradientScale,
     gradientAngle,
+    designGradient1,
+    designGradient2,
+    designScale,
+    designGradientAngle,
+
+    updateGradient,
+    updateGradient2,
     updateGradientScale,
     updateGradientAngle,
     updateColorIndex,
@@ -28,12 +36,8 @@ const Gradient = () => {
     handleDesignGradient1,
     handleDesignGradient2,
     handleIsDesignGradientEnabled,
-    designGradient1,
-    designGradient2,
-    designScale,
     handleDesignScale,
     updateDesignGradientAngle,
-    designGradientAngle,
     handleModelRotation,
   } = useProductStore((state) => state);
 
@@ -45,6 +49,28 @@ const Gradient = () => {
     setExpanded(isExpanded ? panel : false);
   };
 
+  useEffect(() => {
+    handleAddNewUniform("gradient", {
+      gradient,
+      gradient2,
+      gradientScale,
+      gradientAngle,
+      designGradient1,
+      designGradient2,
+      designScale,
+      designGradientAngle,
+    });
+  }, [
+    gradient,
+    gradient2,
+    gradientScale,
+    gradientAngle,
+    designGradient1,
+    designGradient2,
+    designScale,
+    designGradientAngle,
+  ]);
+  
   const handleGradientScaleForBoth = (handleDesign, e, index) => {
     // debugger;
     if (index === 0 || index % 2 == 0) {

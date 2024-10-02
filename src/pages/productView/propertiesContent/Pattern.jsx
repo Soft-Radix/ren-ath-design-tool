@@ -16,6 +16,7 @@ import { Grid, AutoSizer } from "react-virtualized";
 import loading from "../../../assets/images/load.png";
 import patternPaths from "./images";
 import {
+  handleAddNewUniform,
   modelRotationValue,
   nonRepeatingPatterns,
 } from "../../../utils/funtions";
@@ -27,13 +28,15 @@ const Pattern = () => {
 
   const children = ref?.current?.children || [];
   const {
-    updatePattern,
     pattern,
-    updateLayer,
+    patternRotationDeegre,
     patternScale,
+    updatePatternLayers,
+    patternLayers,
+    updateLayer,
+    updatePattern,
     updatePatternScale,
     updatePatternRotationDeegre,
-    patternRotationDeegre,
     handleModelRotation,
   } = useProductStore((state) => state);
 
@@ -68,6 +71,7 @@ const Pattern = () => {
           style={style}
           className={`${styles.imgWrap}`}
           onClick={() => {
+            updatePatternLayers({ [childIndex]: index + 1 });
             updatePattern(index + 1);
             updateLayer(childIndex);
           }}
@@ -83,6 +87,14 @@ const Pattern = () => {
     },
     [loadedImages, updatePattern, updateLayer]
   );
+  // useEffect(() => {
+  //   console.log("patternLayers", patternLayers);
+  //   handleAddNewUniform("pattern", {
+  //     patternRotationDeegre,
+  //     patternScale,
+  //     patternLayers,
+  //   });
+  // }, [patternLayers, patternRotationDeegre, patternScale]);
 
   const memoizedPatternComponent = useMemo(() => {
     return (
@@ -112,6 +124,7 @@ const Pattern = () => {
                       onClick={(e) => {
                         e.stopPropagation();
                         updatePattern(31);
+                        updatePatternLayers({ [childIndex]: 31 });
                         updateLayer(childIndex);
                       }}
                     >
@@ -195,6 +208,7 @@ const Pattern = () => {
     updateLayer,
     handleChange,
     cellRenderer,
+    patternLayers,
   ]);
 
   return memoizedPatternComponent;

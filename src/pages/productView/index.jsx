@@ -14,7 +14,11 @@ import { Model as W7 } from "../../../public/models/W7/Sleeveless-jersey-without
 import { Model as W8 } from "../../../public/models/W8/Sleeve-only";
 import loaderGif from "../../assets/gif/loader.gif";
 import { useProductStore } from "../../store";
-import { handleZoomIn, handleZoomOut } from "../../utils/funtions";
+import {
+  getUniformData,
+  handleZoomIn,
+  handleZoomOut,
+} from "../../utils/funtions";
 import Header from "./header";
 import styles from "./productView.module.scss";
 import Color from "./propertiesContent/Color";
@@ -43,6 +47,11 @@ const ProductView = () => {
   useEffect(() => {
     updateOrbitalRef(orbitalRef);
   }, [updateOrbitalRef]);
+
+  useEffect(() => {
+    const uniformDesign = getUniformData();
+    console.log("local", uniformDesign);
+  }, []);
 
   return (
     <div className={styles.loadingScreen}>
