@@ -42,6 +42,7 @@ export const useProductStore = create((set) => ({
   patternAngle: {},
   patternRotationDeegre: {},
   patternLayers: {},
+  secondaryTexturesPattern: [],
 
   color: {},
   colorIndex: null,
@@ -114,9 +115,38 @@ export const useProductStore = create((set) => ({
   names: [],
   logos: [],
   resetLogoIndex: null,
+  nameDecalPositions1: [[0, 0, 1]],
+  nameDecalPositions2: [[0, 0, 1]],
+  nameDecalPositions3: [[0.6, -1.2, 1.1]],
+  nameDecalPositions4: [[0.5, 1.8, 1]],
+
+  setNameDecalPositions1: (nameDecalPosition) =>
+    set((state) => ({
+      nameDecalPositions1: [nameDecalPosition],
+    })),
+  setNameDecalPositions2: (nameDecalPosition) =>
+    set((state) => ({
+      nameDecalPositions2: [nameDecalPosition],
+    })),
+  setNameDecalPositions3: (nameDecalPosition) =>
+    set((state) => ({
+      nameDecalPositions3: [nameDecalPosition],
+    })),
+  setNameDecalPositions4: (nameDecalPosition) =>
+    set((state) => ({
+      nameDecalPositions4: [nameDecalPosition],
+    })),
+    
   updatePatternLayers: (layers) =>
     set((state) => ({
       patternLayers: { ...state.patternLayers, ...layers },
+    })),
+  updateSecondaryTextures: (textures) =>
+    set((state) => ({
+      secondaryTexturesPattern: [
+        ...state.secondaryTexturesPattern,
+        ...textures,
+      ],
     })),
   setResetLogoIndex: (logoIndex) =>
     set(() => ({

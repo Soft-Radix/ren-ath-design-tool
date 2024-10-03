@@ -10,6 +10,7 @@ import { useProductStore } from "../../../src/store";
 // ----------------------------- Utils function imports -------------------------
 import {
   calculateScale,
+  getUniformData,
   handleAddNewUniform,
   nonRepeatingPatterns,
 } from "../../../src/utils/funtions";
@@ -63,7 +64,6 @@ export function Model(props) {
 
   // React useState
   const [secondaryTextures, setSecondaryTextures] = useState([]);
-  // console.log("🚀 ~ Model ~ secondaryTextures:", secondaryTextures);
   const [secondaryColors, setSecondaryColors] = useState([]);
 
   const [modelLogoPosition, setModelLogoPosition] = useState([
@@ -123,6 +123,7 @@ export function Model(props) {
   const [nameDecalPositions3, setNameDecalPositions3] = useState(
     [[0.6, -1.2, 1.1]] // Initialize positions array with default values
   );
+
   const normal = useTexture("./model-designs/W3/normal.png");
 
   // state to update color of each layer
@@ -130,14 +131,28 @@ export function Model(props) {
 
   // useProductStore initialise and get states from store
   const {
+    designType,
+    designScale,
+    designGradientAngle,
+    isDesign,
+    isDesignGradientEnabled,
+    designGradient1,
+    designGradient2,
+
+    pattern,
+    patternScale,
+    patternRotationDeegre,
+    patternLayers,
+    secondaryTexturesPattern,
+
     color,
+    designColor,
+    patternColor,
+
     gradient2,
     gradient,
     gradientScale,
     gradientAngle,
-    designGradientAngle,
-    designScale,
-    pattern,
     isGradient,
     updateRef,
     number,
@@ -164,21 +179,12 @@ export function Model(props) {
     logoScale,
     logoAngle,
     colorIndex,
-    designType,
     layer,
-    isDesign,
     orbitalRef,
     modelRotation,
-    designColor,
-    patternScale,
-    patternColor,
-    designGradient1,
-    designGradient2,
-    isDesignGradientEnabled,
     updatedLogos,
+    logos,
     updatedNames,
-    patternRotationDeegre,
-    patternLayers,
     nameRotation,
     setModelLoading,
   } = useProductStore((state) => state);
@@ -207,6 +213,17 @@ export function Model(props) {
     setSecondaryColors(colorsCollection);
     setLayerColor(changeColor);
   }, [color[colorIndex]]);
+
+  useEffect(() => {
+    const colorsKeys = Object.keys(color);
+    if (!colorIndex && colorsKeys.length > 0) {
+      const prevColorCollection = [];
+      colorsKeys.forEach((colorItem) => {
+        prevColorCollection[colorItem] = color[colorItem];
+      });
+      setSecondaryColors(prevColorCollection);
+    }
+  }, [color]);
 
   // Effect to update secondary texture based on pattern change
   useEffect(() => {
@@ -267,8 +284,10 @@ export function Model(props) {
     handleAddNewUniform("logo", {
       combinedLogos,
       logoScale,
+      updatedLogos,
+      logos,
     });
-  }, [combinedLogos, logoScale]);
+  }, [combinedLogos, logoScale, updatedLogos, logos]);
 
   useEffect(() => {
     handleAddNewUniform("pattern", {
@@ -278,6 +297,11 @@ export function Model(props) {
       patternLayers,
     });
   }, [secondaryTextures, patternLayers, patternRotationDeegre, patternScale]);
+
+  useEffect(() => {
+    const uniformObject = getUniformData();
+    // setCombinedLogos(uniformObject.logo.combinedLogos);
+  }, [modelRef?.current]);
 
   useEffect(() => {
     handleAddNewUniform("name", {
@@ -571,7 +595,12 @@ export function Model(props) {
             secondaryColors[index] ?? threeJsColor
           );
           const gradientColor1 = new Three.Color(gradient2[index]);
+          console.log(
+            "🚀 ~ modelRef.current.children.forEach ~ gradient2 : ",
+            gradient2
+          );
           const gradientColor2 = new Three.Color(gradient[index]);
+
           const gradientBool = isGradient ? isGradient[index] : false;
           const primaryGradientColor1 = new Three.Color(designGradient1[index]);
           const primaryGradientColor2 = new Three.Color(designGradient2[index]);
@@ -853,17 +882,22 @@ export function Model(props) {
   const combineKeys = (object) => {
     const combined = { 1: [], 2: [], 3: [], 4: [] };
 
-    Object.values(object).forEach((image) => {
-      Object.keys(combined).forEach((key) => {
-        combined[key] = [...combined[key], ...image[key]];
+    if (object) {
+      Object.values(object).forEach((image) => {
+        Object.keys(combined).forEach((key) => {
+          combined[key] = [...combined[key], ...image[key]];
+        });
       });
-    });
+    }
 
     return combined;
   };
 
   useEffect(() => {
-    const result = combineKeys(updatedLogos);
+    const uniformObject = getUniformData();
+    const result = combineKeys({
+      ...updatedLogos,
+    });
     setCombinedLogos(result);
     const positions1 = result?.[1]?.map(() => [0, 0, 1]);
     const positions2 = result?.[2]?.map(() => [0, 0, 1]);
@@ -887,6 +921,21 @@ export function Model(props) {
     setNameDecalPositions3([...nameDecalPositions3, ...positions3]);
     setNameDecalPositions4([...nameDecalPositions4, ...positions4]);
   }, [updatedNames]);
+
+  useEffect(() => {
+    handleAddNewUniform("name", {
+      nameDecalPositions1,
+      nameDecalPositions2,
+      nameDecalPositions3,
+      nameDecalPositions4,
+    });
+  }, [
+    nameDecalPositions1,
+    nameDecalPositions2,
+    nameDecalPositions3,
+    nameDecalPositions4,
+  ]);
+
   return (
     <>
       <ambientLight intensity={6} />

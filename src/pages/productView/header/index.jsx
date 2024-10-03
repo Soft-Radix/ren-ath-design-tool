@@ -1,13 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { BackButtonIcon, ShareButton } from "../../../assets/svg/icons";
 import ThemeButton from "../../../components/common/ThemeButton";
-import styles from "./header.module.scss";
 import { useProductStore } from "../../../store";
-import { useEffect } from "react";
+import { saveUniformDesign } from "../../../utils/funtions";
+import styles from "./header.module.scss";
 
 const Header = () => {
   const productName = useProductStore((state) => state.name);
-  const id = useProductStore((state) => state.id);
   const navigate = useNavigate();
 
   return (
@@ -20,7 +19,14 @@ const Header = () => {
       </div>
       <div className={styles.rightWrap}>
         <ShareButton />
-        <ThemeButton>Save</ThemeButton>
+        <ThemeButton
+          onClick={() => {
+            saveUniformDesign();
+            navigate("/");
+          }}
+        >
+          Save
+        </ThemeButton>
       </div>
     </div>
   );

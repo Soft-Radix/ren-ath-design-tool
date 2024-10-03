@@ -108,54 +108,67 @@ export const modelRotationValue = (layerIndex) => {
 
 export const removeInitialSpace = (value) => value.replace(/^\s+/g, "");
 
-export const handleAddNewUniform = (keyName, keyData) => {
-  const uniformObject = {
-    design: { designType: 10, isDesign: false },
-    pattern: {
-      secondaryTextures: [],
-      patternRotationDeegre: {},
-      patternScale: {},
-      patternLayers: {},
-    },
-    color: { color: {}, designColor: {}, patternColor: {} },
-    gradient: {
-      gradient: {},
-      gradient2: {},
-      gradientScale: {},
-      gradientAngle: {},
-      designGradient1: {},
-      designGradient2: {},
-      designScale: {},
-      designGradientAngle: {},
-    },
-    number: {
-      number: {},
-      numberColor: {},
-      numberFont: {},
-      numberOutline: {},
-      numberScale: {},
-      numberAngle: {},
-    },
-    name: {
-      nameFont: {},
-      nameRotation: {},
-      nameColor: {},
-      combinedNames: {},
-      nameOutline: {},
-      nameGradientAngle: {},
-      nameGradientColor: {},
-      nameScale: {},
-      nameGradientScale: {},
-    },
-    logo: { combinedLogos: {}, logoScale: {} },
-  };
+// Define the uniformObject outside of the function scope
+let uniformObject = {
+  design: { designType: 10, isDesign: false },
+  pattern: {
+    secondaryTextures: [],
+    patternRotationDeegre: {},
+    patternScale: {},
+    patternLayers: {},
+  },
+  color: { color: {}, designColor: {}, patternColor: {} },
+  gradient: {
+    isGradient: {},
+    gradient: {},
+    designGradient1: {},
+    designGradient2: {},
+    gradient2: {},
 
+    gradientScale: {},
+    gradientAngle: {},
+    designScale: {},
+    designGradientAngle: {},
+  },
+  number: {
+    number: {},
+    numberColor: {},
+    numberFont: {},
+    numberOutline: {},
+    numberScale: {},
+    numberAngle: {},
+  },
+  name: {
+    nameFont: {},
+    nameRotation: {},
+    nameColor: {},
+    combinedNames: {},
+    nameOutline: {},
+    nameGradientAngle: {},
+    nameGradientColor: {},
+    nameScale: {},
+    nameGradientScale: {},
+    nameDecalPositions1: [[0, 0, 1]],
+    nameDecalPositions2: [[0, 0, 1]],
+    nameDecalPositions3: [[0.6, -1.2, 1.1]],
+    nameDecalPositions4: [[0.5, 1.8, 1]],
+  },
+  logo: { combinedLogos: {}, logoScale: {} ,updatedLogos:{}},
+};
+
+export const handleAddNewUniform = (keyName, keyData) => {
   uniformObject[keyName] = { ...uniformObject[keyName], ...keyData };
-  localStorage.setItem("uniformObject", JSON.stringify(uniformObject));
+  return uniformObject;
+};
+
+export const saveUniformDesign = () => {
+  const data = handleAddNewUniform();
+  console.log("🚀 ~ saveUniformDesign ~ data:", data);
+  localStorage.setItem("uniformData", JSON.stringify(data));
 };
 
 export const getUniformData = () => {
-  const storedUniform = localStorage.getItem("uniformObject");
+  const storedUniform = localStorage.getItem("uniformData");
   if (storedUniform) {
     return JSON.parse(storedUniform);
   } else {

@@ -48,11 +48,6 @@ const ProductView = () => {
     updateOrbitalRef(orbitalRef);
   }, [updateOrbitalRef]);
 
-  useEffect(() => {
-    const uniformDesign = getUniformData();
-    console.log("local", uniformDesign);
-  }, []);
-
   return (
     <div className={styles.loadingScreen}>
       <div className={styles.mainWrap}>

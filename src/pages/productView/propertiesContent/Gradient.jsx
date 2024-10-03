@@ -26,6 +26,7 @@ const Gradient = () => {
     designGradient2,
     designScale,
     designGradientAngle,
+    isGradient,
 
     updateGradient,
     updateGradient2,
@@ -51,6 +52,7 @@ const Gradient = () => {
 
   useEffect(() => {
     handleAddNewUniform("gradient", {
+      isGradient,
       gradient,
       gradient2,
       gradientScale,
@@ -69,8 +71,9 @@ const Gradient = () => {
     designGradient2,
     designScale,
     designGradientAngle,
+    isGradient,
   ]);
-  
+
   const handleGradientScaleForBoth = (handleDesign, e, index) => {
     // debugger;
     if (index === 0 || index % 2 == 0) {
