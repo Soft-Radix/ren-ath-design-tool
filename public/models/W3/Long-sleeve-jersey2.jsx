@@ -149,6 +149,11 @@ export function Model(props) {
     designColor,
     patternColor,
 
+    logoDecalPositions1,
+    logoDecalPositions2,
+    logoDecalPositions3,
+    logoDecalPositions4,
+
     gradient2,
     gradient,
     gradientScale,
@@ -286,8 +291,42 @@ export function Model(props) {
       logoScale,
       updatedLogos,
       logos,
+      decalPositions1,
+      decalPositions2,
+      decalPositions3,
+      decalPositions4,
     });
-  }, [combinedLogos, logoScale, updatedLogos, logos]);
+  }, [
+    combinedLogos,
+    logoScale,
+    updatedLogos,
+    logos,
+    decalPositions1,
+    decalPositions2,
+    decalPositions3,
+    decalPositions4,
+  ]);
+
+  useEffect(() => {
+    if (logoDecalPositions1?.length > 0) {
+      setDecalPositions1(logoDecalPositions1[0]);
+    }
+    if (logoDecalPositions2?.length > 0) {
+      setDecalPositions2(logoDecalPositions2[0]);
+    }
+    if (logoDecalPositions3?.length > 0) {
+      setDecalPositions3(logoDecalPositions3[0]);
+    }
+    if (logoDecalPositions4?.length > 0) {
+      setDecalPositions4(logoDecalPositions4[0]);
+    }
+  }, [
+    logoDecalPositions1,
+    logoDecalPositions2,
+    logoDecalPositions3,
+    logoDecalPositions4,
+    modelRef.current,
+  ]);
 
   useEffect(() => {
     handleAddNewUniform("pattern", {

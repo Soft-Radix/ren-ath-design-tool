@@ -163,7 +163,6 @@ export const handleAddNewUniform = (keyName, keyData) => {
 
 export const saveUniformDesign = () => {
   const data = handleAddNewUniform();
-  console.log("🚀 ~ saveUniformDesign ~ data:", data);
   localStorage.setItem("uniformData", JSON.stringify(data));
 };
 

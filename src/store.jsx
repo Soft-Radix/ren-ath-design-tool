@@ -120,6 +120,27 @@ export const useProductStore = create((set) => ({
   nameDecalPositions3: [[0.6, -1.2, 1.1]],
   nameDecalPositions4: [[0.5, 1.8, 1]],
 
+  logoDecalPositions1: [[0, 0, 1]],
+  logoDecalPositions2: [],
+  logoDecalPositions3: [],
+  logoDecalPositions4: [],
+  setLogoDecalPositions1: (logoDecalPosition) =>
+    set((state) => ({
+      logoDecalPositions1: [logoDecalPosition],
+    })),
+  setLogoDecalPositions2: (logoDecalPosition) =>
+    set((state) => ({
+      logoDecalPositions2: [logoDecalPosition],
+    })),
+  setLogoDecalPositions3: (logoDecalPosition) =>
+    set((state) => ({
+      logoDecalPositions3: [logoDecalPosition],
+    })),
+  setLogoDecalPositions4: (logoDecalPosition) =>
+    set((state) => ({
+      logoDecalPositions4: [logoDecalPosition],
+    })),
+
   setNameDecalPositions1: (nameDecalPosition) =>
     set((state) => ({
       nameDecalPositions1: [nameDecalPosition],
@@ -136,7 +157,7 @@ export const useProductStore = create((set) => ({
     set((state) => ({
       nameDecalPositions4: [nameDecalPosition],
     })),
-    
+
   updatePatternLayers: (layers) =>
     set((state) => ({
       patternLayers: { ...state.patternLayers, ...layers },

@@ -71,7 +71,12 @@ const Pattern = () => {
           style={style}
           className={`${styles.imgWrap}`}
           onClick={() => {
-            updatePatternLayers({ [childIndex]: index + 1 });
+            if (childIndex === 0 || childIndex % 2 == 0) {
+              updatePatternLayers({ [childIndex]: index + 1 });
+              updatePatternLayers({ [childIndex + 1]: index + 1 });
+            } else {
+              updatePatternLayers({ [childIndex]: index });
+            }
             updatePattern(index + 1);
             updateLayer(childIndex);
           }}
