@@ -1,0 +1,21 @@
+@import "../var";
+
+.form_wrapper {
+  :global {
+    .btn_primary {
+      height: 45px;
+    }
+  }
+}
+.btn_wrap {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 1rem;
+}
+.field_wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-bottom: 1.875rem;
+}

@@ -2,15 +2,22 @@ $primary: #0e2b3a;
 $secondary: #768f99;
 $white: #ffffff;
 $black: #000000;
+$tableHeadColor: #f9fafb;
 $lineBg: rgba(118, 143, 153, 0.3);
 $canvasBg: #f9f9f9;
 $modelColor: #eeeeee;
+$error: #d32f2f;
+
+$borderColor: #e6e8ed;
 
 $sm: 440;
 $md: 768;
 $lg: 1024;
 $xl: 1240;
-
+$xl1: 1280;
+$xl2: 1365;
+$xl3: 1399;
+$xl5: 1599;
 // font size
 $fontXsm: 12px;
 $fontSm: 14px;
@@ -59,5 +66,70 @@ $fontExtraBold: 600;
     padding: 0 var(--space);
     flex-basis: var(--width);
     max-width: var(--width);
+  }
+}
+
+@mixin min($value) {
+  @media screen and (min-width: ($value + 1 + "px")) {
+    @content;
+  }
+}
+@mixin max($value) {
+  @media screen and (max-width: ($value + "px")) {
+    @content;
+  }
+}
+@mixin minMax($min, $max) {
+  @media (min-width: ($min + "px")) and (max-width: ($max + "px")) {
+    @content;
+  }
+}
+
+@mixin card {
+  border: 1px solid $primary;
+  border-radius: 8px;
+  background-color: $white;
+}
+@mixin btn {
+  white-space: nowrap;
+  border: 1px solid;
+  border-radius: 8px;
+  padding: 12px 1.25rem;
+  cursor: pointer;
+  line-height: 1.2;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+@mixin noUserSelect {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+}
+@mixin cssVariables {
+  --f48: 48px;
+  --f40: 40px;
+  --f36: 36px;
+  --f32: 32px;
+  --f24: 24px;
+  --f20: 20px;
+  --f18: 18px;
+  --f16: 16px;
+  --f14: 14px;
+  --btnSpace: 1.25rem;
+  @include max($md) {
+    --f48: 34px;
+    --f40: 30px;
+    --f36: 26px;
+    --f32: 24px;
+    --f24: 20px;
+    --f20: 18px;
+    --f18: 16px;
+    --f16: 14px;
+    --btnSpace: 1rem;
+  }
+  @include max($sm) {
+    --f40: 26px;
+    --f20: 16px;
   }
 }

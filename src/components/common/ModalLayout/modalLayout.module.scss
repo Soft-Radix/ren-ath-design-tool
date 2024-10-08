@@ -1,0 +1,25 @@
+@import "/src/scss/var";
+
+.modalContent {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  border: none;
+  box-shadow: 0px 0px 5px 0px #0e2b3a;
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 4rem 4rem;
+  z-index: 99999;
+  @include max(567) {
+    width: 60%;
+    padding: 4rem 3rem;
+    max-height: 500px;
+    overflow-y: auto;
+  }
+  @include max(425) {
+    width: 70%;
+    padding: 4rem 2rem;
+  }
+}

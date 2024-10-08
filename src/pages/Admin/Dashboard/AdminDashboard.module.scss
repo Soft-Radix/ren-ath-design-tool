@@ -1,0 +1,62 @@
+@import "./../../../scss/var";
+.headerWrapper {
+  margin-top: 1.5rem;
+  .cardOne.cardOneBorder {
+    border: 1px solid $primary;
+    background-color: $white;
+    .cardContentWrapper {
+      .cardContent {
+        p {
+          color: $secondary;
+        }
+        h5 {
+          color: #2d4956;
+        }
+      }
+    }
+  }
+  .cardOne {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    min-height: 150px;
+    border-radius: 8px;
+    display: flex;
+    padding: 0 2rem;
+    .cardContentWrapper {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      .avatarIcon {
+        width: 78px;
+        height: 78px;
+        background-color: $secondary;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .cardContent {
+        margin-left: 2rem;
+        p {
+          font-size: 16px;
+          color: $white;
+          margin: 0;
+          margin-bottom: 0.8rem;
+        }
+        h5 {
+          font-size: 38px;
+          font-weight: 700;
+          color: $white;
+          margin: 0;
+        }
+      }
+    }
+    .arrowIconWrapper {
+      margin-top: 1.5rem;
+    }
+  }
+}
+.decoNone {
+  text-decoration: none;
+}

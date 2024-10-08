@@ -8,9 +8,9 @@ import { Model as W4 } from "../../../public/models/W4/Short-sleeve-hitting-tee"
 import { Model as W6 } from "../../../public/models/W6/Sleeveless-jersey-with-sleeve";
 import { Model as W7 } from "../../../public/models/W7/Sleeveless-jersey-without-sleeve";
 import { Model as W8 } from "../../../public/models/W8/Sleeve-only";
+import { Model as W3 } from "../../../public/models/W3/Long-sleeve-jersey2";
 import loaderGif from "../../assets/gif/loader.gif";
 import { useProductStore } from "../../store";
-import { Grid } from "@react-three/drei";
 
 const Scene = () => {
   const productId = useProductStore((state) => state.id);
@@ -42,6 +42,8 @@ const Scene = () => {
           <M1 />
         ) : productId === "M6" ? (
           <M6 />
+        ) : productId === "W3" ? (
+          <W3 />
         ) : null}
 
         {/* <Grid position={[0, -0.01, 0]} args={[15, 15]} />

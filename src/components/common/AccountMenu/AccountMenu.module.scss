@@ -1,0 +1,16 @@
+@import "/src/scss/var";
+.menuOptions {
+  ul {
+    padding: 20px 10px;
+    background: #fff;
+    @include max(530) {
+      padding: 0;
+    }
+  }
+  .menuItem {
+    margin: 8px 0px;
+    color: $secondary;
+    display: flex;
+    gap: 17px;
+  }
+}

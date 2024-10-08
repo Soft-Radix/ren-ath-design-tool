@@ -1,0 +1,70 @@
+@import "/src/scss/var";
+.bredCrumb {
+  min-height: 325px;
+  background-color: #f2f4f5;
+}
+.myProfileWrapper {
+  background-color: #fff;
+  box-shadow: 0px 4px 30px 0px #f1f4f580;
+  min-height: 500px;
+  margin-top: -200px;
+  padding: 5rem;
+  border-radius: 5px;
+  @include max($sm) {
+    padding: 5rem 2rem;
+  }
+  .headerTitleWrapper {
+    text-align: center;
+    .title {
+      color: $primary;
+    }
+    .desc {
+      color: $primary;
+    }
+  }
+  .contentWrapperFooter {
+    width: 50%;
+    margin: 2rem auto 0;
+    text-align: center;
+    @include max($md) {
+      width: 100%;
+    }
+    .saveButton {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+  }
+  .contentWrapperEdit {
+    width: 70%;
+    margin: 3rem auto 0;
+    @include max($md) {
+      width: 100%;
+    }
+    label {
+      color: #0e2b3a;
+      font-size: 14px;
+    }
+    .subHeading {
+      font-size: 18px;
+    }
+  }
+  .contentWrapper {
+    width: 50%;
+    margin: 2rem auto 0;
+    @include max($md) {
+      width: 100%;
+    }
+    .itemListValue {
+      color: $secondary;
+    }
+    ul {
+      display: initial;
+      li {
+        border-top: 1px solid #eaeced;
+        .itemTitle {
+          color: #051440;
+        }
+      }
+    }
+  }
+}

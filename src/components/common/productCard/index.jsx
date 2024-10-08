@@ -20,7 +20,9 @@ const ProductCard = ({ title, image, id, designCount }) => {
           <ThemeButton
             onClick={() => {
               updateProduct(id, title, designCount);
-              navigate("product-view");
+              window.location.href = "/product-view";
+
+              // navigate("/product-view");
               cookies.set("productDetails", {
                 id: id,
                 name: title,
