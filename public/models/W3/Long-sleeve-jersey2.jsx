@@ -92,6 +92,7 @@ export function Model(props) {
   const [secondaryTextureUrl, setSecondaryTextureUrl] = useState(
     "./textures/pattern2.png"
   );
+  console.log("🚀 ~ Model ~ secondaryTextures:", secondaryTextures);
 
   const [loading, setLoading] = useState(false);
   const primaryTexture = useTexture(designTexture);
@@ -144,6 +145,7 @@ export function Model(props) {
     patternRotationDeegre,
     patternLayers,
     secondaryTexturesPattern,
+    updatePatternLayers,
 
     color,
     designColor,
@@ -153,6 +155,11 @@ export function Model(props) {
     logoDecalPositions2,
     logoDecalPositions3,
     logoDecalPositions4,
+
+    namePositions1,
+    namePositions2,
+    namePositions3,
+    namePositions4,
 
     gradient2,
     gradient,
@@ -192,6 +199,7 @@ export function Model(props) {
     updatedNames,
     nameRotation,
     setModelLoading,
+    names,
   } = useProductStore((state) => state);
 
   // Load 3D model and textures
@@ -235,6 +243,12 @@ export function Model(props) {
     if (pattern !== null) {
       const url = `./textures/pattern${pattern}.png`;
       setSecondaryTextureUrl(url);
+      if (layer === 0 || layer % 2 == 0) {
+        updatePatternLayers({ [layer]: url });
+        updatePatternLayers({ [layer + 1]: url });
+      } else {
+        updatePatternLayers({ [layer]: url });
+      }
     }
   }, [pattern]);
 
@@ -286,6 +300,31 @@ export function Model(props) {
   }, [secondaryTextureUrl, layer]);
 
   useEffect(() => {
+    const loadAllTextures = async () => {
+      const texturesArray = await Promise.all(
+        Object.keys(patternLayers).map((layerKey) =>
+          loadTexture(patternLayers[layerKey])
+            .then((texture) => ({ layerKey, texture }))
+            .catch((error) => {
+              // Handle error if needed
+              console.error("Failed to load texture", error);
+              return { layerKey, texture: null }; // Return null or handle accordingly
+            })
+        )
+      );
+
+      const textures = [...secondaryTextures];
+      texturesArray.forEach(({ layerKey, texture }) => {
+        textures[layerKey] = texture;
+      });
+      setSecondaryTextures([...textures]);
+    };
+    if (!pattern && !layer) {
+      loadAllTextures();
+    }
+  }, [patternLayers]);
+
+  useEffect(() => {
     handleAddNewUniform("logo", {
       combinedLogos,
       logoScale,
@@ -329,6 +368,30 @@ export function Model(props) {
   ]);
 
   useEffect(() => {
+    debugger;
+    if (namePositions1[0]?.length > 0) {
+      setNameDecalPositions1(namePositions1[0]);
+    }
+    if (namePositions2[0]?.length > 0) {
+      setNameDecalPositions2(namePositions2[0]);
+    }
+    if (namePositions3[0]?.length > 0) {
+      setNameDecalPositions3(namePositions3[0]);
+    }
+    if (namePositions4[0]?.length > 0) {
+      setNameDecalPositions4(namePositions4[0]);
+    }
+  }, [
+    namePositions1,
+    namePositions2,
+    namePositions3,
+    namePositions4,
+    modelRef.current,
+  ]);
+
+  console.log("nameDecalPositions1", nameDecalPositions1);
+
+  useEffect(() => {
     handleAddNewUniform("pattern", {
       secondaryTextures,
       patternRotationDeegre,
@@ -336,11 +399,6 @@ export function Model(props) {
       patternLayers,
     });
   }, [secondaryTextures, patternLayers, patternRotationDeegre, patternScale]);
-
-  useEffect(() => {
-    const uniformObject = getUniformData();
-    // setCombinedLogos(uniformObject.logo.combinedLogos);
-  }, [modelRef?.current]);
 
   useEffect(() => {
     handleAddNewUniform("name", {
@@ -353,8 +411,11 @@ export function Model(props) {
       nameGradientColor,
       nameScale,
       nameGradientScale,
+      updatedNames,
+      names,
     });
   }, [
+    updatedNames,
     nameFont,
     nameRotation,
     nameColor,
@@ -364,6 +425,7 @@ export function Model(props) {
     nameGradientColor,
     nameScale,
     nameGradientScale,
+    names,
   ]);
 
   useEffect(() => {
@@ -634,10 +696,6 @@ export function Model(props) {
             secondaryColors[index] ?? threeJsColor
           );
           const gradientColor1 = new Three.Color(gradient2[index]);
-          console.log(
-            "🚀 ~ modelRef.current.children.forEach ~ gradient2 : ",
-            gradient2
-          );
           const gradientColor2 = new Three.Color(gradient[index]);
 
           const gradientBool = isGradient ? isGradient[index] : false;
@@ -1077,6 +1135,7 @@ export function Model(props) {
               </meshStandardMaterial>
             )}
           </mesh>
+
           <mesh
             geometry={nodes.Dress_1_Group6255_0005_1.geometry}
             material={materials["Default (5)"]}
@@ -1242,6 +1301,7 @@ export function Model(props) {
                 />
               </meshStandardMaterial>
             )}
+
             {combinedLogos?.[1]?.length > 0 &&
               combinedLogos?.[1]?.map((item, index) => {
                 return (

@@ -36,10 +36,11 @@ export const useUpdateUniformStates = () => {
     updateNumberAngle,
 
     // name
-    setNameDecalPositions1,
-    setNameDecalPositions2,
-    setNameDecalPositions3,
-    setNameDecalPositions4,
+    setNames,
+    setNamePositions1,
+    setNamePositions2,
+    setNamePositions3,
+    setNamePositions4,
     updateNameFont,
     updateNameRotation,
     updateNameColor,
@@ -53,11 +54,12 @@ export const useUpdateUniformStates = () => {
     setUpdatedLogos,
     updateLogoScale,
     setLogos,
-    
+
     setLogoDecalPositions1,
     setLogoDecalPositions2,
     setLogoDecalPositions3,
     setLogoDecalPositions4,
+    setUpdatedNames,
 
     updateLogo,
     updateName,
@@ -110,11 +112,11 @@ export const useUpdateUniformStates = () => {
       updateNameGradient(uniformObject.name.nameGradientColor);
       updateNameScale(uniformObject.name.nameScale);
       updateNameGradientScale(uniformObject.name.nameGradientScale);
-
-      setNameDecalPositions1(uniformObject.name.setNameDecalPositions1);
-      setNameDecalPositions2(uniformObject.name.setNameDecalPositions2);
-      setNameDecalPositions3(uniformObject.name.setNameDecalPositions3);
-      setNameDecalPositions4(uniformObject.name.setNameDecalPositions4);
+      setNamePositions1(uniformObject.name.nameDecalPositions1);
+      setNamePositions2(uniformObject.name.nameDecalPositions2);
+      setNamePositions3(uniformObject.name.nameDecalPositions3);
+      setNamePositions4(uniformObject.name.nameDecalPositions4);
+      setNames(uniformObject.name.names);
 
       //logos
       setUpdatedLogos(uniformObject.logo.updatedLogos);
@@ -124,6 +126,8 @@ export const useUpdateUniformStates = () => {
       setLogoDecalPositions2(uniformObject.logo.decalPositions2);
       setLogoDecalPositions3(uniformObject.logo.decalPositions3);
       setLogoDecalPositions4(uniformObject.logo.decalPositions4);
+
+      setUpdatedNames(uniformObject.name.updatedNames);
     } else {
       console.log("No uniformObject found in localStorage.");
     }
