@@ -23,7 +23,7 @@ jobs:
         run: echo "::set-output name=unique_id::$(date +'%Y-%m-%d-%H-%M-%S')"
 
       - name: Build Docker image
-        run: docker build -t 438786549001.dkr.ecr.us-east-1.amazonaws.com/ren-ath:uniform-frotend-dev .
+        run: docker build -t 438786549001.dkr.ecr.us-east-1.amazonaws.com/ren-ath:uniform-frontend-dev .
 
       - name: Login to AWS CLI
         run: |
