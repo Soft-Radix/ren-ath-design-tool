@@ -67,7 +67,7 @@ jobs:
             echo "pulling image"
             docker pull 438786549001.dkr.ecr.us-east-1.amazonaws.com/ren-ath:uniform-frontend-dev
             echo "Done"
-            echo "deleting existing container if any"
+            echo "deleting existing container if any."
             frontend
             UNIQUE_ID=$(date +%s)
             CONTAINER_NAME="ren-ath-uniform-frontend-dev-${UNIQUE_ID}"
