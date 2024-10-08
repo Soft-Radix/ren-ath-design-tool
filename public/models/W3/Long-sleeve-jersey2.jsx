@@ -368,7 +368,6 @@ export function Model(props) {
   ]);
 
   useEffect(() => {
-    debugger;
     if (namePositions1[0]?.length > 0) {
       setNameDecalPositions1(namePositions1[0]);
     }
