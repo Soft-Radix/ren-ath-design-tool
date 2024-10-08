@@ -25,7 +25,7 @@ const useFetch = (url, config, formdata) => {
     return new Promise((resolve, reject) => {
       setLoading(true);
       instance({
-        url: `${url}`,
+        url,
         ...config,
         data,
         headers,
