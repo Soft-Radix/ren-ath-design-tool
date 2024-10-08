@@ -72,7 +72,7 @@ jobs:
             UNIQUE_ID=$(date +%s)
             CONTAINER_NAME="ren-ath-uniform-frontend-dev-${UNIQUE_ID}"
             echo "Starting Docker container..."
-            sudo docker run -d --name $CONTAINER_NAME --restart always -p 81:81 438786549001.dkr.ecr.us-east-1.amazonaws.com/ren-ath:uniform-frontend-dev
+            sudo docker run -d --name $CONTAINER_NAME --restart always -p 81:80 438786549001.dkr.ecr.us-east-1.amazonaws.com/ren-ath:uniform-frontend-dev
             echo "Docker container started......."
             docker system prune -a --force
             '
