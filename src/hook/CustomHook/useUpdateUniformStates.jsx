@@ -1,8 +1,14 @@
+import { useEffect, useState } from "react";
 import { useProductStore } from "../../store";
 import { getUniformData } from "../../utils/funtions";
+import useFetch from "./usefetch";
 
 export const useUpdateUniformStates = () => {
+  const [designData, setDesignData] = useState();
   const {
+    //Id
+    myDesignId,
+
     // Design
     updateDesignType,
     updateIsDesign,
@@ -66,10 +72,40 @@ export const useUpdateUniformStates = () => {
     // Add other relevant update functions here
   } = useProductStore((state) => state);
 
-  const updateFromUniformObject = () => {
-    const uniformObject = getUniformData();
-    console.log("🚀 ~ updateFromUniformObject ~ uniformObject:", uniformObject);
+  const [getDesignByIdQuery, { response, loading, error }] = useFetch(
+    `/design/detail/${myDesignId}`,
+    {
+      method: "post",
+    }
+  );
 
+  useEffect(() => {
+    if (true) {
+      // getDesignByIdQuery();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (response) {
+      const parseData = response?.data;
+      for (const key in parseData) {
+        try {
+          if (typeof parseData[key] === "string") {
+            parseData[key] = JSON.parse(parseData[key]);
+          } else {
+            parseData[key] = parseData[key];
+          }
+        } catch (error) {
+          console.error(`Error parsing value for key "${key}":`, error);
+          parseData[key] = parseData[key]; // Preserve original value if parsing fails
+        }
+      }
+      setDesignData(parseData);
+    }
+  }, [response]);
+
+  const updateFromUniformObject = () => {
+    const uniformObject = designData;
     if (uniformObject) {
       //design
       updateDesignType(uniformObject.design.designType);
