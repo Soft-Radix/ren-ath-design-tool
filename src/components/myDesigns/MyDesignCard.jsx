@@ -3,11 +3,23 @@ import ThemeButton from "../common/ThemeButton";
 import styles from "./MyDesignList.module.scss";
 import { Deleteicon, DoneIcon, EditIcon } from "../../assets/svg/icons";
 import CommonModal from "../common/modal";
+import { useNavigate } from "react-router-dom";
+import { useProductStore } from "../../store";
+import { useUpdateUniformStates } from "../../hook/CustomHook/useUpdateUniformStates";
 
-const MyDesignCard = ({ title, status, img }) => {
+const MyDesignCard = ({ title, status, img, id }) => {
   const [openDelete, setOpenDelete] = useState(false);
   const [openStatus, setOpenStatus] = useState(false);
+  const navigate = useNavigate();
+  const { updateEditedDesignId } = useProductStore((store) => store);
+  // Call the custom hook at the top level of the component
+  const updateUniformStates = useUpdateUniformStates();
 
+  const handleClick = () => {
+    updateUniformStates();
+    updateEditedDesignId(id);
+  };
+  
   return (
     <div className={styles.designCard}>
       <div className={styles.imgContainer}>
@@ -20,7 +32,7 @@ const MyDesignCard = ({ title, status, img }) => {
             <Deleteicon />
           </span>
           {!!!status && (
-            <span>
+            <span onClick={handleClick}>
               <EditIcon />
             </span>
           )}
@@ -34,6 +46,7 @@ const MyDesignCard = ({ title, status, img }) => {
           textColor={status ? "#07CD86" : ""}
           onClick={() => {
             !!!status && setOpenStatus(true);
+            // handleClick();
           }}
         >
           <span>
@@ -42,7 +55,7 @@ const MyDesignCard = ({ title, status, img }) => {
           </span>
         </ThemeButton>
       </div>
-      
+
       {/* modal for delete */}
       <CommonModal
         open={openDelete}

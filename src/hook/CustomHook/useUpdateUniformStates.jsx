@@ -1,14 +1,16 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useProductStore } from "../../store";
 import { getUniformData, handleAddNewUniform } from "../../utils/funtions";
 import useFetch from "./usefetch";
+import { useNavigate } from "react-router-dom";
 
 export const useUpdateUniformStates = () => {
   const [designData, setDesignData] = useState();
+  const navigate = useNavigate();
   const {
     updateEditedDesignData,
     //Id
-    myDesignId,
+    editedDesignId,
 
     // Design
     updateDesignType,
@@ -74,17 +76,17 @@ export const useUpdateUniformStates = () => {
   } = useProductStore((state) => state);
 
   const [getDesignByIdQuery, { response, loading, error }] = useFetch(
-    `/design/detail/${myDesignId}`,
+    `/design/detail/${editedDesignId}`,
     {
       method: "post",
     }
   );
 
   useEffect(() => {
-    if (myDesignId) {
+    if (editedDesignId) {
       getDesignByIdQuery();
     }
-  }, []);
+  }, [editedDesignId]);
 
   useEffect(() => {
     if (response) {
@@ -105,12 +107,17 @@ export const useUpdateUniformStates = () => {
       }
       updateEditedDesignData(parseData);
       setDesignData(parseData);
+      updateFromUniformObject(parseData);
+      setTimeout(() => {
+        navigate("/product-view");
+      }, [1000]);
       // handleAddNewUniform("", "", parseData);
     }
   }, [response]);
 
-  const updateFromUniformObject = () => {
-    const uniformObject = designData;
+  const updateFromUniformObject = (uniformObject) => {
+    debugger;
+
     if (uniformObject) {
       //design
       updateDesignType(uniformObject.design.designType);

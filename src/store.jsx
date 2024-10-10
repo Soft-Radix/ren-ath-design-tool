@@ -132,10 +132,11 @@ export const useProductStore = create((set) => ({
     set(() => ({
       editDesignData: data,
     })),
-  updateEditedDesignId: (id) =>
+  updateEditedDesignId: (id) => {
     set(() => ({
       editedDesignId: id,
-    })),
+    }));
+  },
   updateSnapShot: (img) =>
     set(() => ({
       snapShot: img,
