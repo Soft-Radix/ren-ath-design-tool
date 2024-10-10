@@ -326,7 +326,6 @@ export function Model(props) {
 
   useEffect(() => {
     handleAddNewUniform("logo", {
-      combinedLogos,
       logoScale,
       updatedLogos,
       logos,
@@ -336,7 +335,6 @@ export function Model(props) {
       decalPositions4,
     });
   }, [
-    combinedLogos,
     logoScale,
     updatedLogos,
     logos,
@@ -368,7 +366,6 @@ export function Model(props) {
   ]);
 
   useEffect(() => {
-    debugger;
     if (namePositions1[0]?.length > 0) {
       setNameDecalPositions1(namePositions1[0]);
     }

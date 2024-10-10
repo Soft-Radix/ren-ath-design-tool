@@ -124,7 +124,26 @@ export const useProductStore = create((set) => ({
   logoDecalPositions2: [],
   logoDecalPositions3: [],
   logoDecalPositions4: [],
-
+  myDesignId: null,
+  snapShot: "",
+  editedDesignId: null,
+  editDesignData: {},
+  updateEditedDesignData: (data) =>
+    set(() => ({
+      editDesignData: data,
+    })),
+  updateEditedDesignId: (id) =>
+    set(() => ({
+      editedDesignId: id,
+    })),
+  updateSnapShot: (img) =>
+    set(() => ({
+      snapShot: img,
+    })),
+  updateMyDesignId: (id) =>
+    set(() => ({
+      myDesignId: id,
+    })),
   setLogoDecalPositions1: (logoDecalPosition) =>
     set((state) => ({
       logoDecalPositions1: [logoDecalPosition],

@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useProductStore } from "../../store";
-import { getUniformData } from "../../utils/funtions";
+import { getUniformData, handleAddNewUniform } from "../../utils/funtions";
 import useFetch from "./usefetch";
 
 export const useUpdateUniformStates = () => {
   const [designData, setDesignData] = useState();
   const {
+    updateEditedDesignData,
     //Id
     myDesignId,
 
@@ -80,14 +81,16 @@ export const useUpdateUniformStates = () => {
   );
 
   useEffect(() => {
-    if (true) {
-      // getDesignByIdQuery();
+    if (myDesignId) {
+      getDesignByIdQuery();
     }
   }, []);
 
   useEffect(() => {
     if (response) {
       const parseData = response?.data;
+      // delete parseData['cover_photo']
+      // delete parseData['design_name']
       for (const key in parseData) {
         try {
           if (typeof parseData[key] === "string") {
@@ -100,7 +103,9 @@ export const useUpdateUniformStates = () => {
           parseData[key] = parseData[key]; // Preserve original value if parsing fails
         }
       }
+      updateEditedDesignData(parseData);
       setDesignData(parseData);
+      // handleAddNewUniform("", "", parseData);
     }
   }, [response]);
 

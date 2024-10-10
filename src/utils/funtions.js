@@ -153,7 +153,7 @@ let uniformObject = {
     nameDecalPositions3: [[0.6, -1.2, 1.1]],
     nameDecalPositions4: [[0.5, 1.8, 1]],
   },
-  logo: { combinedLogos: {}, logoScale: {} ,updatedLogos:{}},
+  logo: { logoScale: {}, updatedLogos: {}, logos: [] },
 };
 
 export const handleAddNewUniform = (keyName, keyData) => {
@@ -162,8 +162,25 @@ export const handleAddNewUniform = (keyName, keyData) => {
 };
 
 export const saveUniformDesign = () => {
-  const data = handleAddNewUniform();
-  localStorage.setItem("uniformData", JSON.stringify(data));
+  const uniformObject =handleAddNewUniform();
+
+  for (let key in uniformObject) {
+    // Check if the value is undefined, null, or an empty object before stringifying
+    if (
+      uniformObject[key] === undefined ||
+      uniformObject[key] === null ||
+      Object.keys(uniformObject[key]).length === 0
+    ) {
+      delete uniformObject[key]; // Remove the key if it's empty or undefined
+    } else {
+      // Otherwise, stringify the value
+      uniformObject[key] = JSON.stringify(uniformObject[key]);
+    }
+  }
+  delete uniformObject["createdAt"];
+  delete uniformObject["updatedAt"];
+  console.log("🚀 ~ data ~ uniformObject:", uniformObject);
+  return uniformObject;
 };
 
 export const getUniformData = () => {
