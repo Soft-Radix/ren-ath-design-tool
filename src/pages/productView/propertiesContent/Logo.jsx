@@ -15,14 +15,14 @@ import DeleteIcon from "@mui/icons-material/Delete";
 const Logo = () => {
   const {
     updateLogo,
-    id,
-    updatedLogos,
-    setUpdatedLogos,
     logoScale,
+    logos,
+    id,
+    setUpdatedLogos,
     updateLogoScale,
     handleModelRotation,
-    logos,
     setLogos,
+    updatedLogos,
   } = useProductStore((state) => state);
 
   const [expanded, setExpanded] = React.useState(false);
@@ -30,8 +30,8 @@ const Logo = () => {
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-  const [logoPositions, setLogoPositions] = useState({});
 
+  const [logoPositions, setLogoPositions] = useState({});
   const [logoAngles, setLogoAngles] = useState({});
   const [images, setImages] = useState({
     front: "",
@@ -71,19 +71,26 @@ const Logo = () => {
   };
 
   const onDropAccepted = (acceptedFiles) => {
-    const newLogo = acceptedFiles[0]
-      ? URL.createObjectURL(acceptedFiles[0])
-      : null;
-    updateLogo(acceptedFiles[0]);
-    const logoKey = `image${logos.length + 1}`;
-    setLogos([...logos, newLogo]);
-    setUpdatedLogos({
-      ...updatedLogos,
-      [logoKey]: { 1: [], 2: [], 3: [], 4: [] },
-    });
-    setLogoPositions({ ...logoPositions, [logoKey]: null });
-    updateLogoScale({ ...logoScale });
-    setLogoAngles({ ...logoAngles, [logoKey]: 0 });
+    if (acceptedFiles.length > 0) {
+      const file = acceptedFiles[0];
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        const newLogo = reader.result; // Base64 string
+        updateLogo(file);
+        const logoKey = `image${logos.length + 1}`;
+        setLogos([...logos, newLogo]);
+        setUpdatedLogos({
+          ...updatedLogos,
+          [logoKey]: { 1: [], 2: [], 3: [], 4: [] },
+        });
+        setLogoPositions({ ...logoPositions, [logoKey]: null });
+        updateLogoScale({ ...logoScale });
+        setLogoAngles({ ...logoAngles, [logoKey]: 0 });
+      };
+
+      reader.readAsDataURL(file); // Convert to base64
+    }
   };
 
   const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject } =
@@ -134,24 +141,20 @@ const Logo = () => {
   const updateLogosWithPosition = (key, logo, logoKey) => {
     const newLogos = { ...updatedLogos };
 
-    // Ensure logoKey exists
     if (!newLogos[logoKey]) {
       newLogos[logoKey] = { 1: [], 2: [], 3: [], 4: [] };
     }
 
-    // Remove logo from other keys
     Object.keys(newLogos[logoKey]).forEach((k) => {
       if (k !== String(key)) {
         newLogos[logoKey][k] = newLogos[logoKey][k].filter((l) => l !== logo);
       }
     });
 
-    // Add logo to the specified key if it doesn't exist
     if (!newLogos[logoKey][key].includes(logo)) {
       newLogos[logoKey][key] = [...newLogos[logoKey][key], logo];
     }
 
-    // Update the position state for this logo
     const newLogoPositions = { ...logoPositions, [logoKey]: key };
 
     setUpdatedLogos(newLogos);
@@ -231,7 +234,6 @@ const Logo = () => {
                     }}
                   >
                     Front
-                    {/* <img src={images.front} alt="" /> */}
                   </div>
                   <div
                     className={`${styles.imgWrap} ${
@@ -243,7 +245,6 @@ const Logo = () => {
                     }}
                   >
                     Back
-                    {/* <img src={images.back} alt="" /> */}
                   </div>
                   <div
                     className={`${styles.imgWrap} ${
@@ -255,7 +256,6 @@ const Logo = () => {
                     }}
                   >
                     Left
-                    {/* <img src={images.chest_left} alt="" /> */}
                   </div>
                   <div
                     className={`${styles.imgWrap} ${
@@ -267,7 +267,6 @@ const Logo = () => {
                     }}
                   >
                     Right
-                    {/* <img src={images.chest_right} alt="" /> */}
                   </div>
                 </div>
               </div>
@@ -277,40 +276,19 @@ const Logo = () => {
                   min={0.5}
                   max={1.5}
                   step={0.1}
-                  value={logoScale[logoKey]}
+                  value={logoScale ? logoScale[logoKey] :0.4}
                   defaultValue={0.3}
                   onChange={(e) => updateLogoScales(logoKey, e)}
                 />
               </div>
-              {/* <h3>Angle</h3> */}
-              {/* <div className={styles.sliderWrap}>
-                <Slider
-                  min={0}
-                  max={360}
-                  step={1}
-                  value={logoAngles[logoKey]}
-                  onChange={(e) => updateLogoAngle(logoKey, e)}
-                />
-                <span>
-                  {logoAngles[logoKey] || 0}
-                  <sup>°</sup>
-                </span>
-              </div> */}
             </AccordionDetails>
           </Accordion>
         );
       })}
       <div {...getRootProps({ style })}>
         <input {...getInputProps()} />
-        <span className={styles.uploadWrap}>
-          <UploadIcon />
-          <span className={styles.textWrap}>
-            <span className={styles.text1}>Upload logo</span>
-            <span className={styles.text2}>
-              Max size 10MB, JPG, PNG, SVG, PDF
-            </span>
-          </span>
-        </span>
+        <UploadIcon width={24} height={24} />
+        <p>Add Logos</p>
       </div>
     </div>
   );

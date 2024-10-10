@@ -10,6 +10,8 @@ import { useProductStore } from "../../../src/store";
 // ----------------------------- Utils function imports -------------------------
 import {
   calculateScale,
+  getUniformData,
+  handleAddNewUniform,
   nonRepeatingPatterns,
 } from "../../../src/utils/funtions";
 
@@ -90,6 +92,7 @@ export function Model(props) {
   const [secondaryTextureUrl, setSecondaryTextureUrl] = useState(
     "./textures/pattern2.png"
   );
+  console.log("🚀 ~ Model ~ secondaryTextures:", secondaryTextures);
 
   const [loading, setLoading] = useState(false);
   const primaryTexture = useTexture(designTexture);
@@ -121,6 +124,7 @@ export function Model(props) {
   const [nameDecalPositions3, setNameDecalPositions3] = useState(
     [[0.6, -1.2, 1.1]] // Initialize positions array with default values
   );
+
   const normal = useTexture("./model-designs/W3/normal.png");
 
   // state to update color of each layer
@@ -128,14 +132,39 @@ export function Model(props) {
 
   // useProductStore initialise and get states from store
   const {
+    designType,
+    designScale,
+    designGradientAngle,
+    isDesign,
+    isDesignGradientEnabled,
+    designGradient1,
+    designGradient2,
+
+    pattern,
+    patternScale,
+    patternRotationDeegre,
+    patternLayers,
+    secondaryTexturesPattern,
+    updatePatternLayers,
+
     color,
+    designColor,
+    patternColor,
+
+    logoDecalPositions1,
+    logoDecalPositions2,
+    logoDecalPositions3,
+    logoDecalPositions4,
+
+    namePositions1,
+    namePositions2,
+    namePositions3,
+    namePositions4,
+
     gradient2,
     gradient,
     gradientScale,
     gradientAngle,
-    designGradientAngle,
-    designScale,
-    pattern,
     isGradient,
     updateRef,
     number,
@@ -162,22 +191,15 @@ export function Model(props) {
     logoScale,
     logoAngle,
     colorIndex,
-    designType,
     layer,
-    isDesign,
     orbitalRef,
     modelRotation,
-    designColor,
-    patternScale,
-    patternColor,
-    designGradient1,
-    designGradient2,
-    isDesignGradientEnabled,
     updatedLogos,
+    logos,
     updatedNames,
-    patternRotationDeegre,
     nameRotation,
     setModelLoading,
+    names,
   } = useProductStore((state) => state);
 
   // Load 3D model and textures
@@ -205,11 +227,28 @@ export function Model(props) {
     setLayerColor(changeColor);
   }, [color[colorIndex]]);
 
+  useEffect(() => {
+    const colorsKeys = Object.keys(color);
+    if (!colorIndex && colorsKeys.length > 0) {
+      const prevColorCollection = [];
+      colorsKeys.forEach((colorItem) => {
+        prevColorCollection[colorItem] = color[colorItem];
+      });
+      setSecondaryColors(prevColorCollection);
+    }
+  }, [color]);
+
   // Effect to update secondary texture based on pattern change
   useEffect(() => {
     if (pattern !== null) {
       const url = `./textures/pattern${pattern}.png`;
       setSecondaryTextureUrl(url);
+      if (layer === 0 || layer % 2 == 0) {
+        updatePatternLayers({ [layer]: url });
+        updatePatternLayers({ [layer + 1]: url });
+      } else {
+        updatePatternLayers({ [layer]: url });
+      }
     }
   }, [pattern]);
 
@@ -259,6 +298,135 @@ export function Model(props) {
         });
     }
   }, [secondaryTextureUrl, layer]);
+
+  useEffect(() => {
+    const loadAllTextures = async () => {
+      const texturesArray = await Promise.all(
+        Object.keys(patternLayers).map((layerKey) =>
+          loadTexture(patternLayers[layerKey])
+            .then((texture) => ({ layerKey, texture }))
+            .catch((error) => {
+              // Handle error if needed
+              console.error("Failed to load texture", error);
+              return { layerKey, texture: null }; // Return null or handle accordingly
+            })
+        )
+      );
+
+      const textures = [...secondaryTextures];
+      texturesArray.forEach(({ layerKey, texture }) => {
+        textures[layerKey] = texture;
+      });
+      setSecondaryTextures([...textures]);
+    };
+    if (!pattern && !layer) {
+      loadAllTextures();
+    }
+  }, [patternLayers]);
+
+  useEffect(() => {
+    handleAddNewUniform("logo", {
+      combinedLogos,
+      logoScale,
+      updatedLogos,
+      logos,
+      decalPositions1,
+      decalPositions2,
+      decalPositions3,
+      decalPositions4,
+    });
+  }, [
+    combinedLogos,
+    logoScale,
+    updatedLogos,
+    logos,
+    decalPositions1,
+    decalPositions2,
+    decalPositions3,
+    decalPositions4,
+  ]);
+
+  useEffect(() => {
+    if (logoDecalPositions1?.length > 0) {
+      setDecalPositions1(logoDecalPositions1[0]);
+    }
+    if (logoDecalPositions2?.length > 0) {
+      setDecalPositions2(logoDecalPositions2[0]);
+    }
+    if (logoDecalPositions3?.length > 0) {
+      setDecalPositions3(logoDecalPositions3[0]);
+    }
+    if (logoDecalPositions4?.length > 0) {
+      setDecalPositions4(logoDecalPositions4[0]);
+    }
+  }, [
+    logoDecalPositions1,
+    logoDecalPositions2,
+    logoDecalPositions3,
+    logoDecalPositions4,
+    modelRef.current,
+  ]);
+
+  useEffect(() => {
+    debugger;
+    if (namePositions1[0]?.length > 0) {
+      setNameDecalPositions1(namePositions1[0]);
+    }
+    if (namePositions2[0]?.length > 0) {
+      setNameDecalPositions2(namePositions2[0]);
+    }
+    if (namePositions3[0]?.length > 0) {
+      setNameDecalPositions3(namePositions3[0]);
+    }
+    if (namePositions4[0]?.length > 0) {
+      setNameDecalPositions4(namePositions4[0]);
+    }
+  }, [
+    namePositions1,
+    namePositions2,
+    namePositions3,
+    namePositions4,
+    modelRef.current,
+  ]);
+
+  console.log("nameDecalPositions1", nameDecalPositions1);
+
+  useEffect(() => {
+    handleAddNewUniform("pattern", {
+      secondaryTextures,
+      patternRotationDeegre,
+      patternScale,
+      patternLayers,
+    });
+  }, [secondaryTextures, patternLayers, patternRotationDeegre, patternScale]);
+
+  useEffect(() => {
+    handleAddNewUniform("name", {
+      nameFont,
+      nameRotation,
+      nameColor,
+      combinedNames,
+      nameOutline,
+      nameGradientAngle,
+      nameGradientColor,
+      nameScale,
+      nameGradientScale,
+      updatedNames,
+      names,
+    });
+  }, [
+    updatedNames,
+    nameFont,
+    nameRotation,
+    nameColor,
+    combinedNames,
+    nameOutline,
+    nameGradientAngle,
+    nameGradientColor,
+    nameScale,
+    nameGradientScale,
+    names,
+  ]);
 
   useEffect(() => {
     if (modelRef.current) {
@@ -529,6 +697,7 @@ export function Model(props) {
           );
           const gradientColor1 = new Three.Color(gradient2[index]);
           const gradientColor2 = new Three.Color(gradient[index]);
+
           const gradientBool = isGradient ? isGradient[index] : false;
           const primaryGradientColor1 = new Three.Color(designGradient1[index]);
           const primaryGradientColor2 = new Three.Color(designGradient2[index]);
@@ -551,7 +720,6 @@ export function Model(props) {
           const secondaryTextureTranslation = new Three.Vector2(0, 0); // Adjust the position as needed
 
           const patternScales = patternScale[index];
-          console.log("ss", index, patternScale[index]);
 
           const material = createMaterial(
             secondaryTexture,
@@ -811,17 +979,22 @@ export function Model(props) {
   const combineKeys = (object) => {
     const combined = { 1: [], 2: [], 3: [], 4: [] };
 
-    Object.values(object).forEach((image) => {
-      Object.keys(combined).forEach((key) => {
-        combined[key] = [...combined[key], ...image[key]];
+    if (object) {
+      Object.values(object).forEach((image) => {
+        Object.keys(combined).forEach((key) => {
+          combined[key] = [...combined[key], ...image[key]];
+        });
       });
-    });
+    }
 
     return combined;
   };
 
   useEffect(() => {
-    const result = combineKeys(updatedLogos);
+    const uniformObject = getUniformData();
+    const result = combineKeys({
+      ...updatedLogos,
+    });
     setCombinedLogos(result);
     const positions1 = result?.[1]?.map(() => [0, 0, 1]);
     const positions2 = result?.[2]?.map(() => [0, 0, 1]);
@@ -845,6 +1018,21 @@ export function Model(props) {
     setNameDecalPositions3([...nameDecalPositions3, ...positions3]);
     setNameDecalPositions4([...nameDecalPositions4, ...positions4]);
   }, [updatedNames]);
+
+  useEffect(() => {
+    handleAddNewUniform("name", {
+      nameDecalPositions1,
+      nameDecalPositions2,
+      nameDecalPositions3,
+      nameDecalPositions4,
+    });
+  }, [
+    nameDecalPositions1,
+    nameDecalPositions2,
+    nameDecalPositions3,
+    nameDecalPositions4,
+  ]);
+
   return (
     <>
       <ambientLight intensity={6} />
@@ -947,6 +1135,7 @@ export function Model(props) {
               </meshStandardMaterial>
             )}
           </mesh>
+
           <mesh
             geometry={nodes.Dress_1_Group6255_0005_1.geometry}
             material={materials["Default (5)"]}
@@ -1033,49 +1222,6 @@ export function Model(props) {
                         : font1
                     }
                   />
-
-                  /* <NameDecal
-                    modelNamePosition={nameDecalPositions3[index]}
-                    toggleHovered={toggleHovered}
-                    index={index}
-                    isNameGradientColor={isNameGradientColor}
-                    name={item}
-                    nameColor={nameColor[item]}
-                    nameFont={
-                      nameFont[item] == 1
-                        ? font1
-                        : nameFont[item] == 2
-                        ? font8
-                        : nameFont[item] == 3
-                        ? font3
-                        : nameFont[item] == 4
-                        ? font4
-                        : nameFont[item] == 5
-                        ? font5
-                        : nameFont[item] == 6
-                        ? font6
-                        : nameFont[item] == 7
-                        ? font7
-                        : nameFont[item] == 8
-                        ? font8
-                        : nameFont[item] == 9
-                        ? font9
-                        : font1
-                    }
-                    nameGradientAngle={nameGradientAngle[item]}
-                    nameGradientColor={nameGradientColor[item]}
-                    nameGradientScale={nameGradientScale[item]}
-                    nameScale={name1Scale}
-                    nameOutline={nameOutline[item]}
-                    orbitalRef={orbitalRef}
-                    key={item + index}
-                    setModelNamePosition={(position) => {
-                      const newPositions = [...nameDecalPositions3];
-                      newPositions[index] = position;
-                      setNameDecalPositions3(newPositions);
-                    }}
-                    namePosition={3}
-                  /> */
                 );
               })}
           </mesh>
@@ -1155,6 +1301,7 @@ export function Model(props) {
                 />
               </meshStandardMaterial>
             )}
+
             {combinedLogos?.[1]?.length > 0 &&
               combinedLogos?.[1]?.map((item, index) => {
                 return (
@@ -1374,64 +1521,6 @@ export function Model(props) {
                     }}
                     namePosition={2}
                   />
-                  // <Decal
-                  //   {...bindBack()}
-                  //   onPointerEnter={toggleHovered}
-                  //   onPointerLeave={toggleHovered}
-                  //   position={name2Position}
-                  //   rotation={[0, degToRad(180), 0]}
-                  //   scale={calculateScale(nameScale[item])}
-                  //   origin={[0, 0, 0]}
-                  // >
-                  //   <meshStandardMaterial
-                  //     transparent
-                  //     polygonOffset
-                  //     polygonOffsetFactor={-1}
-                  //   >
-                  //     <RenderTexture attach="map">
-                  //       <PerspectiveCamera
-                  //         makeDefault
-                  //         manual
-                  //         aspect={2}
-                  //         position={[0, 0.1, 2.5]}
-                  //       />
-
-                  //       <GradientText
-                  //         color1={nameColor[item]}
-                  //         color2={nameGradientColor[item]}
-                  //         outlineColor={nameOutline[item]}
-                  //         isNumberGradientColor={isNameGradientColor}
-                  //         rotation={[0, 0, 0]}
-                  //         fontSize={0.5}
-                  //         gradientRotation={nameGradientAngle[item]}
-                  //         gradientScale={nameGradientScale[item]}
-                  //         font={
-                  //           nameFont[item] == 1
-                  //             ? font1
-                  //             : nameFont[item] == 2
-                  //             ? font8
-                  //             : nameFont[item] == 3
-                  //             ? font3
-                  //             : nameFont[item] == 4
-                  //             ? font4
-                  //             : nameFont[item] == 5
-                  //             ? font5
-                  //             : nameFont[item] == 6
-                  //             ? font6
-                  //             : nameFont[item] == 7
-                  //             ? font7
-                  //             : nameFont[item] == 8
-                  //             ? font8
-                  //             : nameFont[item] == 9
-                  //             ? font9
-                  //             : font1
-                  //         }
-                  //       >
-                  //         {item}
-                  //       </GradientText>
-                  //     </RenderTexture>
-                  //   </meshStandardMaterial>
-                  // </Decal>
                 );
               })}
           </mesh>

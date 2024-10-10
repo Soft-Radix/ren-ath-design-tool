@@ -88,7 +88,7 @@ export const handleDragLimitSeleeveY = (yPos) => {
   return newYPosition;
 };
 
-export const nonRepeatingPatterns = [2,3, 5, 6, 7, 8, 9, 15, 16];
+export const nonRepeatingPatterns = [2, 3, 5, 6, 7, 8, 9, 15, 16];
 
 export const modelRotationValue = (layerIndex) => {
   if (layerIndex === 0) {
@@ -107,3 +107,70 @@ export const modelRotationValue = (layerIndex) => {
 };
 
 export const removeInitialSpace = (value) => value.replace(/^\s+/g, "");
+
+// Define the uniformObject outside of the function scope
+let uniformObject = {
+  design: { designType: 10, isDesign: false },
+  pattern: {
+    secondaryTextures: [],
+    patternRotationDeegre: {},
+    patternScale: {},
+    patternLayers: {},
+  },
+  color: { color: {}, designColor: {}, patternColor: {} },
+  gradient: {
+    isGradient: {},
+    gradient: {},
+    designGradient1: {},
+    designGradient2: {},
+    gradient2: {},
+
+    gradientScale: {},
+    gradientAngle: {},
+    designScale: {},
+    designGradientAngle: {},
+  },
+  number: {
+    number: {},
+    numberColor: {},
+    numberFont: {},
+    numberOutline: {},
+    numberScale: {},
+    numberAngle: {},
+  },
+  name: {
+    nameFont: {},
+    nameRotation: {},
+    nameColor: {},
+    combinedNames: {},
+    nameOutline: {},
+    nameGradientAngle: {},
+    nameGradientColor: {},
+    nameScale: {},
+    nameGradientScale: {},
+    nameDecalPositions1: [[0, 0, 1]],
+    nameDecalPositions2: [[0, 0, 1]],
+    nameDecalPositions3: [[0.6, -1.2, 1.1]],
+    nameDecalPositions4: [[0.5, 1.8, 1]],
+  },
+  logo: { combinedLogos: {}, logoScale: {} ,updatedLogos:{}},
+};
+
+export const handleAddNewUniform = (keyName, keyData) => {
+  uniformObject[keyName] = { ...uniformObject[keyName], ...keyData };
+  return uniformObject;
+};
+
+export const saveUniformDesign = () => {
+  const data = handleAddNewUniform();
+  localStorage.setItem("uniformData", JSON.stringify(data));
+};
+
+export const getUniformData = () => {
+  const storedUniform = localStorage.getItem("uniformData");
+  if (storedUniform) {
+    return JSON.parse(storedUniform);
+  } else {
+    return null;
+  }
+};

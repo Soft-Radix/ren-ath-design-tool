@@ -11,27 +11,30 @@ import styles from "./properties.module.scss";
 import { colorList } from "../../../components/data/colors";
 import { TextField } from "@mui/material";
 import Slider from "rc-slider";
-import { modelRotationValue } from "../../../utils/funtions";
+import {
+  handleAddNewUniform,
+  modelRotationValue,
+} from "../../../utils/funtions";
 const Number = () => {
   const {
     number,
-    updateNumber,
-    handleModelRotation,
-    numberFont,
-    updateNumberFont,
     numberColor,
-    updateNumberColor,
-    numberOutline,
-    updateNumberOutline,
+    updateNumber,
+    numberFont,
     id,
+    numberOutline,
+    isNumberGradientColor,
+    numberScale,
+    numberAngle,
+    handleModelRotation,
+    updateNumberFont,
+    updateNumberColor,
+    updateNumberOutline,
     numberGradientColor,
     updateNumberGradient,
     updateIsNumberGradient,
-    isNumberGradientColor,
-    numberScale,
     updateNumberScale,
     updateNumberAngle,
-    numberAngle,
   } = useProductStore((state) => state);
   const ref = useProductStore((state) => state.ref);
 
@@ -92,6 +95,24 @@ const Number = () => {
       handleFunction({ [index]: e });
     }
   };
+
+  useEffect(() => {
+    handleAddNewUniform("number", {
+      number,
+      numberColor,
+      numberFont,
+      numberOutline,
+      numberScale,
+      numberAngle,
+    });
+  }, [
+    number,
+    numberColor,
+    numberFont,
+    numberOutline,
+    numberScale,
+    numberAngle,
+  ]);
 
   return (
     <div className={styles.numberWrap}>

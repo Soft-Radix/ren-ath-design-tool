@@ -33,6 +33,7 @@ const useFetchFormData = (url, config) => {
           if (response.status === 200 || response.status === 201) {
             setLoading(false);
             setError(undefined);
+
             response.data != null && setResponse(response.data);
           } else {
             setLoading(false);
