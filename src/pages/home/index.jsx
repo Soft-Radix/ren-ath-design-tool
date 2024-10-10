@@ -22,8 +22,9 @@ import {
   womenImg3,
   womenImg4,
   womenImg5,
-  womenImg6
+  womenImg6,
 } from "./images";
+import { JerseyShortsProducts, WarmUpsProducts } from "../../utils/constant";
 
 const Home = () => {
   const [womenTabValue, setWomenTabValue] = useState("1");
@@ -75,52 +76,30 @@ const Home = () => {
           <div className={styles.productsWrap}>
             {womenTabValue == 1 && (
               <Fragment>
-                <ProductCard
-                  image={womenImg3}
-                  title="Long Sleeve Jersey"
-                  id="W3"
-                  designCount={10}
-                />
-                <ProductCard
-                  image={womenImg5}
-                  title="Short Sleeve Jersey"
-                  id="W5"
-                  designCount={3}
-                />
-                <ProductCard
-                  image={womenImg6}
-                  title="Sleeveless Jersey with Sleeve"
-                  id="W6"
-                  designCount={3}
-                />{" "}
-                <ProductCard
-                  image={cover_up_short}
-                  title="Cover Up Short"
-                  id="W11"
-                  designCount={3}
-                />
+                {JerseyShortsProducts.map((item, index) => (
+                  <ProductCard
+                    key={index}
+                    image={item.thumbnailImage}
+                    title={item.title}
+                    id={item.id}
+                    designCount={item.designCount}
+                    detail={item}
+                  />
+                ))}
               </Fragment>
             )}
             {womenTabValue == 2 && (
               <Fragment>
-                <ProductCard
-                  image={womenImg1}
-                  title="Long Sleeve Hitting Tees with Hood"
-                  id="W1"
-                  designCount={4}
-                />
-                <ProductCard
-                  image={womenImg2}
-                  title="Long Sleeve Hitting Tees without Hood"
-                  id="W2"
-                  designCount={3}
-                />
-                <ProductCard
-                  image={womenImg4}
-                  title="Short Sleeve Hitting Tee"
-                  id="W4"
-                  designCount={3}
-                />
+                {WarmUpsProducts.map((item, index) => (
+                  <ProductCard
+                    key={index}
+                    image={item.thumbnailImage}
+                    title={item.title}
+                    id={item.id}
+                    designCount={item.designCount}
+                    detail={item}
+                  />
+                ))}
               </Fragment>
             )}
             {/* <ProductCard
