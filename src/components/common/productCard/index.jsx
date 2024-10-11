@@ -17,7 +17,6 @@ const ProductCard = ({ title, image, id, designCount, detail }) => {
   const handleClick = () => {
     updateUniformStates(); // Call the function to update states
   };
-  console.log(title, image, id, designCount, detail);
 
   return (
     <div className={styles.outerWrap}>
