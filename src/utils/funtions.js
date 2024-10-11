@@ -163,11 +163,15 @@ export const handleAddNewUniform = (keyName, keyData) => {
 
 export const getUpdatedUniformData = (isSave) => {
   const uniformObject = handleAddNewUniform();
-  // if (isSave) {
-  //   for (let key in uniformObject) {
-  //     uniformObject[key] = JSON.stringify(uniformObject[key]);
-  //   }
-  // }
+  if (isSave) {
+    for (let key in uniformObject) {
+      if (typeof uniformObject[key] === "string") {
+        uniformObject[key] = uniformObject[key];
+      } else {
+        uniformObject[key] = JSON.stringify(uniformObject[key]);
+      }
+    }
+  }
   delete uniformObject["createdAt"];
   delete uniformObject["updatedAt"];
   delete uniformObject["undefined"];
@@ -215,14 +219,6 @@ export function mergeObjects(updatedObj, prefilledObj) {
   }
 
   // Now stringify all values in the final merged object
-  function stringifyValues(obj) {
-    for (let key in obj) {
-      // Convert all values (including objects and arrays) to JSON strings
-      obj[key] = JSON.stringify(obj[key]);
-    }
-  }
-
-  stringifyValues(updatedObj); // Stringify all values
 
   // Remove createdAt and updatedAt if they exist
   delete updatedObj["createdAt"];
