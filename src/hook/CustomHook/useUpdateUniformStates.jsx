@@ -1,16 +1,14 @@
-import { useCallback, useEffect, useState } from "react";
-import { useProductStore } from "../../store";
-import { getUniformData, handleAddNewUniform } from "../../utils/funtions";
-import useFetch from "./usefetch";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useProductStore } from "../../store";
+import useFetch from "./usefetch";
 
 export const useUpdateUniformStates = () => {
   const [designData, setDesignData] = useState();
+  const [designId, setDesignId] = useState(null);
   const navigate = useNavigate();
   const {
     updateEditedDesignData,
-    //Id
-    editedDesignId,
 
     // Design
     updateDesignType,
@@ -76,17 +74,23 @@ export const useUpdateUniformStates = () => {
   } = useProductStore((state) => state);
 
   const [getDesignByIdQuery, { response, loading, error }] = useFetch(
-    `/design/detail/${editedDesignId}`,
+    `/design/detail/${designId}`,
     {
       method: "post",
     }
   );
 
+  // Function to update the design ID and fetch data based on it
+  const updateFromUniformObject = (id) => {
+    setDesignId(id);
+  };
+
+  // Fetch design data whenever designId changes
   useEffect(() => {
-    if (editedDesignId) {
-      getDesignByIdQuery();
+    if (designId) {
+      getDesignByIdQuery(); // Trigger API query once designId is updated
     }
-  }, [editedDesignId]);
+  }, [designId]);
 
   useEffect(() => {
     if (response) {
@@ -107,17 +111,15 @@ export const useUpdateUniformStates = () => {
       }
       updateEditedDesignData(parseData);
       setDesignData(parseData);
-      updateFromUniformObject(parseData);
       setTimeout(() => {
         navigate("/product-view");
       }, [1000]);
-      // handleAddNewUniform("", "", parseData);
     }
   }, [response]);
 
-  const updateFromUniformObject = (uniformObject) => {
-    debugger;
-
+  useEffect(() => {
+    const uniformObject = designData;
+    console.log("🚀 ~ useEffect ~ uniformObject:", uniformObject)
     if (uniformObject) {
       //design
       updateDesignType(uniformObject.design.designType);
@@ -179,7 +181,7 @@ export const useUpdateUniformStates = () => {
     } else {
       console.log("No uniformObject found in localStorage.");
     }
-  };
+  }, [designData]);
 
   return updateFromUniformObject;
 };

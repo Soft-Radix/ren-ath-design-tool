@@ -2,7 +2,7 @@ import { ThreeSixty, ZoomIn, ZoomOut } from "@mui/icons-material";
 import { Button, ButtonGroup } from "@mui/material";
 import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import { Model as M1 } from "../../../public/models/M1/Flex-custom-board-shorts";
 import { Model as M6 } from "../../../public/models/M6/Sleeveless-jersey";
 import { Model as W1 } from "../../../public/models/W1/Long-sleeve-hitting-tees-with-hood";
@@ -15,9 +15,8 @@ import { Model as W8 } from "../../../public/models/W8/Sleeve-only";
 import loaderGif from "../../assets/gif/loader.gif";
 import { useProductStore } from "../../store";
 import {
-  getUniformData,
   handleZoomIn,
-  handleZoomOut,
+  handleZoomOut
 } from "../../utils/funtions";
 import Header from "./header";
 import styles from "./productView.module.scss";

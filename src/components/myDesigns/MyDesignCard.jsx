@@ -16,10 +16,10 @@ const MyDesignCard = ({ title, status, img, id }) => {
   const updateUniformStates = useUpdateUniformStates();
 
   const handleClick = () => {
-    updateUniformStates();
+    updateUniformStates(id);
     updateEditedDesignId(id);
   };
-  
+
   return (
     <div className={styles.designCard}>
       <div className={styles.imgContainer}>

@@ -161,33 +161,80 @@ export const handleAddNewUniform = (keyName, keyData) => {
   return uniformObject;
 };
 
-export const saveUniformDesign = () => {
-  const uniformObject =handleAddNewUniform();
-
-  for (let key in uniformObject) {
-    // Check if the value is undefined, null, or an empty object before stringifying
-    if (
-      uniformObject[key] === undefined ||
-      uniformObject[key] === null ||
-      Object.keys(uniformObject[key]).length === 0
-    ) {
-      delete uniformObject[key]; // Remove the key if it's empty or undefined
-    } else {
-      // Otherwise, stringify the value
+export const getUpdatedUniformData = (isSave) => {
+  const uniformObject = handleAddNewUniform();
+  if (isSave) {
+    for (let key in uniformObject) {
       uniformObject[key] = JSON.stringify(uniformObject[key]);
     }
   }
   delete uniformObject["createdAt"];
   delete uniformObject["updatedAt"];
-  console.log("🚀 ~ data ~ uniformObject:", uniformObject);
+  delete uniformObject["undefined"];
   return uniformObject;
 };
 
-export const getUniformData = () => {
-  const storedUniform = localStorage.getItem("uniformData");
-  if (storedUniform) {
-    return JSON.parse(storedUniform);
-  } else {
-    return null;
+export function mergeObjects(updatedObj, prefilledObj) {
+  // Function to merge objects deeply
+  for (let key in prefilledObj) {
+    if (prefilledObj.hasOwnProperty(key)) {
+      // Check if the value is an object (and not null or an array)
+      if (
+        typeof prefilledObj[key] === "object" &&
+        !Array.isArray(prefilledObj[key]) &&
+        prefilledObj[key] !== null
+      ) {
+        // Ensure the updated object has a corresponding object, if not, create it
+        if (!updatedObj[key] || typeof updatedObj[key] !== "object") {
+          updatedObj[key] = {};
+        }
+        // Recursively merge the nested objects
+        mergeObjects(updatedObj[key], prefilledObj[key]);
+      }
+      // Check if it's an array
+      else if (Array.isArray(prefilledObj[key])) {
+        // If the array in updatedObj is empty or undefined, use the array from prefilledObj
+        if (!updatedObj[key] || updatedObj[key].length === 0) {
+          updatedObj[key] = [...prefilledObj[key]];
+        }
+      }
+      // For primitive values
+      else {
+        // If the value in updatedObj is empty, null, or undefined, use the value from prefilledObj
+        if (
+          updatedObj[key] === undefined ||
+          updatedObj[key] === null ||
+          (typeof updatedObj[key] === "string" &&
+            updatedObj[key].trim() === "") ||
+          (typeof updatedObj[key] === "number" && isNaN(updatedObj[key]))
+        ) {
+          updatedObj[key] = prefilledObj[key];
+        }
+      }
+    }
   }
-};
+
+  // Now stringify all values in the final merged object
+  function stringifyValues(obj) {
+    for (let key in obj) {
+      // Convert all values (including objects and arrays) to JSON strings
+      obj[key] = JSON.stringify(obj[key]);
+    }
+  }
+
+  stringifyValues(updatedObj); // Stringify all values
+
+  // Remove createdAt and updatedAt if they exist
+  delete updatedObj["createdAt"];
+  delete updatedObj["updatedAt"];
+  delete updatedObj["deleted_at"];
+  delete updatedObj["id"];
+  delete updatedObj["is_finalized"];
+  delete updatedObj["is_logo_upload"];
+  delete updatedObj["is_pantone_info"];
+  delete updatedObj["pantone_info"];
+  delete updatedObj["undefined"];
+  delete updatedObj["user_id"];
+
+  return updatedObj;
+}

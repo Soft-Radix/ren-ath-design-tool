@@ -37,7 +37,6 @@ const myDesignDataList = [
 ];
 
 const MyDesignList = ({ designList }) => {
-  console.log("🚀 ~ MyDesignList ~ designList:", designList);
   return (
     <div className={styles.designWrap}>
       {designList?.list?.length > 0 &&

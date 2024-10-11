@@ -10,9 +10,8 @@ import { useProductStore } from "../../../src/store";
 // ----------------------------- Utils function imports -------------------------
 import {
   calculateScale,
-  getUniformData,
   handleAddNewUniform,
-  nonRepeatingPatterns,
+  nonRepeatingPatterns
 } from "../../../src/utils/funtions";
 
 // ----------------------------- Components import ------------------------------
@@ -988,7 +987,6 @@ export function Model(props) {
   };
 
   useEffect(() => {
-    const uniformObject = getUniformData();
     const result = combineKeys({
       ...updatedLogos,
     });
@@ -1071,7 +1069,8 @@ export function Model(props) {
                 );
               })}
 
-            {combinedNames?.[3]?.length > 0 &&
+            {combinedNames &&
+              combinedNames?.[3]?.length > 0 &&
               combinedNames?.[3]?.map((item, index) => {
                 return (
                   <SleeveDecalName
