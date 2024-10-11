@@ -95,7 +95,7 @@ export const useUpdateUniformStates = () => {
   useEffect(() => {
     if (response) {
       const parseData = response?.data;
-      // delete parseData['cover_photo']
+      delete parseData["cover_photo"];
       // delete parseData['design_name']
       for (const key in parseData) {
         try {
@@ -119,7 +119,6 @@ export const useUpdateUniformStates = () => {
 
   useEffect(() => {
     const uniformObject = designData;
-    console.log("🚀 ~ useEffect ~ uniformObject:", uniformObject)
     if (uniformObject) {
       //design
       updateDesignType(uniformObject.design.designType);

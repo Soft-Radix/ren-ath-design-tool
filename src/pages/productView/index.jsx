@@ -29,18 +29,20 @@ import Sidebar from "./sidebar";
 // Component inside Canvas to handle snapshot capture
 const CaptureControl = ({ captureRef }) => {
   const { gl, scene, camera } = useThree(); // Access Three.js renderer, scene, and camera
-
+  const { updateSnapShotImage, callSnapShotFunc } = useProductStore(
+    (store) => store
+  );
   const capture = () => {
     gl.render(scene, camera); // Render the current scene
 
     // Capture the canvas as an image
     const imgData = gl.domElement.toDataURL("image/png");
-
-    // Trigger the download of the snapshot
-    const link = document.createElement("a");
-    link.href = imgData;
-    link.download = "snapshot.png";
-    link.click();
+    updateSnapShotImage(imgData);
+    // // Trigger the download of the snapshot
+    // const link = document.createElement("a");
+    // link.href = imgData;
+    // link.download = "snapshot.png";
+    // link.click();
   };
 
   // Pass the capture function back through the ref
@@ -48,6 +50,12 @@ const CaptureControl = ({ captureRef }) => {
     captureRef.current = capture;
   }, [captureRef]);
 
+  useEffect(() => {
+    if (callSnapShotFunc) {
+      capture();
+    }
+  }, [callSnapShotFunc]);
+  
   return null; // No need to render anything, only logic here
 };
 

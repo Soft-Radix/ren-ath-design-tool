@@ -36,14 +36,14 @@ const myDesignDataList = [
   },
 ];
 
-const MyDesignList = ({ designList,loadMyDesignListQuery }) => {
+const MyDesignList = ({ designList, loadMyDesignListQuery }) => {
   return (
     <div className={styles.designWrap}>
       {designList?.list?.length > 0 &&
         designList?.list?.map((design, index) => {
           return (
             <MyDesignCard
-              img={mydesign1}
+              img={design.cover_photo ? design?.cover_photo : ''}
               status={design.is_finalized}
               title={design.design_name}
               key={design.id}

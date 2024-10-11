@@ -128,6 +128,16 @@ export const useProductStore = create((set) => ({
   snapShot: "",
   editedDesignId: null,
   editDesignData: {},
+  snapShotImg: "",
+  callSnapShotFunc: false,
+  handleCallSnapShotFunc: (isYes) =>
+    set(() => ({
+      callSnapShotFunc: isYes,
+    })),
+  updateSnapShotImage: (img) =>
+    set(() => ({
+      snapShotImg: img,
+    })),
   updateEditedDesignData: (data) =>
     set(() => ({
       editDesignData: data,
