@@ -27,9 +27,18 @@ const Header = () => {
   );
 
   const handleSaveUniform = () => {
-    const updatedData = getUpdatedUniformData();
-    const mergedData = mergeObjects(updatedData, editDesignData);
     if (editedDesignId) {
+      const updatedData = getUpdatedUniformData();
+      const mergedData = mergeObjects(updatedData, editDesignData);
+      for (let key in mergedData) {
+        if (typeof mergedData[key] === "string") {
+          mergedData[key] = mergedData[key];
+        } else {
+          mergedData[key] = JSON.stringify(mergedData[key]);
+        }
+      }
+      console.log(mergedData, "mergedData");
+
       editUniformQuery({
         ...mergedData,
         style_code: "10052",
@@ -38,6 +47,8 @@ const Header = () => {
       });
     } else {
       const saveData = getUpdatedUniformData(true);
+      console.log(saveData.logo.logos, "saveData", saveData.logo);
+
       saveUniformQuery({
         ...saveData,
         design_name: Math.random().toFixed(2) + "design",
