@@ -8,7 +8,7 @@ import { useProductStore } from "../../../store";
 import { Color as ParceColor } from "three";
 import styles from "./properties.module.scss";
 import { colorList } from "../../../components/data/colors";
-import { modelRotationValue } from "../../../utils/funtions";
+import { handleAddNewUniform, modelRotationValue } from "../../../utils/funtions";
 
 const Color = () => {
   const ref = useProductStore((state) => state.ref);
@@ -26,12 +26,24 @@ const Color = () => {
     handleIsDesignGradientEnabled,
     handleModelRotation,
   } = useProductStore((state) => state);
+  console.log("🚀 ~ Color ~ patternColor:", patternColor);
+  console.log("🚀 ~ Color ~ designColor:", designColor);
+  console.log("🚀 ~ Color ~ color:", color);
 
   const [expanded, setExpanded] = React.useState(false > false);
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
+
+  useEffect(() => {
+    handleAddNewUniform("color", {
+      color,
+      designColor,
+      patternColor,
+    });
+  }, [color, designColor, patternColor]);
+  
   return (
     <div className={styles.colorWrap}>
       {children?.map((item, childIndex) => (

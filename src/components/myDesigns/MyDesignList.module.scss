@@ -24,6 +24,8 @@
   border-radius: 8px;
   border: 1px solid $secondary;
   .imgContainer {
+    overflow: hidden;
+    object-fit: contain;
     position: relative;
     background: rgba(118, 143, 153, 0.1);
     display: flex;
@@ -32,6 +34,7 @@
     height: 208px;
     img {
       max-height: 198px;
+      object-fit: cover;
     }
     .actionBtn {
       top: 0;

@@ -35,19 +35,23 @@ const myDesignDataList = [
     status: 0,
   },
 ];
-const MyDesignList = () => {
+
+const MyDesignList = ({ designList, loadMyDesignListQuery }) => {
   return (
     <div className={styles.designWrap}>
-      {myDesignDataList?.map((design, index) => {
-        return (
-          <MyDesignCard
-            img={design.img}
-            status={design.status}
-            title={design.name}
-            key={design.name + index}
-          />
-        );
-      })}
+      {designList?.list?.length > 0 &&
+        designList?.list?.map((design, index) => {
+          return (
+            <MyDesignCard
+              img={design.cover_photo ? design?.cover_photo : ''}
+              status={design.is_finalized}
+              title={design.design_name}
+              key={design.id}
+              id={design?.id}
+              loadMyDesignListQuery={loadMyDesignListQuery}
+            />
+          );
+        })}
     </div>
   );
 };
