@@ -11,12 +11,17 @@ import LoadingBars from "../../components/common/loader/LoadingBars";
 import { AuthContext } from "../../contexts/AuthContext";
 const Login = ({ setIsOpen }) => {
   const { setUser } = useContext(AuthContext);
-  const [loadQuery, { response, loading, error }] = useFetch("/auth/login", {
-    method: "post",
-  });
+  const [loadQuery, { response, loading, error, credentialsMatch }] = useFetch(
+    "/auth/login",
+    {
+      method: "post",
+    }
+  );
+
   const handleLogin = (values) => {
     loadQuery(values);
   };
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -30,11 +35,17 @@ const Login = ({ setIsOpen }) => {
 
   useEffect(() => {
     toast.dismiss();
+    
     if (response) {
       setUserLocalData(response.data);
+      toast.error(credentialsMatch);
       setUser(response.data.user);
       toast.success(response.message);
       setIsOpen(false);
+    }
+
+    if (credentialsMatch) {
+      toast.error(credentialsMatch);
     }
 
     if (error) {
@@ -43,7 +54,9 @@ const Login = ({ setIsOpen }) => {
         toast.dismiss(toastId);
       };
     }
-  }, [response, error]);
+
+  }, [response, error, credentialsMatch]);
+
   return (
     <form onSubmit={formik.handleSubmit}>
       <div className={styles.loginWrapper}>
