@@ -36,7 +36,7 @@ const myDesignDataList = [
   },
 ];
 
-const MyDesignList = ({ designList }) => {
+const MyDesignList = ({ designList,loadMyDesignListQuery }) => {
   return (
     <div className={styles.designWrap}>
       {designList?.list?.length > 0 &&
@@ -48,6 +48,7 @@ const MyDesignList = ({ designList }) => {
               title={design.design_name}
               key={design.id}
               id={design?.id}
+              loadMyDesignListQuery={loadMyDesignListQuery}
             />
           );
         })}

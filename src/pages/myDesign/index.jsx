@@ -25,7 +25,7 @@ const Mydesign = () => {
     toast.dismiss();
     if (response) {
       setDesignList(response.data);
-      toast.success(response.message);
+      // toast.success(response.message);
     }
 
     if (error) {
@@ -45,7 +45,10 @@ const Mydesign = () => {
           subHeading="Here is your fully customized design, tailored just for you."
         />
       </div>
-      <MyDesignList designList={designList} />
+      <MyDesignList
+        designList={designList}
+        loadMyDesignListQuery={loadMyDesignListQuery}
+      />
     </MainLayout>
   );
 };

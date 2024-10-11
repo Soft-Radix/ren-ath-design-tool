@@ -163,11 +163,11 @@ export const handleAddNewUniform = (keyName, keyData) => {
 
 export const getUpdatedUniformData = (isSave) => {
   const uniformObject = handleAddNewUniform();
-  if (isSave) {
-    for (let key in uniformObject) {
-      uniformObject[key] = JSON.stringify(uniformObject[key]);
-    }
-  }
+  // if (isSave) {
+  //   for (let key in uniformObject) {
+  //     uniformObject[key] = JSON.stringify(uniformObject[key]);
+  //   }
+  // }
   delete uniformObject["createdAt"];
   delete uniformObject["updatedAt"];
   delete uniformObject["undefined"];

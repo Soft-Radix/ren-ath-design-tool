@@ -1,7 +1,7 @@
 import { ThreeSixty, ZoomIn, ZoomOut } from "@mui/icons-material";
 import { Button, ButtonGroup } from "@mui/material";
 import { OrbitControls } from "@react-three/drei";
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useThree } from "@react-three/fiber";
 import { Suspense, useEffect, useRef } from "react";
 import { Model as M1 } from "../../../public/models/M1/Flex-custom-board-shorts";
 import { Model as M6 } from "../../../public/models/M6/Sleeveless-jersey";
@@ -14,10 +14,7 @@ import { Model as W7 } from "../../../public/models/W7/Sleeveless-jersey-without
 import { Model as W8 } from "../../../public/models/W8/Sleeve-only";
 import loaderGif from "../../assets/gif/loader.gif";
 import { useProductStore } from "../../store";
-import {
-  handleZoomIn,
-  handleZoomOut
-} from "../../utils/funtions";
+import { handleZoomIn, handleZoomOut } from "../../utils/funtions";
 import Header from "./header";
 import styles from "./productView.module.scss";
 import Color from "./propertiesContent/Color";
@@ -29,8 +26,34 @@ import Number from "./propertiesContent/Number";
 import Pattern from "./propertiesContent/Pattern";
 import Sidebar from "./sidebar";
 
+// Component inside Canvas to handle snapshot capture
+const CaptureControl = ({ captureRef }) => {
+  const { gl, scene, camera } = useThree(); // Access Three.js renderer, scene, and camera
+
+  const capture = () => {
+    gl.render(scene, camera); // Render the current scene
+
+    // Capture the canvas as an image
+    const imgData = gl.domElement.toDataURL("image/png");
+
+    // Trigger the download of the snapshot
+    const link = document.createElement("a");
+    link.href = imgData;
+    link.download = "snapshot.png";
+    link.click();
+  };
+
+  // Pass the capture function back through the ref
+  useEffect(() => {
+    captureRef.current = capture;
+  }, [captureRef]);
+
+  return null; // No need to render anything, only logic here
+};
+
 const ProductView = () => {
   const orbitalRef = useRef();
+  const captureRef = useRef(); // This ref will hold the capture function
 
   const { selectedSidebarItem, selectedSidebarItemName, modelLoading } =
     useProductStore((state) => state);
@@ -84,6 +107,7 @@ const ProductView = () => {
                       backgroundColor: "#f0eeed",
                     }}
                   >
+                    {/* Render different models based on the selected product ID */}
                     {id === "W1" || id === "M2" ? (
                       <W1 />
                     ) : id === "W2" || id === "M3" ? (
@@ -110,6 +134,8 @@ const ProductView = () => {
                       maxPolarAngle={Math.PI * 0.55}
                       enableZoom={false}
                     />
+                    {/* Add capture control inside the Canvas */}
+                    <CaptureControl captureRef={captureRef} />
                   </Canvas>
                 </Suspense>
               )}
@@ -137,6 +163,7 @@ const ProductView = () => {
                 <Button key="three" onClick={() => handleZoomOut(orbitalRef)}>
                   <ZoomOut fontSize="large" />
                 </Button>
+                {/* Capture button now works using the ref */}
               </ButtonGroup>
             </div>
           </div>
