@@ -80,7 +80,10 @@ const AccountMenu = () => {
           <ChangePasswordIcon />
           Change Password
         </MenuItem>
-        <MenuItem onClick={handleClose} className={styles.menuItem}>
+        <MenuItem
+          onClick={() => navigate("/my-design")}
+          className={styles.menuItem}
+        >
           <MyDesignIcon />
           My Designs
         </MenuItem>
