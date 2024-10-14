@@ -131,6 +131,13 @@ export const useProductStore = create((set) => ({
   snapShotImg: "",
   callSnapShotFunc: false,
   colorPelleteCollection: [],
+  globalLoader: false,
+  handleGlobalLoader: (loading) => {
+    console.log("🚀 ~ useProductStore ~ loading:", loading)
+    set(() => ({
+      globalLoader: loading,
+    }));
+  },
   handleUpdateCollorPellteCollection: (colorsCollection) =>
     set(() => ({
       colorPelleteCollection: colorsCollection,

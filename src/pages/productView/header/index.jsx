@@ -11,6 +11,7 @@ import useFetch from "../../../hook/CustomHook/usefetch";
 import { useProductStore } from "../../../store";
 import { getUpdatedUniformData, mergeObjects } from "../../../utils/funtions";
 import styles from "./header.module.scss";
+import LoadingBars from "../../../components/common/loader/LoadingBars";
 
 const Header = () => {
   const productName = useProductStore((state) => state.name);
@@ -144,7 +145,7 @@ const Header = () => {
             // handleCallSnapShotFunc(true); // This will trigger the snapshot update
           }}
         >
-          Save
+         Save
         </ThemeButton>
       </div>
       <CommonModal
@@ -180,7 +181,7 @@ const Header = () => {
               handleCallSnapShotFunc(true);
             }}
           >
-            Save
+            {saveLoading && <LoadingBars />} Save
           </ThemeButton>
         </div>
       </CommonModal>
