@@ -1,21 +1,23 @@
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { TextField } from "@mui/material";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import { motion } from "framer-motion";
-import React, { useState, useEffect } from "react";
+import Slider from "rc-slider";
+import React, { useEffect, useState } from "react";
 import { CrossIcon, TickIcon } from "../../../assets/svg/icons";
 import ThemeButton from "../../../components/common/ThemeButton";
 import { useProductStore } from "../../../store";
-import styles from "./properties.module.scss";
-import { colorList } from "../../../components/data/colors";
-import { TextField } from "@mui/material";
-import Slider from "rc-slider";
 import {
   handleAddNewUniform,
   modelRotationValue,
 } from "../../../utils/funtions";
+import styles from "./properties.module.scss";
+import useGetColorPelleteList from "../../../hook/CustomHook/useGetColorPelleteList";
 const Number = () => {
+  const colorList = useGetColorPelleteList();
+
   const {
     number,
     numberColor,

@@ -130,6 +130,11 @@ export const useProductStore = create((set) => ({
   editDesignData: {},
   snapShotImg: "",
   callSnapShotFunc: false,
+  colorPelleteCollection: [],
+  handleUpdateCollorPellteCollection: (colorsCollection) =>
+    set(() => ({
+      colorPelleteCollection: colorsCollection,
+    })),
   handleCallSnapShotFunc: (isYes) =>
     set(() => ({
       callSnapShotFunc: isYes,

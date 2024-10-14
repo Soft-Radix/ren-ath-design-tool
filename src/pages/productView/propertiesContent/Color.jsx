@@ -3,17 +3,20 @@ import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import React, { useEffect } from "react";
-import { CrossIcon, TickIcon } from "../../../assets/svg/icons";
-import { useProductStore } from "../../../store";
 import { Color as ParceColor } from "three";
+import { CrossIcon, TickIcon } from "../../../assets/svg/icons";
+import useGetColorPelleteList from "../../../hook/CustomHook/useGetColorPelleteList";
+import { useProductStore } from "../../../store";
+import {
+  handleAddNewUniform,
+  modelRotationValue,
+} from "../../../utils/funtions";
 import styles from "./properties.module.scss";
-import { colorList } from "../../../components/data/colors";
-import { handleAddNewUniform, modelRotationValue } from "../../../utils/funtions";
 
 const Color = () => {
+  const colorList = useGetColorPelleteList();
   const ref = useProductStore((state) => state.ref);
   const children = ref?.current?.children || [];
-
   const {
     color,
     updateColor,
@@ -26,9 +29,6 @@ const Color = () => {
     handleIsDesignGradientEnabled,
     handleModelRotation,
   } = useProductStore((state) => state);
-  console.log("🚀 ~ Color ~ patternColor:", patternColor);
-  console.log("🚀 ~ Color ~ designColor:", designColor);
-  console.log("🚀 ~ Color ~ color:", color);
 
   const [expanded, setExpanded] = React.useState(false > false);
 
@@ -43,7 +43,7 @@ const Color = () => {
       patternColor,
     });
   }, [color, designColor, patternColor]);
-  
+
   return (
     <div className={styles.colorWrap}>
       {children?.map((item, childIndex) => (
@@ -114,7 +114,9 @@ const Color = () => {
                   )}
                 </div>
               ))}
+            </div>
 
+            <div className={styles.colorPalletWrap}>
               <div>
                 <h4>Pattern Colors</h4>
                 <div
@@ -124,15 +126,6 @@ const Color = () => {
                     gap: 10,
                   }}
                 >
-                  {/* <div
-                    className={styles.colorViewer}
-                    style={{ backgroundColor: "transparent" }}
-                    onClick={() => {
-                      handlePatternColor({ [childIndex]: null });
-                    }}
-                  >
-                    <CrossIcon />
-                  </div> */}
                   {colorList.map((itemColor, index) => (
                     <div
                       key={index}
@@ -148,32 +141,32 @@ const Color = () => {
                   ))}
                 </div>
               </div>
-
-              <h3>Design Color</h3>
-              <div className={styles.colorPalletWrap}>
-                {/* <div
-              className={styles.colorViewer}
-              style={{ backgroundColor: "transparent" }}
-              onClick={() => {
-                handleDesignColor(null);
-              }}
-            >
-              <CrossIcon />
-            </div> */}
-                {colorList.map((itemColor, index) => (
-                  <div
-                    key={index}
-                    className={styles.colorViewer}
-                    style={{ backgroundColor: itemColor }}
-                    onClick={() => {
-                      handleDesignColor({ [childIndex]: itemColor });
-                      handleIsDesignGradientEnabled(false);
-                    }}
-                  >
-                    {designColor[childIndex] &&
-                      designColor[childIndex] === itemColor && <TickIcon />}
-                  </div>
-                ))}
+            </div>
+            <div className={styles.colorPalletWrap}>
+              <div>
+                <h3>Design Color</h3>
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: 10,
+                  }}
+                >
+                  {colorList.map((itemColor, index) => (
+                    <div
+                      key={index}
+                      className={styles.colorViewer}
+                      style={{ backgroundColor: itemColor }}
+                      onClick={() => {
+                        handleDesignColor({ [childIndex]: itemColor });
+                        handleIsDesignGradientEnabled(false);
+                      }}
+                    >
+                      {designColor[childIndex] &&
+                        designColor[childIndex] === itemColor && <TickIcon />}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </AccordionDetails>
