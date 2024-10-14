@@ -1,22 +1,19 @@
 import { Tooltip } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
   BackButtonIcon,
   ShareButton
 } from "../../../assets/svg/icons";
-import CustomDrawer from "../../../components/common/drawer";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { BackButtonIcon, ShareButton } from "../../../assets/svg/icons";
+import ColorPelleteDrawer from "../../../components/common/drawer";
+import { InputField } from "../../../components/common/InputField/InputField";
 import CommonModal from "../../../components/common/modal";
 import ThemeButton from "../../../components/common/ThemeButton";
 import useFetch from "../../../hook/CustomHook/usefetch";
 import { useProductStore } from "../../../store";
 import { getUpdatedUniformData, mergeObjects } from "../../../utils/funtions";
 import styles from "./header.module.scss";
-import { InputField } from "../../../components/common/InputField/InputField";
 
 const Header = () => {
   const productName = useProductStore((state) => state.name);
@@ -142,7 +139,7 @@ const Header = () => {
             onClick={toggleDrawer(true)}
           />
         </Tooltip>
-        <CustomDrawer open={isOpen} toggleDrawer={toggleDrawer} />
+        <ColorPelleteDrawer open={isOpen} toggleDrawer={toggleDrawer} />
         <ShareButton />
         <ThemeButton
           onClick={() => {

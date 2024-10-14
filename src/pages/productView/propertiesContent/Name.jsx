@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { CrossIcon, TickIcon } from "../../../assets/svg/icons";
 import ThemeButton from "../../../components/common/ThemeButton";
-import { colorList } from "../../../components/data/colors";
 
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -14,8 +13,11 @@ import Slider from "rc-slider";
 import React, { useEffect, useState } from "react";
 import { useProductStore } from "../../../store";
 import styles from "./properties.module.scss";
+import useGetColorPelleteList from "../../../hook/CustomHook/useGetColorPelleteList";
 
 const Name = () => {
+  const colorList = useGetColorPelleteList();
+
   const {
     id,
     nameFont,
