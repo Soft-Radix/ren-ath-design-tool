@@ -6,7 +6,9 @@ import SectionHeading from "../../components/common/sectionHeading";
 import MyDesignList from "../../components/myDesigns/MyDesignList";
 import useFetch from "../../hook/CustomHook/usefetch";
 import { toast } from "react-toastify";
+
 const Mydesign = () => {
+  
   const [designList, setDesignList] = useState([]);
   const [loadMyDesignListQuery, { response, loading, error }] = useFetch(
     "/design/list",
@@ -35,6 +37,8 @@ const Mydesign = () => {
       };
     }
   }, [response, error]);
+
+  console.log("designList", designList);
 
   return (
     <MainLayout>
