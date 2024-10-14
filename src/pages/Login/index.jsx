@@ -16,9 +16,12 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { useProductStore } from "../../store";
 const Login = ({ setIsOpen }) => {
   const { setUser } = useContext(AuthContext);
-  const [loadQuery, { response, loading, error }] = useFetch("/auth/login", {
-    method: "post",
-  });
+  const [loadQuery, { response, loading, error, credentialsMatch }] = useFetch(
+    "/auth/login",
+    {
+      method: "post",
+    }
+  );
   // fecth api to save user color pellete list
   const [saveColorPelleteQuery] = useFetch("/color-palette/add", {
     method: "post",
@@ -44,6 +47,7 @@ const Login = ({ setIsOpen }) => {
   const handleLogin = (values) => {
     loadQuery(values);
   };
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -57,6 +61,7 @@ const Login = ({ setIsOpen }) => {
 
   useEffect(() => {
     toast.dismiss();
+
     if (response) {
       setUserColorPellete(response?.data?.user?.color_palette);
       handleUpdateCollorPellteCollection(response?.data?.user?.color_palette);
@@ -68,9 +73,14 @@ const Login = ({ setIsOpen }) => {
           getTempColors
         );
       }
+      toast.error(credentialsMatch);
       setUser(response.data.user);
       toast.success(response.message);
       setIsOpen(false);
+    }
+
+    if (credentialsMatch) {
+      toast.error(credentialsMatch);
     }
 
     if (error) {
@@ -79,7 +89,7 @@ const Login = ({ setIsOpen }) => {
         toast.dismiss(toastId);
       };
     }
-  }, [response, error]);
+  }, [response, error, credentialsMatch]);
 
   useEffect(() => {
     if (colorReponse?.data) {

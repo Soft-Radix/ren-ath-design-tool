@@ -1,0 +1,88 @@
+@import "../var";
+
+.dash_layout {
+  --sidebarWidth: 270px;
+  --sidebarWidthZero: 0px;
+  --topSpace: 1.25rem;
+
+  @include max($xl) {
+    --topSpace: 0;
+  }
+
+  .overlaySideBar {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: #00000094;
+    z-index: 9999;
+    display: none;
+
+    @media (max-width: 992px) {
+      display: block;
+    }
+  }
+
+  .sidebar {
+    // padding: 2.25rem 0;
+    background-color: #fff;
+    position: fixed;
+    width: var(--sidebarWidth);
+    height: 100%;
+    left: 0;
+    z-index: 9999;
+    transition: transform 0.15s ease-in-out;
+
+    &.open {
+      @media (max-width: 992px) {
+        transform: translateX(-101%);
+      }
+    }
+
+    // @include max($xl) {
+    //   transform: translateX(-101%);
+    //   z-index: 99;
+    //   &.open {
+    //     transform: none;
+    //   }
+    // }
+  }
+
+  .dash_body_outer {
+    padding-left: var(--sidebarWidth);
+    padding-top: var(--topSpace);
+    transition: transform 0.15s ease-in-out;
+
+    @media (max-width: 992px) {
+      padding-left: var(--sidebarWidthZero);
+    }
+
+    &.open {
+      // @media (max-width: 992px) {
+      //   padding-left: var(--sidebarWidthZero);
+      // }
+    }
+
+    @include max($xl) {
+      // padding-left: 0;
+    }
+  }
+
+  .dash_body {
+    min-height: calc(100vh - var(--topSpace));
+    background-color: $canvasBg;
+    border-radius: 2rem 0 0 0;
+
+    .dash_body_container {
+      padding: 2rem;
+      max-width: calc(1920px - var(--sidebarWidth));
+
+      @media (max-width: 992px) {
+        padding: 1rem;
+      }
+    }
+
+    @include max($xl) {
+      border-radius: 0;
+    }
+  }
+}

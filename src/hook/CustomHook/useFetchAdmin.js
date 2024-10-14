@@ -1,24 +1,26 @@
-import { useState } from "react";
 import axios from "axios";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { clearUserLocalData } from "../../utils/common";
+import { clearAdminLocalData } from "../../utils/common";
 
-const useFetchFormData = (url, config) => {
+const useFetchAdmin = (url, config, formdata) => {
   const [response, setResponse] = useState(undefined);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(undefined);
+  const [credentialsMatch, setCredentialsMatch] = useState(undefined);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
   const instance = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL,
   });
   const loadQuery = async (data, rest) => {
-    const token = localStorage.getItem("UniFormDesign_token");
+    const token = localStorage.getItem("UniFormDesign_token_admin");
+
     const headers = !token
       ? {}
       : {
           Authorization: token,
-          "Content-Type": "multipart/form-data",
+          "Content-Type": formdata ? "multipart/form-data" : "application/json",
         };
 
     return new Promise((resolve, reject) => {
@@ -28,39 +30,52 @@ const useFetchFormData = (url, config) => {
         ...config,
         data,
         headers,
+        ...rest,
       })
         .then((response) => {
           if (response.status === 200 || response.status === 201) {
-            setLoading(false);
+            resolve(response);
             setError(undefined);
-
-            response.data != null && setResponse(response.data);
+            response.data != null &&
+              response?.data?.data?.user.role_id ==1 &&
+              setResponse(response.data);
+              if (response?.data?.data?.user.role_id == 2) {
+                setCredentialsMatch("Credentials do not match");
+              } else {
+                setCredentialsMatch(undefined);
+              }
           } else {
-            setLoading(false);
+          
             setError(response?.data);
             setErrorMessage(response?.data?.message ?? "Something went wrong!");
             setResponse(undefined);
           }
+          // setTimeout(() => {
+          setLoading(false);
+          // }, 1);
         })
         .catch((e) => {
           if (e.response?.status === 401 || e.response?.status === 403) {
-            clearUserLocalData();
+            clearAdminLocalData();
             navigate("/");
           } else if (e.response?.status === 404) {
             setResponse(undefined);
           } else {
             setResponse(undefined);
           }
+  
           setErrorMessage(
             e.response?.data?.toString() ?? "Something went wrong!"
           );
           setError(e.response?.data);
-          setLoading(false);
+          setTimeout(() => {
+            setLoading(false);
+          }, 1);
         });
     });
   };
 
-  return [loadQuery, { response, loading, error, errorMessage }];
+  return [loadQuery, { response, loading, error, errorMessage,credentialsMatch }];
 };
 
-export default useFetchFormData;
+export default useFetchAdmin;
