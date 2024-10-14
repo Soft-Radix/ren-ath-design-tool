@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+ 
 import bgImage from "../../assets/images/home/bgImage.png";
 import Loader from "../../components/common/loader";
 import SectionHeading from "../../components/common/sectionHeading";
@@ -8,9 +8,9 @@ import MyDesignList from "../../components/myDesigns/MyDesignList";
 import useFetch from "../../hook/CustomHook/usefetch";
 import { toast } from "react-toastify";
 import LoadingBars from "../../components/common/loader/LoadingBars";
+import styles from './myDesign.module.scss'
 
 const Mydesign = () => {
-  const { globalLoader } = useProductStore((store) => store);
   const [designList, setDesignList] = useState([]);
 
   const [loadMyDesignListQuery, { response, loading, error }] = useFetch(
