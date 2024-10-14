@@ -11,19 +11,6 @@ const useGetColorPelleteList = () => {
   const { colorPelleteCollection } = useProductStore((store) => store);
   const defaultColorPelleteList = [...colorList];
 
-  const [loadColorListQuery, { response, loading, error }] = useFetch(
-    "/color-palette/detail",
-    {
-      method: "get",
-    }
-  );
-  //load api
-  useEffect(() => {
-    if (userToken) {
-      loadColorListQuery();
-    }
-  }, [userToken]);
-
   useEffect(() => {
     if (colorPelleteCollection?.length > 0) {
       setFinalColorPelleteList([...colorPelleteCollection]);

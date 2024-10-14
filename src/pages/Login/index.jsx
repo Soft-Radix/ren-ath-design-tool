@@ -20,11 +20,15 @@ const Login = ({ setIsOpen }) => {
     method: "post",
   });
   // fecth api to save user color pellete list
-  const [
-    saveColorPelleteQuery,
-    { response: colorReponse, loading: colorLoading, error: colorError },
-  ] = useFetch("/color-palette/add", {
+  const [saveColorPelleteQuery] = useFetch("/color-palette/add", {
     method: "post",
+  });
+
+  const [
+    loadColorListQuery,
+    { response: colorReponse, loading: colorLoading, error: colorError },
+  ] = useFetch("/color-palette/detail", {
+    method: "get",
   });
   const { handleUpdateCollorPellteCollection } = useProductStore(
     (store) => store
@@ -34,6 +38,7 @@ const Login = ({ setIsOpen }) => {
     const combinedColor = [...preColors, ...TempColors];
     saveColorPelleteQuery({ color_palette: combinedColor.join(",") });
     localStorage.removeItem("colorPelleteCollectionTemporary");
+    loadColorListQuery();
   };
 
   const handleLogin = (values) => {
@@ -75,6 +80,14 @@ const Login = ({ setIsOpen }) => {
       };
     }
   }, [response, error]);
+
+  useEffect(() => {
+    if (colorReponse?.data) {
+      setUserColorPellete(colorReponse.data?.color_palette);
+      handleUpdateCollorPellteCollection(colorReponse.data?.color_palette);
+    }
+  }, [colorReponse, colorError]);
+
   return (
     <form onSubmit={formik.handleSubmit}>
       <div className={styles.loginWrapper}>
