@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { clearUserLocalData } from "../../utils/common";
 
 const useFetch = (url, config, formdata) => {
+  console.log("🚀 ~ useFetch ~ url:", url)
   const [response, setResponse] = useState(undefined);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(undefined);
@@ -37,14 +38,27 @@ const useFetch = (url, config, formdata) => {
           if (response.status === 200 || response.status === 201) {
             resolve(response);
             setError(undefined);
-            response.data != null &&
+            console.log(url, "response?.data?.data?.user.role_id");
+            if(url == '/auth/login'){
+              response.data != null &&
               response?.data?.data?.user.role_id == 2 &&
               setResponse(response.data);
-            if (response?.data?.data?.user.role_id == 1) {
-              setCredentialsMatch("Credentials do not match");
-            } else {
-              setCredentialsMatch(undefined);
+               if (response?.data?.data?.user.role_id == 1) {
+                  setCredentialsMatch("Credentials do not match");
+                } else {
+                  setCredentialsMatch(undefined);
+                }
+            }else{
+              setResponse(response.data);
             }
+            // // response.data != null &&
+            // //   response?.data?.data?.user.role_id == 2 &&
+            //   setResponse(response.data);
+            // // if (response?.data?.data?.user.role_id == 1) {
+            // //   setCredentialsMatch("Credentials do not match");
+            // // } else {
+            // //   setCredentialsMatch(undefined);
+            // // }
           } else {
             setError(response?.data);
             setErrorMessage(response?.data?.message ?? "Something went wrong!");

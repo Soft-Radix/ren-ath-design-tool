@@ -1,24 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+ 
 import bgImage from "../../assets/images/home/bgImage.png";
 import Loader from "../../components/common/loader";
 import SectionHeading from "../../components/common/sectionHeading";
 import MainLayout from "../../components/Layouts/MainLayout";
 import MyDesignList from "../../components/myDesigns/MyDesignList";
 import useFetch from "../../hook/CustomHook/usefetch";
-import styles from "./myDesign.module.scss";
-import { useProductStore } from "../../store";
-import { Box } from "@mui/material";
+import { toast } from "react-toastify";
+import LoadingBars from "../../components/common/loader/LoadingBars";
+import styles from './myDesign.module.scss'
+
 const Mydesign = () => {
-  const { globalLoader } = useProductStore((store) => store);
-  console.log("🚀 ~ Mydesign ~ globalLoader:", globalLoader);
   const [designList, setDesignList] = useState([]);
+
   const [loadMyDesignListQuery, { response, loading, error }] = useFetch(
     "/design/list",
     {
       method: "post",
     }
   );
+
 
   //load api
   useEffect(() => {
@@ -28,7 +29,7 @@ const Mydesign = () => {
   // handle api response
   useEffect(() => {
     toast.dismiss();
-    if (response) {
+    if (response?.data) {
       setDesignList(response.data);
       // toast.success(response.message);
     }
@@ -42,35 +43,23 @@ const Mydesign = () => {
   }, [response, error]);
 
   return (
-    <>
-      {globalLoader ? (
-        <Box
-          sx={{
-            display: "flex",
-            height: "100vh",
-            width: "100%",
-            position: "relative",
-            justifyContent: "center",
-          }}
-        >
-          <Loader />
-        </Box>
+    <MainLayout>
+      <div className={styles.mainWrap}>
+        <img src={bgImage} alt="" />
+        <SectionHeading
+          heading="My Designs"
+          subHeading="Here is your fully customized design, tailored just for you."
+        />
+      </div>
+      {loading ? (
+        <LoadingBars />
       ) : (
-        <MainLayout>
-          <div className={styles.mainWrap}>
-            <img src={bgImage} alt="" />
-            <SectionHeading
-              heading="My Designs"
-              subHeading="Here is your fully customized design, tailored just for you."
-            />
-          </div>
-          <MyDesignList
-            designList={designList}
-            loadMyDesignListQuery={loadMyDesignListQuery}
-          />
-        </MainLayout>
+        <MyDesignList
+          designList={designList}
+          loadMyDesignListQuery={loadMyDesignListQuery}
+        />
       )}
-    </>
+    </MainLayout>
   );
 };
 

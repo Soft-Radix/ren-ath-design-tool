@@ -6,11 +6,13 @@ const ThemeButton = ({
   className,
   color = "",
   textColor = "",
+  isDisable=false,
   ...rest
 }) => {
   return (
     <motion.span whileHover={{ scale: 1.03 }}>
       <Button
+      disabled={isDisable}
         sx={{
           background: `${color} !important`,
           color: `${textColor} !important`,

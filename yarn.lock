@@ -397,7 +397,11 @@
 
 "@icons/material@^0.2.4":
   version "0.2.4"
+<<<<<<< HEAD
+  resolved "https://registry.yarnpkg.com/@icons/material/-/material-0.2.4.tgz#e90c9f71768b3736e76d7dd6783fc6c2afa88bc8"
+=======
   resolved "https://registry.npmjs.org/@icons/material/-/material-0.2.4.tgz"
+>>>>>>> bc8a067e63968dee8e9828371e7c34d05f90b3b7
   integrity sha512-QPcGmICAPbGLGb6F/yNf/KzKqvFx8z5qx3D1yFqVAjoFmXK35EgyW+cJ57Te3CNsmzblwtzakLGFqHPqrfb4Tw==
 
 "@jridgewell/gen-mapping@^0.3.5":
@@ -2526,7 +2530,11 @@ maath@^0.6.0:
 
 material-colors@^1.2.1:
   version "1.2.6"
+<<<<<<< HEAD
+  resolved "https://registry.yarnpkg.com/material-colors/-/material-colors-1.2.6.tgz#6d1958871126992ceecc72f4bcc4d8f010865f46"
+=======
   resolved "https://registry.npmjs.org/material-colors/-/material-colors-1.2.6.tgz"
+>>>>>>> bc8a067e63968dee8e9828371e7c34d05f90b3b7
   integrity sha512-6qE4B9deFBIa9YSpOc9O0Sgc43zTeVYbgDT5veRKSlB2+ZuHNoVVxA1L/ckMUayV9Ay9y7Z/SZCLcGteW9i7bg==
 
 meshline@^3.1.6:
@@ -2827,7 +2835,11 @@ rc-util@^5.36.0:
 
 react-color@^2.19.3:
   version "2.19.3"
+<<<<<<< HEAD
+  resolved "https://registry.yarnpkg.com/react-color/-/react-color-2.19.3.tgz#ec6c6b4568312a3c6a18420ab0472e146aa5683d"
+=======
   resolved "https://registry.npmjs.org/react-color/-/react-color-2.19.3.tgz"
+>>>>>>> bc8a067e63968dee8e9828371e7c34d05f90b3b7
   integrity sha512-LEeGE/ZzNLIsFWa1TMe8y5VYqr7bibneWmvJwm1pCn/eNmrabWDh659JSPn9BuaMpEfU83WTOJfnCcjDZwNQTA==
   dependencies:
     "@icons/material" "^0.2.4"
@@ -2974,7 +2986,11 @@ react@*, "react@^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0", "react@^15.3.0 || ^16
 
 reactcss@^1.2.0:
   version "1.2.3"
+<<<<<<< HEAD
+  resolved "https://registry.yarnpkg.com/reactcss/-/reactcss-1.2.3.tgz#c00013875e557b1cf0dfd9a368a1c3dab3b548dd"
+=======
   resolved "https://registry.npmjs.org/reactcss/-/reactcss-1.2.3.tgz"
+>>>>>>> bc8a067e63968dee8e9828371e7c34d05f90b3b7
   integrity sha512-KiwVUcFu1RErkI97ywr8nvx8dNOpT03rbnma0SSalTYjkrPYaEajR4a/MRt6DZ46K6arDRbWMNHF+xH7G7n/8A==
   dependencies:
     lodash "^4.0.1"
@@ -3378,6 +3394,11 @@ tiny-warning@^1.0.2:
 
 tinycolor2@^1.4.1:
   version "1.6.0"
+<<<<<<< HEAD
+  resolved "https://registry.yarnpkg.com/tinycolor2/-/tinycolor2-1.6.0.tgz#f98007460169b0263b97072c5ae92484ce02d09e"
+  integrity sha512-XPaBkWQJdsf3pLKJV9p4qN/S+fm2Oj8AIPo1BTUhg5oxkvm9+SVEGFdhyOz7tTdUTfvxMiAs4sp6/eZO2Ew+pw==
+
+=======
   resolved "https://registry.npmjs.org/tinycolor2/-/tinycolor2-1.6.0.tgz"
   integrity sha512-XPaBkWQJdsf3pLKJV9p4qN/S+fm2Oj8AIPo1BTUhg5oxkvm9+SVEGFdhyOz7tTdUTfvxMiAs4sp6/eZO2Ew+pw==
 
@@ -3393,6 +3414,7 @@ tldts@^6.1.32:
   dependencies:
     tldts-core "^6.1.47"
 
+>>>>>>> bc8a067e63968dee8e9828371e7c34d05f90b3b7
 to-fast-properties@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/to-fast-properties/-/to-fast-properties-2.0.0.tgz"

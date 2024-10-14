@@ -34,6 +34,7 @@ const useFetchAdmin = (url, config, formdata) => {
       })
         .then((response) => {
           if (response.status === 200 || response.status === 201) {
+            debugger
             resolve(response);
             setError(undefined);
             response.data != null &&
