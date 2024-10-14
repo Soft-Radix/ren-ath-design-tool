@@ -121,7 +121,7 @@ export default function ColorPelleteDrawer({ open, toggleDrawer }) {
               }}
               onClick={toggleDrawer(false)}
             >
-              <img src="../../../../src/assets/close-circle-line.svg" />
+              <img src="/close-circle-line.svg" />
             </Box>
           </ListSubheader>
         </ListItem>
@@ -154,7 +154,7 @@ export default function ColorPelleteDrawer({ open, toggleDrawer }) {
             {selectedColors.map((color, index) => (
               <Box key={index} className="colorListBox">
                 <img
-                  src="../../../../src/assets/close-circle-line.svg"
+                  src="/close-circle-line.svg"
                   onClick={() => handleRemoveColor(color)}
                 />
                 <Box
