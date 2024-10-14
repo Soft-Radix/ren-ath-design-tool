@@ -7,7 +7,9 @@ const useFetch = (url, config, formdata) => {
   const [response, setResponse] = useState(undefined);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(undefined);
+  const [credentialsMatch, setCredentialsMatch] = useState(undefined);
   const [errorMessage, setErrorMessage] = useState("");
+
   const navigate = useNavigate();
   const instance = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -25,7 +27,7 @@ const useFetch = (url, config, formdata) => {
     return new Promise((resolve, reject) => {
       setLoading(true);
       instance({
-        url: `${url}`,
+        url,
         ...config,
         data,
         headers,
@@ -35,7 +37,14 @@ const useFetch = (url, config, formdata) => {
           if (response.status === 200 || response.status === 201) {
             resolve(response);
             setError(undefined);
-            response.data != null && setResponse(response.data);
+            response.data != null &&
+              response?.data?.data?.user.role_id == 2 &&
+              setResponse(response.data);
+            if (response?.data?.data?.user.role_id == 1) {
+              setCredentialsMatch("Credentials do not match");
+            } else {
+              setCredentialsMatch(undefined);
+            }
           } else {
             setError(response?.data);
             setErrorMessage(response?.data?.message ?? "Something went wrong!");
@@ -65,7 +74,10 @@ const useFetch = (url, config, formdata) => {
     });
   };
 
-  return [loadQuery, { response, loading, error, errorMessage }];
+  return [
+    loadQuery,
+    { response, loading, error, errorMessage, credentialsMatch },
+  ];
 };
 
 export default useFetch;

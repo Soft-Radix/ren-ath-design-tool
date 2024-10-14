@@ -1,0 +1,234 @@
+@import "../var";
+
+$menuTransition: 0.2s linear;
+@mixin activeBefore {
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 20px;
+  width: 2px;
+  border-radius: 10px;
+  background-color: $primary;
+  z-index: 1;
+}
+
+.menu_list {
+  font-weight: 500;
+  @include noUserSelect;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.menu_list1 {
+  font-weight: 500;
+  @include noUserSelect;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+}
+.menu_button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 1rem;
+  border-radius: 8px;
+
+  gap: 1rem;
+  .btn_content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    span {
+      line-height: 1;
+      height: 1.875rem;
+      width: 1.875rem;
+      @include flexCenter;
+      border-radius: 4px;
+    }
+    img {
+      width: 64%;
+    }
+    svg {
+      width: 64%;
+      height: 64%;
+    }
+  }
+  .btn_content1 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    span {
+      line-height: 1;
+      height: 1.875rem;
+      width: 1.875rem;
+      @include flexCenter;
+      border-radius: 4px;
+    }
+    img {
+      width: 64%;
+    }
+  }
+  .dropIcon_filled {
+    transform: rotate(-90deg);
+  }
+  .dropIcon {
+    transition: $menuTransition;
+    svg {
+      width: 14px;
+    }
+  }
+}
+.subMenuList {
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: $menuTransition;
+  padding-left: 54px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  .subMenu {
+    cursor: pointer;
+    position: relative;
+    padding: 4px 0px;
+    &.active {
+      color: $white;
+      &::before {
+        @include activeBefore;
+        left: -10px;
+      }
+    }
+  }
+}
+.menu {
+  cursor: pointer;
+  position: relative;
+  border-radius: 8px;
+  &.active {
+    // background-color: $secondary;
+    .menu_button {
+      &::before {
+        @include activeBefore;
+        left: 10px;
+      }
+      .btn_content {
+        // color: $white;
+        span {
+          border: 1px solid $primary;
+          // background: #fff;
+        }
+      }
+      .btn_content1 {
+        color: $primary;
+      }
+      .dropIcon {
+        svg {
+          color: $white;
+        }
+      }
+      .dropIcon_filled {
+        svg {
+          color: $white;
+        }
+      }
+    }
+  }
+  &.opened {
+    &.active {
+      .menu_button {
+        &::before {
+          display: none;
+        }
+      }
+      .subMenuList {
+        .subMenu {
+          color: $white;
+        }
+      }
+    }
+    // padding-bottom: 0;
+    .menu_button {
+      .dropIcon {
+        transform: rotate(-180deg);
+        transition: $menuTransition;
+      }
+    }
+    .subMenuList {
+      padding-top: 4px;
+      padding-bottom: 10px;
+      transition: $menuTransition;
+      opacity: 1;
+      max-height: 15rem;
+    }
+  }
+  // &.filled {
+  //   background-color: $secondary;
+  //   .menu_button {
+  //     &::before {
+  //       @include activeBefore;
+  //       left: 10px;
+  //     }
+  //     .btn_content {
+  //       span {
+  //         border: 1px solid $primary;
+  //         background: #fff;
+  //       }
+  //     }
+  //   }
+  // }
+  // &.innerActive {
+  //   .menu_button {
+  //     background-color: $secondary;
+  //   }
+  // }
+}
+.logo {
+  padding: 0px 0rem;
+  img {
+    padding: 20px 1rem;
+  }
+}
+.custom_logo {
+  display: flex;
+  align-items: center;
+  span {
+    font-weight: 600;
+    font-size: 16px;
+  }
+  .BackBtn {
+    background: #e9e9e9;
+    border-radius: 4px;
+    width: 30px;
+    height: 30px;
+  }
+  hr {
+    padding: 30px 0px;
+  }
+}
+.active1 {
+  .menu_button {
+    background-color: $secondary;
+    &::before {
+      content: "";
+      position: absolute;
+      transform: translateY(-50%);
+      height: 20px;
+      width: 2px;
+      border-radius: 10px;
+      background-color: $white;
+      z-index: 1;
+      left: 7px;
+      top: 50%;
+    }
+    .btn_content {
+      color: $white;
+      // span {
+      //   // border: 1px solid $primary;
+      //   background: #fff;
+      // }
+    }
+  }
+}

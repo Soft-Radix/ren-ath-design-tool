@@ -1,14 +1,19 @@
+import { Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { BackButtonIcon, ShareButton } from "../../../assets/svg/icons";
+import {
+  BackButtonIcon,
+  ShareButton
+} from "../../../assets/svg/icons";
+import ColorPelleteDrawer from "../../../components/common/drawer";
+import { InputField } from "../../../components/common/InputField/InputField";
 import CommonModal from "../../../components/common/modal";
 import ThemeButton from "../../../components/common/ThemeButton";
 import useFetch from "../../../hook/CustomHook/usefetch";
 import { useProductStore } from "../../../store";
 import { getUpdatedUniformData, mergeObjects } from "../../../utils/funtions";
 import styles from "./header.module.scss";
-import { InputField } from "../../../components/common/InputField/InputField";
 
 const Header = () => {
   const productName = useProductStore((state) => state.name);
@@ -22,6 +27,7 @@ const Header = () => {
   } = useProductStore((state) => state);
   const [designName, setDesignName] = useState("");
   const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
   const [
     saveUniformQuery,
     { response: saveResponse, saveLoading, error: saveError },
@@ -110,6 +116,9 @@ const Header = () => {
     setDesignName(editDesignData?.design_name);
   }, [editDesignData]);
 
+  const toggleDrawer = (open) => () => {
+    setIsOpen(open);
+  };
   return (
     <div className={styles.mainWrap}>
       <div className={styles.leftWrap}>
@@ -119,6 +128,18 @@ const Header = () => {
         <span className={styles.title}>{productName}</span>
       </div>
       <div className={styles.rightWrap}>
+        <Tooltip title="Add your own color palette">
+          <img
+            src="../../../../src/assets/svg/colorPallete.svg"
+            alt=""
+            style={{
+              marginTop: 5,
+              cursor: "pointer",
+            }}
+            onClick={toggleDrawer(true)}
+          />
+        </Tooltip>
+        <ColorPelleteDrawer open={isOpen} toggleDrawer={toggleDrawer} />
         <ShareButton />
         <ThemeButton
           onClick={() => {

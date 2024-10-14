@@ -1,0 +1,52 @@
+@import "../var";
+
+.layout_page {
+  @include flexCenter;
+  min-height: calc(100vh - 20px);
+  padding: 2rem;
+  margin: 1.25rem 0 0 1.25rem;
+  border-radius: 40px 0 0 0;
+  background-color: $canvasBg;
+  @include max($md) {
+    min-height: 100vh;
+    margin: 0;
+    border-radius: 0;
+    padding: 1.5rem;
+  }
+  .layout_box {
+    max-width: 500px;
+    width: 100%;
+    min-height: 100px;
+    @include card;
+    padding: 3.25rem;
+    @include max($md) {
+      padding: 2rem 1.5rem;
+    }
+  }
+  .layout_heading {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    max-width: 340px;
+    margin: 0 auto 2.5rem;
+    img {
+      width: 100%;
+    }
+    h3 {
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+    h5 {
+      font-weight: 500;
+    }
+    @include max($md) {
+      // max-width: 100%;
+      margin-bottom: 2rem;
+      img {
+        max-width: 136px;
+      }
+      h3 {
+        margin-top: 1.5rem;
+      }
+    }
+  }
+}

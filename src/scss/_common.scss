@@ -172,8 +172,9 @@ label.form_label {
       font-size: 1rem;
       -webkit-box-shadow: 0 0 0 1000px #fff inset;
 
-      &:not(.MuiInputBase-inputMultiline, .MuiAutocomplete-input) {
-        padding: 12px 14px;
+      &:not(.MuiAutocomplete-input, .MuiInputBase-inputMultiline) {
+        padding: 14px 14px;
+        height: 100%;
       }
 
       &::placeholder {
@@ -391,6 +392,91 @@ label.form_label {
   color: $error;
   font-weight: 500;
 }
+.theme_table {
+  border: 1px solid $primary;
+  overflow-x: auto;
+  border-radius: 8px;
+  --thead_padding: 0.875rem 1rem;
+  --tbody_padding: 1.5rem 1rem;
+
+  .containedWidth {
+    width: 1%;
+  }
+
+  table {
+    white-space: nowrap;
+
+    .cell_dateTime {
+      font-weight: 400;
+      white-space: nowrap;
+
+      p {
+        font-size: var(--f14);
+        margin-bottom: 2px;
+      }
+
+      span {
+        font-size: 12px;
+      }
+    }
+
+    .paymentMethod {
+      white-space: pre-line;
+      width: 200px;
+    }
+
+    th,
+    td {
+      color: $primary;
+      border-bottom: 1px solid $primary;
+      line-height: 1;
+    }
+  }
+
+  thead {
+    th,
+    td {
+      padding: var(--thead_padding);
+    }
+
+    th {
+      background-color: $tableHeadColor;
+
+      &:first-child {
+        border-radius: 8px 0 0 0;
+      }
+
+      &:last-child {
+        border-radius: 0 8px 0 0;
+      }
+    }
+  }
+
+  tbody {
+    th,
+    td {
+      padding: var(--tbody_padding);
+      background-color: #ffffff;
+
+      &:first-child {
+        border-radius: 0 0 0 8px;
+      }
+
+      &:last-child {
+        border-radius: 0 0 8px 0;
+      }
+    }
+
+    tr {
+      &:last-child {
+        > * {
+          border: none;
+          // border-bottom: 1px solid;
+        }
+      }
+    }
+  }
+}
 
 .MuiDialog-paper {
   padding: 20px 10px;
@@ -538,4 +624,33 @@ label.form_label {
   display: flex;
   flex-direction: row;
   gap: 10px;
+}
+
+.sketch-picker {
+  width: 95% !important;
+  border-radius: 10px !important;
+}
+
+// css for color pellete container
+.colorListBox {
+  width: 30px;
+  height: 30px;
+  border-radius: 5%;
+  padding: 4px;
+  border: 1px solid #768f994d;
+  position: relative;
+  img {
+    position: absolute;
+    top: -28%;
+    right: -20%;
+    height: 22px;
+    width: 22px;
+    z-index: 999;
+    cursor: pointer;
+  }
+  .colorListBoxChild {
+    width: 30px;
+    height: 30px;
+    border-radius: 5%;
+  }
 }

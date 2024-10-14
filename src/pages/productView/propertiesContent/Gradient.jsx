@@ -7,15 +7,15 @@ import "rc-slider/assets/index.css";
 import React, { useEffect, useState } from "react";
 import { CrossIcon, TickIcon } from "../../../assets/svg/icons";
 import ThemeButton from "../../../components/common/ThemeButton";
-import { colorList } from "../../../components/data/colors";
 import { useProductStore } from "../../../store";
 import styles from "./properties.module.scss";
 import {
   handleAddNewUniform,
   modelRotationValue,
 } from "../../../utils/funtions";
-
+import useGetColorPelleteList from "../../../hook/CustomHook/useGetColorPelleteList";
 const Gradient = () => {
+  const colorList = useGetColorPelleteList();
   const ref = useProductStore((state) => state.ref);
   const {
     gradient,
