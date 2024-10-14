@@ -2,10 +2,7 @@ import { Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import {
-  BackButtonIcon,
-  ShareButton
-} from "../../../assets/svg/icons";
+import { BackButtonIcon, ShareButton } from "../../../assets/svg/icons";
 import ColorPelleteDrawer from "../../../components/common/drawer";
 import { InputField } from "../../../components/common/InputField/InputField";
 import CommonModal from "../../../components/common/modal";
@@ -130,7 +127,7 @@ const Header = () => {
       <div className={styles.rightWrap}>
         <Tooltip title="Add your own color palette">
           <img
-            src="../../../../src/assets/svg/colorPallete.svg"
+            src="/colorPallete.svg"
             alt=""
             style={{
               marginTop: 5,
