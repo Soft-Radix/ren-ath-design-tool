@@ -6,16 +6,18 @@ import SectionHeading from "../../components/common/sectionHeading";
 import MyDesignList from "../../components/myDesigns/MyDesignList";
 import useFetch from "../../hook/CustomHook/usefetch";
 import { toast } from "react-toastify";
+import LoadingBars from "../../components/common/loader/LoadingBars";
 
 const Mydesign = () => {
-  
   const [designList, setDesignList] = useState([]);
+
   const [loadMyDesignListQuery, { response, loading, error }] = useFetch(
     "/design/list",
     {
       method: "post",
     }
   );
+
 
   //load api
   useEffect(() => {
@@ -25,7 +27,7 @@ const Mydesign = () => {
   // handle api response
   useEffect(() => {
     toast.dismiss();
-    if (response) {
+    if (response?.data) {
       setDesignList(response.data);
       // toast.success(response.message);
     }
@@ -38,8 +40,6 @@ const Mydesign = () => {
     }
   }, [response, error]);
 
-  console.log("designList", designList);
-
   return (
     <MainLayout>
       <div className={styles.mainWrap}>
@@ -49,10 +49,14 @@ const Mydesign = () => {
           subHeading="Here is your fully customized design, tailored just for you."
         />
       </div>
-      <MyDesignList
-        designList={designList}
-        loadMyDesignListQuery={loadMyDesignListQuery}
-      />
+      {loading ? (
+        <LoadingBars />
+      ) : (
+        <MyDesignList
+          designList={designList}
+          loadMyDesignListQuery={loadMyDesignListQuery}
+        />
+      )}
     </MainLayout>
   );
 };

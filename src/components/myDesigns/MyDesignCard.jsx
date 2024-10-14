@@ -27,6 +27,7 @@ import modalStyles from "../common/modal/modal.module.scss";
 import Cross from "../../assets/svg/cross.svg";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
+import LoadingBars from "../common/loader/LoadingBars";
 
 const baseStyleFormat = {
   flex: 1,
@@ -44,7 +45,7 @@ const baseStyleFormat = {
   transition: "border .24s ease-in-out",
   marginTop: "20px",
   marginBottom: "20px",
-  cursor: "grab",
+  cursor: "pointer",
 };
 
 const focusedStyle = {
@@ -90,9 +91,10 @@ const MyDesignCard = ({ title, status, img, id, loadMyDesignListQuery }) => {
   const [allFormatsFiles, setAllFormatsFiles] = useState([]);
   const [colorCode, setColorCode] = useState("");
   const [colorList, setColorList] = useState([]);
-
+  const [resp, setResp] = useState(false);
   const [selectedOption, setSelectedOption] = useState("1");
   const [selectedColorOption, setSelectedColorOption] = useState("1");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { updateEditedDesignId } = useProductStore((store) => store);
   // Call the custom hook at the top level of the component
@@ -109,54 +111,61 @@ const MyDesignCard = ({ title, status, img, id, loadMyDesignListQuery }) => {
     baseURL: import.meta.env.VITE_API_BASE_URL,
   });
   // Function to send the form data
-  const uploadDesignData = async (
-   
-  ) => {
+  const uploadDesignData = async () => {
+    setIsLoading(true);
+    const token = localStorage.getItem("UniFormDesign_token");
     const formData = new FormData();
 
     // Append design_id
-    formData.append('design_id', id.toString());
+    formData.append("design_id", id.toString());
 
     // Append is_logo_upload
-    formData.append('is_logo_upload', selectedOption);
+    formData.append("is_logo_upload", selectedOption);
 
     // Check if file should be uploaded
     if (selectedOption === "1") {
-      if (files) {
-        formData.append('files', files);
-      }
-    }else if(selectedOption==="2"){
+      files.forEach((file, index) => {
+        formData.append(`files`, file); // Append each file with an indexed name
+      });
+    } else if (selectedOption === "2") {
       if (allFormatsFiles) {
-        formData.append('files', allFormatsFiles);
+        allFormatsFiles.forEach((file, index) => {
+          formData.append(`files`, file); // Append each file with an indexed name
+        });
       }
-    }else{
-      formData.append('files', '');
+    } else {
+      formData.append("files", "");
     }
-   
 
     // Append is_pantone_info
-    formData.append('is_pantone_info', selectedColorOption);
+    formData.append("is_pantone_info", selectedColorOption);
 
     // Check if pantone_info should be sent
     if (selectedColorOption === "1") {
-      formData.append('pantone_info', colorList.join(','));
+      formData.append("pantone_info", colorList.join(","));
     } else {
-      formData.append('pantone_info', ''); // Send empty if pantone_info is not required
+      formData.append("pantone_info", ""); // Send empty if pantone_info is not required
     }
 
     try {
       // Send POST request
-      const response = await instance.post('/design/mark-complete', formData, {
+      const response = await instance.post("/design/mark-complete", formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
         },
       });
 
-      // Handle response
-      console.log('Success:', response.data);
+      toast.success(response.data.message);
+      setOpenMarkAsCompletedModal(false);
+      setResp(true);
+      // console.log("Success:", response.data);
     } catch (error) {
       // Handle error
-      console.error('Error:', error);
+      toast.error(error);
+      console.error("Error:", error);
+    } finally {
+      setIsLoading(false); // Set loading to false once the request is complete
     }
   };
 
@@ -312,6 +321,12 @@ const MyDesignCard = ({ title, status, img, id, loadMyDesignListQuery }) => {
     const newFiles = allFormatsFiles.filter((logo) => logo !== key);
     setAllFormatsFiles(newFiles);
   };
+  // Handle Enter key press
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleAddColor();
+    }
+  };
 
   const allFormatPreview = allFormatsFiles.map((file, index) => {
     const key = file;
@@ -380,16 +395,16 @@ const MyDesignCard = ({ title, status, img, id, loadMyDesignListQuery }) => {
       <div className={styles.title}>{title}</div>
       <div className={styles.btnWrap}>
         <ThemeButton
-          color={status ? "#D8FFF1" : ""}
-          textColor={status ? "#07CD86" : ""}
+          color={status || resp ? "#D8FFF1" : ""}
+          textColor={status || resp ? "#07CD86" : ""}
           onClick={() => {
             !!!status && setOpenStatus(true);
             // handleClick();
           }}
         >
           <span>
-            {!!status && <DoneIcon />}{" "}
-            {status ? "Completed" : "Mark as Completed"}
+            {!!(status || resp) && <DoneIcon />}{" "}
+            {status || resp ? "Completed" : "Mark as Completed"}
           </span>
         </ThemeButton>
       </div>
@@ -467,7 +482,10 @@ const MyDesignCard = ({ title, status, img, id, loadMyDesignListQuery }) => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <div className={modalStyles.modalCrossIcon}>
+        <div
+          onClick={() => setOpenMarkAsCompletedModal(false)}
+          className={modalStyles.modalCrossIcon}
+        >
           <img src={Cross} alt="cross" />
         </div>
         <div style={{ paddingLeft: "50px" }} className={modalStyles.itemsStart}>
@@ -582,6 +600,7 @@ const MyDesignCard = ({ title, status, img, id, loadMyDesignListQuery }) => {
                           value={colorCode}
                           onChange={handleInputChange}
                           placeholder="Enter color code"
+                          onKeyDown={handleKeyDown}
                         />
 
                         {/* Add button */}
@@ -643,12 +662,13 @@ const MyDesignCard = ({ title, status, img, id, loadMyDesignListQuery }) => {
           }}
         >
           <ThemeButton
+            isDisable={isLoading}
             onClick={() => {
               setOpenMarkAsCompletedModal(true);
-              uploadDesignData()
+              uploadDesignData();
             }}
           >
-            Finalized My Design
+            {isLoading ? <LoadingBars /> : " Finalized My Design"}
           </ThemeButton>
         </div>
       </Dialog>
