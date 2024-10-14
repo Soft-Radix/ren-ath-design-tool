@@ -1,24 +1,24 @@
-import React, { useEffect, useState, useMemo, useCallback } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { IconButton, Tooltip } from "@mui/material";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Slider from "rc-slider";
-import { useProductStore } from "../../../store";
-import { IconButton, Tooltip } from "@mui/material";
-import resetIcon from "../../../assets/svg/reset.svg";
-import styles from "./properties.module.scss";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   LazyLoadImage,
   trackWindowScroll,
 } from "react-lazy-load-image-component";
-import { Grid, AutoSizer } from "react-virtualized";
+import { AutoSizer, Grid } from "react-virtualized";
 import loading from "../../../assets/images/load.png";
-import patternPaths from "./images";
+import resetIcon from "../../../assets/svg/reset.svg";
+import { useProductStore } from "../../../store";
 import {
   modelRotationValue,
-  nonRepeatingPatterns,
+  nonRepeatingPatterns
 } from "../../../utils/funtions";
+import patternPaths from "./images";
+import styles from "./properties.module.scss";
 
 const Pattern = () => {
   const ref = useProductStore((state) => state.ref);
@@ -27,13 +27,15 @@ const Pattern = () => {
 
   const children = ref?.current?.children || [];
   const {
-    updatePattern,
     pattern,
-    updateLayer,
+    patternRotationDeegre,
     patternScale,
+    updatePatternLayers,
+    patternLayers,
+    updateLayer,
+    updatePattern,
     updatePatternScale,
     updatePatternRotationDeegre,
-    patternRotationDeegre,
     handleModelRotation,
   } = useProductStore((state) => state);
 
@@ -68,6 +70,12 @@ const Pattern = () => {
           style={style}
           className={`${styles.imgWrap}`}
           onClick={() => {
+            // if (childIndex === 0 || childIndex % 2 == 0) {
+            //   updatePatternLayers({ [childIndex]: index + 1 });
+            //   updatePatternLayers({ [childIndex + 1]: index + 1 });
+            // } else {
+            //   updatePatternLayers({ [childIndex]: index });
+            // }
             updatePattern(index + 1);
             updateLayer(childIndex);
           }}
@@ -83,6 +91,14 @@ const Pattern = () => {
     },
     [loadedImages, updatePattern, updateLayer]
   );
+  // useEffect(() => {
+  //   console.log("patternLayers", patternLayers);
+  //   handleAddNewUniform("pattern", {
+  //     patternRotationDeegre,
+  //     patternScale,
+  //     patternLayers,
+  //   });
+  // }, [patternLayers, patternRotationDeegre, patternScale]);
 
   const memoizedPatternComponent = useMemo(() => {
     return (
@@ -112,6 +128,7 @@ const Pattern = () => {
                       onClick={(e) => {
                         e.stopPropagation();
                         updatePattern(31);
+                        // updatePatternLayers({ [childIndex]: 31 });
                         updateLayer(childIndex);
                       }}
                     >
@@ -195,6 +212,7 @@ const Pattern = () => {
     updateLayer,
     handleChange,
     cellRenderer,
+    patternLayers,
   ]);
 
   return memoizedPatternComponent;

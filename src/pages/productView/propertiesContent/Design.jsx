@@ -1,14 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Grid } from "react-virtualized";
 import { useProductStore } from "../../../store";
 import styles from "./properties.module.scss";
+import { handleAddNewUniform } from "../../../utils/funtions";
 
 const Design = () => {
   const { id, designCount } = useProductStore((state) => state);
   const { designType, updateDesignType, updateIsDesign, isDesign } =
     useProductStore((state) => state);
 
+  useEffect(() => {
+    handleAddNewUniform("design", {
+      isDesign,
+      designType,
+    });
+  }, [isDesign, designType]);
+  
   const cellRenderer = ({ columnIndex, key, rowIndex, style }) => {
     const index = rowIndex * 2 + columnIndex + 1;
     if (index > designCount) {

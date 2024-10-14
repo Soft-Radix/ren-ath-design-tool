@@ -41,6 +41,8 @@ export const useProductStore = create((set) => ({
   patternScale: {},
   patternAngle: {},
   patternRotationDeegre: {},
+  patternLayers: {},
+  secondaryTexturesPattern: [],
 
   color: {},
   colorIndex: null,
@@ -113,6 +115,91 @@ export const useProductStore = create((set) => ({
   names: [],
   logos: [],
   resetLogoIndex: null,
+  namePositions1: [],
+  namePositions2: [],
+  namePositions3: [],
+  namePositions4: [],
+
+  logoDecalPositions1: [],
+  logoDecalPositions2: [],
+  logoDecalPositions3: [],
+  logoDecalPositions4: [],
+  myDesignId: null,
+  snapShot: "",
+  editedDesignId: null,
+  editDesignData: {},
+  snapShotImg: "",
+  callSnapShotFunc: false,
+  handleCallSnapShotFunc: (isYes) =>
+    set(() => ({
+      callSnapShotFunc: isYes,
+    })),
+  updateSnapShotImage: (img) =>
+    set(() => ({
+      snapShotImg: img,
+    })),
+  updateEditedDesignData: (data) =>
+    set(() => ({
+      editDesignData: data,
+    })),
+  updateEditedDesignId: (id) => {
+    set(() => ({
+      editedDesignId: id,
+    }));
+  },
+  updateSnapShot: (img) =>
+    set(() => ({
+      snapShot: img,
+    })),
+  updateMyDesignId: (id) =>
+    set(() => ({
+      myDesignId: id,
+    })),
+  setLogoDecalPositions1: (logoDecalPosition) =>
+    set((state) => ({
+      logoDecalPositions1: [logoDecalPosition],
+    })),
+  setLogoDecalPositions2: (logoDecalPosition) =>
+    set((state) => ({
+      logoDecalPositions2: [logoDecalPosition],
+    })),
+  setLogoDecalPositions3: (logoDecalPosition) =>
+    set((state) => ({
+      logoDecalPositions3: [logoDecalPosition],
+    })),
+  setLogoDecalPositions4: (logoDecalPosition) =>
+    set((state) => ({
+      logoDecalPositions4: [logoDecalPosition],
+    })),
+
+  setNamePositions1: (nameDecalPosition) =>
+    set((state) => ({
+      namePositions1: [nameDecalPosition],
+    })),
+  setNamePositions2: (nameDecalPosition) =>
+    set((state) => ({
+      namePositions2: [nameDecalPosition],
+    })),
+  setNamePositions3: (nameDecalPosition) =>
+    set((state) => ({
+      namePositions3: [nameDecalPosition],
+    })),
+  setNamePositions4: (nameDecalPosition) =>
+    set((state) => ({
+      namePositions4: [nameDecalPosition],
+    })),
+
+  updatePatternLayers: (layers) =>
+    set((state) => ({
+      patternLayers: { ...state.patternLayers, ...layers },
+    })),
+  updateSecondaryTextures: (textures) =>
+    set((state) => ({
+      secondaryTexturesPattern: [
+        ...state.secondaryTexturesPattern,
+        ...textures,
+      ],
+    })),
   setResetLogoIndex: (logoIndex) =>
     set(() => ({
       resetLogoIndex: logoIndex,
