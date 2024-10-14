@@ -2,10 +2,7 @@ import { Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import {
-  BackButtonIcon,
-  ShareButton
-} from "../../../assets/svg/icons";
+import { BackButtonIcon, ShareButton } from "../../../assets/svg/icons";
 import ColorPelleteDrawer from "../../../components/common/drawer";
 import { InputField } from "../../../components/common/InputField/InputField";
 import CommonModal from "../../../components/common/modal";
@@ -14,6 +11,7 @@ import useFetch from "../../../hook/CustomHook/usefetch";
 import { useProductStore } from "../../../store";
 import { getUpdatedUniformData, mergeObjects } from "../../../utils/funtions";
 import styles from "./header.module.scss";
+import LoadingBars from "../../../components/common/loader/LoadingBars";
 
 const Header = () => {
   const productName = useProductStore((state) => state.name);
@@ -130,7 +128,7 @@ const Header = () => {
       <div className={styles.rightWrap}>
         <Tooltip title="Add your own color palette">
           <img
-            src="../../../../src/assets/svg/colorPallete.svg"
+            src="/colorPallete.svg"
             alt=""
             style={{
               marginTop: 5,
@@ -147,7 +145,7 @@ const Header = () => {
             // handleCallSnapShotFunc(true); // This will trigger the snapshot update
           }}
         >
-          Save
+         Save
         </ThemeButton>
       </div>
       <CommonModal
@@ -183,7 +181,7 @@ const Header = () => {
               handleCallSnapShotFunc(true);
             }}
           >
-            Save
+            {saveLoading && <LoadingBars />} Save
           </ThemeButton>
         </div>
       </CommonModal>

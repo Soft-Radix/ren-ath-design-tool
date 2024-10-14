@@ -13,6 +13,7 @@ import SketchExample from "../colorPicker";
 import LoadingBars from "../loader/LoadingBars";
 import ThemeButton from "../ThemeButton";
 import {
+  getUserColorPellete,
   getUserColorPelleteTemporary,
   getUserLocalData,
   setUserColorPellete,
@@ -22,6 +23,7 @@ import useGetColorPelleteList from "../../../hook/CustomHook/useGetColorPelleteL
 
 export default function ColorPelleteDrawer({ open, toggleDrawer }) {
   const userToken = getUserLocalData();
+  const colorPalletePre = getUserColorPellete();
   const colorPelletTemp = getUserColorPelleteTemporary();
   // get pre saved color for this login user from store
   const { handleUpdateCollorPellteCollection } = useProductStore(
@@ -79,7 +81,9 @@ export default function ColorPelleteDrawer({ open, toggleDrawer }) {
   // update selectedColors state when pre saved colors updated from store
   React.useEffect(() => {
     if (userToken) {
-      setSelectedColors([...colorList]);
+      if (colorPalletePre?.length > 0) {
+        setSelectedColors([...colorList]);
+      }
     } else {
       setSelectedColors(colorPelletTemp);
     }
@@ -121,7 +125,7 @@ export default function ColorPelleteDrawer({ open, toggleDrawer }) {
               }}
               onClick={toggleDrawer(false)}
             >
-              <img src="../../../../src/assets/close-circle-line.svg" />
+              <img src="/close-circle-line.svg" />
             </Box>
           </ListSubheader>
         </ListItem>
@@ -154,7 +158,7 @@ export default function ColorPelleteDrawer({ open, toggleDrawer }) {
             {selectedColors.map((color, index) => (
               <Box key={index} className="colorListBox">
                 <img
-                  src="../../../../src/assets/close-circle-line.svg"
+                  src="/close-circle-line.svg"
                   onClick={() => handleRemoveColor(color)}
                 />
                 <Box
