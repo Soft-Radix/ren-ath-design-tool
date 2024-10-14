@@ -6,18 +6,11 @@ import SectionHeading from "../../components/common/sectionHeading";
 import MainLayout from "../../components/Layouts/MainLayout";
 import MyDesignList from "../../components/myDesigns/MyDesignList";
 import useFetch from "../../hook/CustomHook/usefetch";
-<<<<<<< HEAD
 import { toast } from "react-toastify";
 import LoadingBars from "../../components/common/loader/LoadingBars";
 
-=======
-import styles from "./myDesign.module.scss";
-import { useProductStore } from "../../store";
-import { Box } from "@mui/material";
->>>>>>> bc8a067e63968dee8e9828371e7c34d05f90b3b7
 const Mydesign = () => {
   const { globalLoader } = useProductStore((store) => store);
-  console.log("🚀 ~ Mydesign ~ globalLoader:", globalLoader);
   const [designList, setDesignList] = useState([]);
 
   const [loadMyDesignListQuery, { response, loading, error }] = useFetch(
