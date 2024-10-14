@@ -92,7 +92,7 @@ const Login = ({ setIsOpen }) => {
   }, [response, error, credentialsMatch]);
 
   useEffect(() => {
-    if (colorReponse?.data) {
+    if (colorReponse) {
       setUserColorPellete(colorReponse.data?.color_palette);
       handleUpdateCollorPellteCollection(colorReponse.data?.color_palette);
     }
