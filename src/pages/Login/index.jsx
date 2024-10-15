@@ -22,6 +22,7 @@ const Login = ({ setIsOpen }) => {
       method: "post",
     }
   );
+  
   // fecth api to save user color pellete list
   const [saveColorPelleteQuery] = useFetch("/color-palette/add", {
     method: "post",

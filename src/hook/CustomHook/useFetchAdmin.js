@@ -34,19 +34,29 @@ const useFetchAdmin = (url, config, formdata) => {
       })
         .then((response) => {
           if (response.status === 200 || response.status === 201) {
-            debugger
             resolve(response);
             setError(undefined);
-            response.data != null &&
-              response?.data?.data?.user.role_id ==1 &&
-              setResponse(response.data);
+            if (url == "/auth/login") {
+              response.data != null &&
+                response?.data?.data?.user.role_id == 1 &&
+                setResponse(response.data);
               if (response?.data?.data?.user.role_id == 2) {
                 setCredentialsMatch("Credentials do not match");
               } else {
                 setCredentialsMatch(undefined);
               }
+            } else {
+              setResponse(response.data);
+            }
+            // response.data != null &&
+            //   response?.data?.data?.user.role_id ==1 &&
+            //   setResponse(response.data);
+            //   if (response?.data?.data?.user.role_id == 2) {
+            //     setCredentialsMatch("Credentials do not match");
+            //   } else {
+            //     setCredentialsMatch(undefined);
+            //   }
           } else {
-          
             setError(response?.data);
             setErrorMessage(response?.data?.message ?? "Something went wrong!");
             setResponse(undefined);
@@ -64,7 +74,7 @@ const useFetchAdmin = (url, config, formdata) => {
           } else {
             setResponse(undefined);
           }
-  
+
           setErrorMessage(
             e.response?.data?.toString() ?? "Something went wrong!"
           );
@@ -76,7 +86,10 @@ const useFetchAdmin = (url, config, formdata) => {
     });
   };
 
-  return [loadQuery, { response, loading, error, errorMessage,credentialsMatch }];
+  return [
+    loadQuery,
+    { response, loading, error, errorMessage, credentialsMatch },
+  ];
 };
 
 export default useFetchAdmin;
