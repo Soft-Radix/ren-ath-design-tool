@@ -135,10 +135,15 @@ const Designs = () => {
   };
 
   const handleOnChange = (e) => {
-    setPageNumber(Number(e.target.value));
-    setStart((Number(e.target.value) - 1) * limit); //* Calculate new start based on selected page
+    const selectedPage = Number(e.target.value);
+    
+    //* Set the page number
+    setPageNumber(selectedPage);
+    
+    //* Calculate the start value based on the selected page
+    setStart((selectedPage - 1) );
   };
-
+  
   return (
     <DashboardLayout>
       <div>
