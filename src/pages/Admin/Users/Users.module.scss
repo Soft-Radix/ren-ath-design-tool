@@ -18,6 +18,9 @@
           &:not(.MuiAutocomplete-input, .MuiInputBase-inputMultiline) {
             padding: 5px 14px;
             height: 100%;
+            display: flex;
+            justify-content: start;
+            align-items: center;
           }
         }
       }
@@ -27,5 +30,85 @@
 :global {
   .pageHeadCustom {
     margin-bottom: 0 !important;
+  }
+}
+.pagination {
+  border-top: 1px solid $primary;
+  background-color: $white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  left: 0;
+  padding: var(--thead_padding);
+  font-size: var(--f14);
+
+  @media (max-width: 425px) {
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  .inner_wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+
+    @media (max-width: 425px) {}
+  }
+
+  .pagination_type_mobile {
+    width: 108px;
+    height: 40px;
+    align-items: center;
+    border-radius: 4px;
+    display: none;
+    margin-top: 10px;
+
+    @media (max-width: 425px) {
+      display: block;
+    }
+  }
+
+  .pagination_middle {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+
+    :global {
+      .form_select {
+        width: 58px;
+        height: 36px;
+        border-radius: 4px;
+      }
+    }
+  }
+
+  .pagination_right {
+    display: flex;
+    gap: 10px;
+
+    .pagination_type_web {
+      @media (max-width: 425px) {
+        display: none;
+      }
+
+    }
+
+    :global {
+      .form_select {
+        width: 108px;
+        height: 40px;
+        align-items: center;
+        border-radius: 4px;
+      }
+    }
+  }
+
+  button {
+    padding: 0.4rem 0.8rem;
+    font-size: inherit;
   }
 }

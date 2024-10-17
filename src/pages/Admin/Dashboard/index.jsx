@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DashboardLayout from "../../../components/Layouts/DashboardLayout";
 import PageHeading from "../../../components/common/theme/PageHeading";
 import styles from "./AdminDashboard.module.scss";
@@ -10,7 +10,27 @@ import {
   UserIcon,
 } from "../../../assets/icons/icons";
 import { Link } from "react-router-dom";
+import useFetchAdmin from "../../../hook/CustomHook/useFetchAdmin";
 const Dashboard = () => {
+  //*Setting dashboard data
+  const [dashboardData, setDashboardData] = useState(null);
+  //* API
+  const [loadQuery, { response, loading }] =
+    useFetchAdmin(`/dashboard/detail`, {
+      method: "get",
+    });
+
+  //* Trigger fetch
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await loadQuery();
+      if (response && response.data) {
+        setDashboardData(response?.data?.data);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <DashboardLayout>
       <div>
@@ -29,7 +49,7 @@ const Dashboard = () => {
                     </div>
                     <div className={styles.cardContent}>
                       <p>Total Users</p>
-                      <h5>1200</h5>
+                      <h5>{dashboardData?.users}</h5>
                     </div>
                   </div>
                   <div className={styles.arrowIconWrapper}>
@@ -47,7 +67,7 @@ const Dashboard = () => {
                     </div>
                     <div className={styles.cardContent}>
                       <p>Total Designs</p>
-                      <h5>1300</h5>
+                      <h5>{dashboardData?.designs}</h5>
                     </div>
                   </div>
                   <div className={styles.arrowIconWrapper}>
