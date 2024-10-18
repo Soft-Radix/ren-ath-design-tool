@@ -65,8 +65,8 @@ export const fetchAndDownloadLogos = async (fileName, logos, userData) => {
   } catch (error) {
     console.error("Error fetching logos or creating PDF:", error);
   }
+  return false;
 };
-
 
 // Generate the PDF with HTML content using html2pdf
 export const createAndDownloadPDF = async (userData) => {
@@ -89,7 +89,9 @@ export const createAndDownloadPDF = async (userData) => {
   // Step 2: Create a container and append the content
   const container = document.createElement("div");
   container.innerHTML = htmlContent;
-  document.body.appendChild(container); // Temporarily append to the body
+  // document.body.appendChild(container); // Temporarily append to the body
+  // Optional: Hide the container with CSS if appended temporarily
+  // container.style.display = 'none'; // Hide the container
 
   // Step 3: Use html2pdf to convert the HTML to PDF
   return new Promise((resolve, reject) => {
@@ -116,7 +118,7 @@ export const createAndDownloadPDF = async (userData) => {
           }
         `;
         document.head.appendChild(style);
-        document.body.removeChild(container); // Remove the HTML after generating PDF
+        // document.body.removeChild(container); // Remove the HTML after generating PDF
         resolve(pdfBlob); // Return the PDF blob
       })
       .catch((error) => {
