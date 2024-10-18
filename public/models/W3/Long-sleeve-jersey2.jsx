@@ -91,7 +91,6 @@ export function Model(props) {
   const [secondaryTextureUrl, setSecondaryTextureUrl] = useState(
     "./textures/pattern2.png"
   );
-  console.log("🚀 ~ Model ~ secondaryTextures:", secondaryTextures);
 
   const [loading, setLoading] = useState(false);
   const primaryTexture = useTexture(designTexture);
@@ -385,7 +384,6 @@ export function Model(props) {
     modelRef.current,
   ]);
 
-  console.log("nameDecalPositions1", nameDecalPositions1);
 
   useEffect(() => {
     handleAddNewUniform("pattern", {

@@ -27,7 +27,6 @@ const Header = () => {
     handleOpenDesignName,
   } = useProductStore((state) => state);
   const [saveClicked, setSaveClicked] = useState(false);
-  console.log("🚀 ~ Header ~ openDesignName:", openDesignName);
   const [designName, setDesignName] = useState("");
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);

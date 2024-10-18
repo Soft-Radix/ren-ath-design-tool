@@ -16,7 +16,6 @@ const SketchExample = ({
   });
 
   const handleChange = (color) => {
-    console.log("🚀 ~ handleChange ~ color:", color);
     setNewColor(color?.hex);
   };
 
