@@ -132,8 +132,25 @@ export const useProductStore = create((set) => ({
   callSnapShotFunc: false,
   colorPelleteCollection: [],
   globalLoader: false,
+  snapShotFrontImg: "",
+  snapShotBackImg: "",
+  openDesignName: false,
+  handleOpenDesignName: (isOpen) => {
+    set(() => ({
+      openDesignName: isOpen,
+    }));
+  },
+  handleSnapFrontImage: (img) => {
+    set(() => ({
+      snapShotFrontImg: img,
+    }));
+  },
+  handleSnapBackImage: (img) => {
+    set(() => ({
+      snapShotBackImg: img,
+    }));
+  },
   handleGlobalLoader: (loading) => {
-    console.log("🚀 ~ useProductStore ~ loading:", loading)
     set(() => ({
       globalLoader: loading,
     }));

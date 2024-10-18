@@ -16,7 +16,8 @@ import ThemeButton from "../../../components/common/ThemeButton";
 import useFetchAdmin from "../../../hook/CustomHook/useFetchAdmin";
 import { pageLimitOptions } from "../Users";
 import LoadingBars from "../../../components/common/loader/LoadingBars";
-
+import { fetchAndDownloadLogos } from "../../../utils/exportFunctions";
+import { toast } from "react-toastify";
 export const TableLoader = () => (
   <>
     {[...Array(10)].map((_, index) => {
@@ -70,6 +71,9 @@ const Designs = () => {
   //*Counting of total pages
   const totalPages = Math.ceil(totalCount / limit);
 
+  // * save design id
+  const [designId, setDesignId] = useState(null);
+
   const [loadQuery, { response, loading, error }] = useFetchAdmin(
     `/design-all/list`,
     {
@@ -77,13 +81,31 @@ const Designs = () => {
     }
   );
 
+  const [
+    loadDesignByIdQuery,
+    {
+      response: loadDesignByIdResponse,
+      loading: loadDesignByIdLoading,
+      error: loadDesignByIdError,
+    },
+  ] = useFetchAdmin(`/design/detail/${designId}`, {
+    method: "get",
+  });
+
+  //* fetch design data when designId state get update
+  useEffect(() => {
+    if (designId) {
+      loadDesignByIdQuery();
+    }
+  }, [designId]);
+
   //* Trigger fetch whenever start, limit, or searchQuery changes
   useEffect(() => {
     const fetchData = async () => {
       const response = await loadQuery({ start, limit, is_complete: status });
       if (response && response.data) {
         setDesignData(response?.data?.data?.list);
-        setTotalCount(response.data.data.total_records);
+        setTotalCount(response?.data?.data?.total_records);
       }
     };
 
@@ -136,14 +158,55 @@ const Designs = () => {
 
   const handleOnChange = (e) => {
     const selectedPage = Number(e.target.value);
-    
+
     //* Set the page number
     setPageNumber(selectedPage);
-    
+
     //* Calculate the start value based on the selected page
-    setStart((selectedPage - 1) );
+    setStart(selectedPage - 1);
   };
-  
+
+  //* handle designById  Response
+  useEffect(() => {
+    if (loadDesignByIdResponse && loadDesignByIdResponse?.data) {
+      const designName = loadDesignByIdResponse?.data?.design_name;
+      const userData = {
+        team_name: loadDesignByIdResponse?.data?.user_detail?.team_name,
+        image1Url: loadDesignByIdResponse?.data?.cover_photo,
+        image2Url: loadDesignByIdResponse?.data?.cover_back_photo,
+        colorPalette: loadDesignByIdResponse?.data?.pantone_info?.split(","),
+        name:
+          loadDesignByIdResponse?.data?.user_detail?.first_name +
+          " " +
+          loadDesignByIdResponse?.data?.user_detail?.last_name,
+        design_name: loadDesignByIdResponse?.data?.design_name,
+        userEmail: loadDesignByIdResponse?.data?.user_detail?.email,
+      };
+      const uploadedFiles = loadDesignByIdResponse?.data?.design_final_logo;
+      const designInfo = {
+        design: JSON.parse(loadDesignByIdResponse?.data?.design),
+        pattern: JSON.parse(loadDesignByIdResponse?.data?.pattern),
+        color: JSON.parse(loadDesignByIdResponse?.data?.color),
+        gradient: JSON.parse(loadDesignByIdResponse?.data?.gradient),
+        number: JSON.parse(loadDesignByIdResponse?.data?.number),
+        name: JSON.parse(loadDesignByIdResponse?.data?.name),
+        logo: JSON.parse(loadDesignByIdResponse?.data?.logo),
+      };
+      console.log("designInfo", designInfo?.pattern);
+      fetchAndDownloadLogos(designName, uploadedFiles, {
+        ...userData,
+        designInfo,
+      });
+      setDesignId(null);
+    }
+    if (loadDesignByIdError) {
+      const toastId = toast.error(error.message);
+      return () => {
+        toast.dismiss(toastId);
+      };
+    }
+  }, [loadDesignByIdResponse, loadDesignByIdError]);
+
   return (
     <DashboardLayout>
       <div>
@@ -220,7 +283,12 @@ const Designs = () => {
                               )}
                             </TableCell>
                             <TableCell>
-                              <ThemeButton className={styles.exportBtn}>
+                              <ThemeButton
+                                className={styles.exportBtn}
+                                onClick={() => setDesignId(item?.id)}
+                              >
+                                {loadDesignByIdLoading &&
+                                  designId === item?.id && <LoadingBars />}{" "}
                                 Export
                               </ThemeButton>
                             </TableCell>

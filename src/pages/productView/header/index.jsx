@@ -2,7 +2,7 @@ import { Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { BackButtonIcon, ShareButton } from "../../../assets/svg/icons";
+import { BackButtonIcon, Deleteicon, ShareButton } from "../../../assets/svg/icons";
 import ColorPelleteDrawer from "../../../components/common/drawer";
 import { InputField } from "../../../components/common/InputField/InputField";
 import CommonModal from "../../../components/common/modal";
@@ -15,14 +15,19 @@ import LoadingBars from "../../../components/common/loader/LoadingBars";
 
 const Header = () => {
   const productName = useProductStore((state) => state.name);
-  const [openDesignName, setOpenDesignName] = useState(false);
+  // const [openDesignName, setOpenDesignName] = useState(false);
   const [confirmSave, setConfirmSave] = useState(false);
   const {
     editedDesignId,
     editDesignData,
     handleCallSnapShotFunc,
-    snapShotImg,
+    snapShotFrontImg,
+    snapShotBackImg,
+    openDesignName,
+    handleOpenDesignName,
   } = useProductStore((state) => state);
+  const [saveClicked, setSaveClicked] = useState(false);
+  console.log("🚀 ~ Header ~ openDesignName:", openDesignName);
   const [designName, setDesignName] = useState("");
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
@@ -40,12 +45,14 @@ const Header = () => {
     method: "post",
   });
 
-  const [currentSnapShotImg, setCurrentSnapShotImg] = useState(snapShotImg);
+  const [currentSnapShotImg, setCurrentSnapShotImg] = useState(
+    snapShotFrontImg + snapShotBackImg
+  );
 
   useEffect(() => {
     // Update local snapshot image state when snapShotImg changes
-    setCurrentSnapShotImg(snapShotImg);
-  }, [snapShotImg]);
+    setCurrentSnapShotImg(snapShotFrontImg, snapShotBackImg);
+  }, [snapShotFrontImg, snapShotBackImg]);
 
   useEffect(() => {
     if (currentSnapShotImg && confirmSave) {
@@ -68,7 +75,8 @@ const Header = () => {
       editUniformQuery({
         ...mergedData,
         style_code: "10052",
-        cover_photo: currentSnapShotImg, // Use the current snapshot image
+        cover_photo: snapShotFrontImg,
+        cover_back_photo: snapShotBackImg,
       });
     } else {
       const saveData = getUpdatedUniformData(true);
@@ -76,7 +84,8 @@ const Header = () => {
         ...saveData,
         design_name: designName,
         style_code: "10052",
-        cover_photo: currentSnapShotImg, // Use the current snapshot image
+        cover_photo: snapShotFrontImg,
+        cover_back_photo: snapShotBackImg,
       });
     }
   };
@@ -108,6 +117,7 @@ const Header = () => {
     }
     setConfirmSave(false);
     setDesignName("");
+    setSaveClicked(false);
   }, [saveResponse, saveError, editResponse, editError]);
 
   useEffect(() => {
@@ -117,6 +127,7 @@ const Header = () => {
   const toggleDrawer = (open) => () => {
     setIsOpen(open);
   };
+
   return (
     <div className={styles.mainWrap}>
       <div className={styles.leftWrap}>
@@ -141,19 +152,22 @@ const Header = () => {
         <ShareButton />
         <ThemeButton
           onClick={() => {
-            setOpenDesignName(true);
+            handleCallSnapShotFunc(true);
+            setSaveClicked(true);
+            // setOpenDesignName(true);
             // handleCallSnapShotFunc(true); // This will trigger the snapshot update
           }}
         >
-         Save
+          Save
         </ThemeButton>
       </div>
       <CommonModal
-        open={openDesignName}
-        enDesignNameen={setOpenDesignName}
+        open={openDesignName && saveClicked}
+        enDesignNameen={handleOpenDesignName}
         // modalIcon={<Deleteicon />}
         title="Add Design Name"
         subTitle="Please add the below your design name"
+        setOpen={setSaveClicked}
       >
         <div
           style={{
@@ -178,7 +192,7 @@ const Header = () => {
           <ThemeButton
             onClick={() => {
               setConfirmSave(true);
-              handleCallSnapShotFunc(true);
+              // handleCallSnapShotFunc(true);
             }}
           >
             {saveLoading && <LoadingBars />} Save

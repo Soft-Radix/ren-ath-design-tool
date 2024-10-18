@@ -40,13 +40,12 @@ const Users = () => {
   const totalPages = Math.ceil(totalCount / limit);
 
   //* Fetching the user list
-  const [loadQuery, { response, loading, error }] =
-    useFetchAdmin(
-      `/users/list?start=${start}&limit=${limit}&search=${search}`,
-      {
-        method: "get",
-      }
-    );
+  const [loadQuery, { response, loading, error }] = useFetchAdmin(
+    `/users/list?start=${start}&limit=${limit}&search=${search}`,
+    {
+      method: "get",
+    }
+  );
 
   //*Setting the pagination options
   useEffect(() => {
@@ -67,7 +66,7 @@ const Users = () => {
     const fetchData = async () => {
       const response = await loadQuery();
       if (response && response.data) {
-        setTotalCount(response.data.data.total_records);
+        setTotalCount(response?.data?.data?.total_records);
       }
     };
 
@@ -75,7 +74,7 @@ const Users = () => {
   }, [start, limit, search]);
 
   const handleOnNextClick = () => {
-    setStart((prev)=>prev+1)
+    setStart((prev) => prev + 1);
     setPageNumber((prev) => {
       const newPage = prev + 1;
       // setStart((newPage - 1) * limit); //* Set start for the next page
@@ -84,7 +83,7 @@ const Users = () => {
   };
 
   const handleOnPrevClick = () => {
-    setStart((prev)=>prev-1)
+    setStart((prev) => prev - 1);
     setPageNumber((prev) => {
       const newPage = prev - 1;
       // setStart((newPage - 1) * limit); //* Set start for the previous page
@@ -100,12 +99,12 @@ const Users = () => {
 
   const handleOnChange = (e) => {
     const selectedPage = Number(e.target.value);
-    
+
     //* Set the page number
     setPageNumber(selectedPage);
-    
+
     //* Calculate the start value based on the selected page
-    setStart((selectedPage - 1) );
+    setStart(selectedPage - 1);
   };
   const handleSearchChange = (e) => {
     setSearch(e.target.value); //* Update search input value
@@ -117,7 +116,7 @@ const Users = () => {
     <DashboardLayout>
       <div>
         <PageHeading title="Users Listing" />
-     
+
         <div>
           <SearchBar
             value={search}
