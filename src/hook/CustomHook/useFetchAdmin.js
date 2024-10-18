@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { clearAdminLocalData } from "../../utils/common";
 
@@ -10,11 +10,22 @@ const useFetchAdmin = (url, config, formdata) => {
   const [credentialsMatch, setCredentialsMatch] = useState(undefined);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+
+  //*Getting the admin auth token from localstorage
+  const token = localStorage.getItem("UniFormDesign_token_admin");
+ 
+  //*Admin private route access
+  useEffect(() => {
+    if (!token) {
+      navigate("/admin");
+    }
+  }, [token]);
+
   const instance = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL,
   });
   const loadQuery = async (data, rest) => {
-    const token = localStorage.getItem("UniFormDesign_token_admin");
+    // const token = localStorage.getItem("UniFormDesign_token_admin");
 
     const headers = !token
       ? {}
