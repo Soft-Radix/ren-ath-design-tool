@@ -1,4 +1,4 @@
-import { ThreeSixty, ZoomIn, ZoomOut } from "@mui/icons-material";
+import { ThreeSixty, ZoomIn, ZoomOut, RestartAlt } from "@mui/icons-material";
 import { Button, ButtonGroup } from "@mui/material";
 import { OrbitControls } from "@react-three/drei";
 import { Canvas, useThree } from "@react-three/fiber";
@@ -27,46 +27,93 @@ import Pattern from "./propertiesContent/Pattern";
 import Sidebar from "./sidebar";
 
 // Component inside Canvas to handle snapshot capture
-const CaptureControl = ({ captureRef }) => {
+const CaptureControl = ({ captureRef, orbitalRef }) => {
   const { gl, scene, camera } = useThree(); // Access Three.js renderer, scene, and camera
-  const { updateSnapShotImage, callSnapShotFunc } = useProductStore(
-    (store) => store
-  );
-  const capture = () => {
+  const {
+    callSnapShotFunc,
+    handleModelRotation,
+    handleSnapFrontImage,
+    handleSnapBackImage,
+    handleOpenDesignName,
+    handleCallSnapShotFunc,
+  } = useProductStore((store) => store);
+
+  const downloadImage = (imgData, filename) => {
+    setTimeout(() => {
+      if (filename === "front_snap") {
+        handleSnapFrontImage(imgData);
+      }
+      if (filename === "back_snap") {
+        handleSnapBackImage(imgData);
+      }
+    }, 100);
+  };
+
+  const capture = (filename) => {
     gl.render(scene, camera); // Render the current scene
 
     // Capture the canvas as an image
     const imgData = gl.domElement.toDataURL("image/png");
-    updateSnapShotImage(imgData);
-    // // Trigger the download of the snapshot
-    // const link = document.createElement("a");
-    // link.href = imgData;
-    // link.download = "snapshot.png";
-    // link.click();
+
+    // Download the captured image
+    downloadImage(imgData, filename);
   };
 
-  // Pass the capture function back through the ref
-  useEffect(() => {
-    captureRef.current = capture;
-  }, [captureRef]);
+  const handleRotationAndCapture = (rotation, filename) => {
+    return new Promise((resolve) => {
+      // Rotate the model to the specified angle
+      handleModelRotation(rotation);
+
+      // Reset the camera position
+      if (orbitalRef.current) {
+        orbitalRef.current.reset();
+        const camera = orbitalRef.current.object;
+        camera.zoom /= 2.1; // Adjust zoom factor as needed
+        camera.updateProjectionMatrix();
+        orbitalRef.current.update();
+      }
+
+      // Delay to allow the rotation and camera reset to complete
+      setTimeout(() => {
+        capture(filename); // Capture the image
+        resolve();
+      }, 1500); // 1.5 second delay before capture
+    });
+  };
 
   useEffect(() => {
+    const takeSnapshots = async () => {
+      // Rotate to 0 (front view), wait, and capture
+      await handleRotationAndCapture(0, "front_snap");
+
+      // Wait for some time before rotating to the back
+      setTimeout(async () => {
+        // Rotate to 180 (back view), wait, and capture
+        await handleRotationAndCapture(180, "back_snap");
+      }, 1000); // 1 second wait between front and back rotations
+    };
+
     if (callSnapShotFunc) {
-      capture();
+      takeSnapshots();
     }
+    handleOpenDesignName(true);
+    handleCallSnapShotFunc(false);
   }, [callSnapShotFunc]);
-  
+
   return null; // No need to render anything, only logic here
 };
 
 const ProductView = () => {
   const orbitalRef = useRef();
   const captureRef = useRef(); // This ref will hold the capture function
-
   const { selectedSidebarItem, selectedSidebarItemName, modelLoading } =
     useProductStore((state) => state);
   const { id, updateOrbitalRef, modelRotation, handleModelRotation } =
     useProductStore((state) => state);
+
+  // Store default positions for reset
+  const defaultModelRotation = 0;
+  const defaultCameraPosition = [0, 1, 2]; // Adjust to your default camera position
 
   const Loader = () => (
     <div className="modelLoader">
@@ -143,7 +190,10 @@ const ProductView = () => {
                       enableZoom={false}
                     />
                     {/* Add capture control inside the Canvas */}
-                    <CaptureControl captureRef={captureRef} />
+                    <CaptureControl
+                      captureRef={captureRef}
+                      orbitalRef={orbitalRef}
+                    />
                   </Canvas>
                 </Suspense>
               )}
@@ -162,16 +212,15 @@ const ProductView = () => {
                   <ThreeSixty fontSize="large" />
                 </Button>
                 <Button
-                  key="one"
+                  key="zoomIn"
                   className="btn2"
                   onClick={() => handleZoomIn(orbitalRef)}
                 >
                   <ZoomIn fontSize="large" />
                 </Button>
-                <Button key="three" onClick={() => handleZoomOut(orbitalRef)}>
+                <Button key="zoomOut" onClick={() => handleZoomOut(orbitalRef)}>
                   <ZoomOut fontSize="large" />
                 </Button>
-                {/* Capture button now works using the ref */}
               </ButtonGroup>
             </div>
           </div>

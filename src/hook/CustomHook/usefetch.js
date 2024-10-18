@@ -38,7 +38,6 @@ const useFetch = (url, config, formdata) => {
           if (response.status === 200 || response.status === 201) {
             resolve(response);
             setError(undefined);
-            console.log(url, "response?.data?.data?.user.role_id");
             if (url == "/auth/login") {
               response.data != null &&
                 response?.data?.data?.user.role_id == 2 &&

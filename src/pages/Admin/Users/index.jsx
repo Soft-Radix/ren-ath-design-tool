@@ -66,7 +66,7 @@ const Users = () => {
     const fetchData = async () => {
       const response = await loadQuery();
       if (response && response.data) {
-        setTotalCount(response.data.data.total_records);
+        setTotalCount(response?.data?.data?.total_records);
       }
     };
 
