@@ -74,6 +74,9 @@ const Designs = () => {
   // * save design id
   const [designId, setDesignId] = useState(null);
 
+  // * load button on the basis of pdf function
+  const [loadPdf, setLoadPdf] = useState(false);
+
   const [loadQuery, { response, loading, error }] = useFetchAdmin(
     `/design-all/list`,
     {
@@ -169,6 +172,7 @@ const Designs = () => {
   //* handle designById  Response
   useEffect(() => {
     if (loadDesignByIdResponse && loadDesignByIdResponse?.data) {
+      setLoadPdf(true);
       const designName = loadDesignByIdResponse?.data?.design_name;
       const userData = {
         team_name: loadDesignByIdResponse?.data?.user_detail?.team_name,
@@ -192,11 +196,13 @@ const Designs = () => {
         name: JSON.parse(loadDesignByIdResponse?.data?.name),
         logo: JSON.parse(loadDesignByIdResponse?.data?.logo),
       };
-      console.log("designInfo", designInfo?.pattern);
-      fetchAndDownloadLogos(designName, uploadedFiles, {
-        ...userData,
-        designInfo,
-      });
+      (async () => {
+        const res = await fetchAndDownloadLogos(designName, uploadedFiles, {
+          ...userData,
+          designInfo,
+        });
+        setLoadPdf(res);
+      })();
       setDesignId(null);
     }
     if (loadDesignByIdError) {
@@ -287,7 +293,7 @@ const Designs = () => {
                                 className={styles.exportBtn}
                                 onClick={() => setDesignId(item?.id)}
                               >
-                                {loadDesignByIdLoading &&
+                                {(loadDesignByIdLoading || loadPdf) &&
                                   designId === item?.id && <LoadingBars />}{" "}
                                 Export
                               </ThemeButton>
