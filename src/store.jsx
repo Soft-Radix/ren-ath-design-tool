@@ -124,7 +124,49 @@ export const useProductStore = create((set) => ({
   logoDecalPositions2: [],
   logoDecalPositions3: [],
   logoDecalPositions4: [],
-
+  myDesignId: null,
+  snapShot: "",
+  editedDesignId: null,
+  editDesignData: {},
+  snapShotImg: "",
+  callSnapShotFunc: false,
+  colorPelleteCollection: [],
+  globalLoader: false,
+  handleGlobalLoader: (loading) => {
+    console.log("🚀 ~ useProductStore ~ loading:", loading)
+    set(() => ({
+      globalLoader: loading,
+    }));
+  },
+  handleUpdateCollorPellteCollection: (colorsCollection) =>
+    set(() => ({
+      colorPelleteCollection: colorsCollection,
+    })),
+  handleCallSnapShotFunc: (isYes) =>
+    set(() => ({
+      callSnapShotFunc: isYes,
+    })),
+  updateSnapShotImage: (img) =>
+    set(() => ({
+      snapShotImg: img,
+    })),
+  updateEditedDesignData: (data) =>
+    set(() => ({
+      editDesignData: data,
+    })),
+  updateEditedDesignId: (id) => {
+    set(() => ({
+      editedDesignId: id,
+    }));
+  },
+  updateSnapShot: (img) =>
+    set(() => ({
+      snapShot: img,
+    })),
+  updateMyDesignId: (id) =>
+    set(() => ({
+      myDesignId: id,
+    })),
   setLogoDecalPositions1: (logoDecalPosition) =>
     set((state) => ({
       logoDecalPositions1: [logoDecalPosition],

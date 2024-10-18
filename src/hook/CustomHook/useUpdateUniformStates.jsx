@@ -1,8 +1,15 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useProductStore } from "../../store";
-import { getUniformData } from "../../utils/funtions";
+import useFetch from "./usefetch";
 
 export const useUpdateUniformStates = () => {
+  const [designData, setDesignData] = useState();
+  const [designId, setDesignId] = useState(null);
+  const navigate = useNavigate();
   const {
+    updateEditedDesignData,
+
     // Design
     updateDesignType,
     updateIsDesign,
@@ -66,10 +73,52 @@ export const useUpdateUniformStates = () => {
     // Add other relevant update functions here
   } = useProductStore((state) => state);
 
-  const updateFromUniformObject = () => {
-    const uniformObject = getUniformData();
-    console.log("🚀 ~ updateFromUniformObject ~ uniformObject:", uniformObject);
+  const [getDesignByIdQuery, { response, loading, error }] = useFetch(
+    `/design/detail/${designId}`,
+    {
+      method: "post",
+    }
+  );
 
+  // Function to update the design ID and fetch data based on it
+  const updateFromUniformObject = (id) => {
+    setDesignId(id);
+  };
+
+  // Fetch design data whenever designId changes
+  useEffect(() => {
+    if (designId) {
+      getDesignByIdQuery(); // Trigger API query once designId is updated
+    }
+  }, [designId]);
+
+  useEffect(() => {
+    if (response) {
+      const parseData = response?.data;
+      delete parseData["cover_photo"];
+      // delete parseData['design_name']
+      for (const key in parseData) {
+        try {
+          if (typeof parseData[key] === "string") {
+            parseData[key] = JSON.parse(parseData[key]);
+          } else {
+            parseData[key] = parseData[key];
+          }
+        } catch (error) {
+          console.error(`Error parsing value for key "${key}":`, error);
+          parseData[key] = parseData[key]; // Preserve original value if parsing fails
+        }
+      }
+      updateEditedDesignData(parseData);
+      setDesignData(parseData);
+      setTimeout(() => {
+        navigate("/product-view");
+      }, [1000]);
+    }
+  }, [response]);
+
+  useEffect(() => {
+    const uniformObject = designData;
     if (uniformObject) {
       //design
       updateDesignType(uniformObject.design.designType);
@@ -131,7 +180,7 @@ export const useUpdateUniformStates = () => {
     } else {
       console.log("No uniformObject found in localStorage.");
     }
-  };
+  }, [designData]);
 
   return updateFromUniformObject;
 };

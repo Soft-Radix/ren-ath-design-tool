@@ -5,18 +5,50 @@ import ThemeButton from "../../components/common/ThemeButton";
 import { useFormik } from "formik";
 import { loginValSchema } from "../../validations/AuthSchema";
 import useFetch from "../../hook/CustomHook/usefetch";
-import { setUserLocalData } from "../../utils/common";
+import {
+  getUserColorPelleteTemporary,
+  setUserColorPellete,
+  setUserLocalData,
+} from "../../utils/common";
 import { toast } from "react-toastify";
 import LoadingBars from "../../components/common/loader/LoadingBars";
 import { AuthContext } from "../../contexts/AuthContext";
+import { useProductStore } from "../../store";
 const Login = ({ setIsOpen }) => {
   const { setUser } = useContext(AuthContext);
-  const [loadQuery, { response, loading, error }] = useFetch("/auth/login", {
+  const [loadQuery, { response, loading, error, credentialsMatch }] = useFetch(
+    "/auth/login",
+    {
+      method: "post",
+    }
+  );
+  
+  // fecth api to save user color pellete list
+  const [saveColorPelleteQuery] = useFetch("/color-palette/add", {
     method: "post",
   });
+
+  const [
+    loadColorListQuery,
+    { response: colorReponse, loading: colorLoading, error: colorError },
+  ] = useFetch("/color-palette/detail", {
+    method: "get",
+  });
+  const { handleUpdateCollorPellteCollection } = useProductStore(
+    (store) => store
+  );
+
+  const handleUploadTempColorPellete = (preColors, TempColors) => {
+    const combinedColor = [...preColors, ...TempColors];
+    saveColorPelleteQuery({ color_palette: combinedColor.join(",") });
+    localStorage.removeItem("colorPelleteCollectionTemporary");
+    loadColorListQuery();
+  };
+
   const handleLogin = (values) => {
     loadQuery(values);
   };
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -30,11 +62,26 @@ const Login = ({ setIsOpen }) => {
 
   useEffect(() => {
     toast.dismiss();
+
     if (response) {
+      setUserColorPellete(response?.data?.user?.color_palette);
+      handleUpdateCollorPellteCollection(response?.data?.user?.color_palette);
       setUserLocalData(response.data);
+      const getTempColors = getUserColorPelleteTemporary();
+      if (getTempColors?.length > 0) {
+        handleUploadTempColorPellete(
+          response?.data?.user?.color_palette,
+          getTempColors
+        );
+      }
+      toast.error(credentialsMatch);
       setUser(response.data.user);
       toast.success(response.message);
       setIsOpen(false);
+    }
+
+    if (credentialsMatch) {
+      toast.error(credentialsMatch);
     }
 
     if (error) {
@@ -43,7 +90,15 @@ const Login = ({ setIsOpen }) => {
         toast.dismiss(toastId);
       };
     }
-  }, [response, error]);
+  }, [response, error, credentialsMatch]);
+
+  useEffect(() => {
+    if (colorReponse) {
+      setUserColorPellete(colorReponse.data?.color_palette);
+      handleUpdateCollorPellteCollection(colorReponse.data?.color_palette);
+    }
+  }, [colorReponse, colorError]);
+
   return (
     <form onSubmit={formik.handleSubmit}>
       <div className={styles.loginWrapper}>

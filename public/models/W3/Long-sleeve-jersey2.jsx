@@ -10,9 +10,8 @@ import { useProductStore } from "../../../src/store";
 // ----------------------------- Utils function imports -------------------------
 import {
   calculateScale,
-  getUniformData,
   handleAddNewUniform,
-  nonRepeatingPatterns,
+  nonRepeatingPatterns
 } from "../../../src/utils/funtions";
 
 // ----------------------------- Components import ------------------------------
@@ -326,7 +325,6 @@ export function Model(props) {
 
   useEffect(() => {
     handleAddNewUniform("logo", {
-      combinedLogos,
       logoScale,
       updatedLogos,
       logos,
@@ -336,7 +334,6 @@ export function Model(props) {
       decalPositions4,
     });
   }, [
-    combinedLogos,
     logoScale,
     updatedLogos,
     logos,
@@ -368,7 +365,6 @@ export function Model(props) {
   ]);
 
   useEffect(() => {
-    debugger;
     if (namePositions1[0]?.length > 0) {
       setNameDecalPositions1(namePositions1[0]);
     }
@@ -991,7 +987,6 @@ export function Model(props) {
   };
 
   useEffect(() => {
-    const uniformObject = getUniformData();
     const result = combineKeys({
       ...updatedLogos,
     });
@@ -1074,7 +1069,8 @@ export function Model(props) {
                 );
               })}
 
-            {combinedNames?.[3]?.length > 0 &&
+            {combinedNames &&
+              combinedNames?.[3]?.length > 0 &&
               combinedNames?.[3]?.map((item, index) => {
                 return (
                   <SleeveDecalName

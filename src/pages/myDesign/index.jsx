@@ -1,10 +1,47 @@
-import React from "react";
-import MainLayout from "../../components/Layouts/MainLayout";
+import React, { useEffect, useState } from "react";
+ 
 import bgImage from "../../assets/images/home/bgImage.png";
-import styles from "./myDesign.module.scss";
+import Loader from "../../components/common/loader";
 import SectionHeading from "../../components/common/sectionHeading";
+import MainLayout from "../../components/Layouts/MainLayout";
 import MyDesignList from "../../components/myDesigns/MyDesignList";
+import useFetch from "../../hook/CustomHook/usefetch";
+import { toast } from "react-toastify";
+import LoadingBars from "../../components/common/loader/LoadingBars";
+import styles from './myDesign.module.scss'
+
 const Mydesign = () => {
+  const [designList, setDesignList] = useState([]);
+
+  const [loadMyDesignListQuery, { response, loading, error }] = useFetch(
+    "/design/list",
+    {
+      method: "post",
+    }
+  );
+
+
+  //load api
+  useEffect(() => {
+    loadMyDesignListQuery();
+  }, []);
+
+  // handle api response
+  useEffect(() => {
+    toast.dismiss();
+    if (response?.data) {
+      setDesignList(response.data);
+      // toast.success(response.message);
+    }
+
+    if (error) {
+      const toastId = toast.error(error.message);
+      return () => {
+        toast.dismiss(toastId);
+      };
+    }
+  }, [response, error]);
+
   return (
     <MainLayout>
       <div className={styles.mainWrap}>
@@ -14,7 +51,14 @@ const Mydesign = () => {
           subHeading="Here is your fully customized design, tailored just for you."
         />
       </div>
-      <MyDesignList />
+      {loading ? (
+        <LoadingBars />
+      ) : (
+        <MyDesignList
+          designList={designList}
+          loadMyDesignListQuery={loadMyDesignListQuery}
+        />
+      )}
     </MainLayout>
   );
 };

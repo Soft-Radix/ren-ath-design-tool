@@ -12,6 +12,7 @@ export const dashboardIcon = (
     />
   </svg>
 );
+
 export const UserIcon = ({ color = "#0E2B3A", width = 24, height = 24 }) => {
   return (
     <svg

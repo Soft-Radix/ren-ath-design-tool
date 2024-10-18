@@ -13,8 +13,30 @@ import Dashboard from "./pages/Admin/Dashboard";
 import Users from "./pages/Admin/Users";
 import Designs from "./pages/Admin/Designs";
 import Mydesign from "./pages/myDesign";
+import {
+  getUserColorPellete,
+  getUserColorPelleteTemporary,
+  getUserLocalData,
+  getUserLocalInfo,
+} from "./utils/common";
+import { useEffect } from "react";
+import { useProductStore } from "./store";
 
 function App() {
+  const { handleUpdateCollorPellteCollection } = useProductStore(
+    (store) => store
+  );
+  const userToken = getUserLocalData();
+  const userLocalColorPellet = userToken
+    ? getUserColorPellete()
+    : getUserColorPelleteTemporary();
+
+  useEffect(() => {
+    if (userLocalColorPellet?.length > 0) {
+      handleUpdateCollorPellteCollection(userLocalColorPellet);
+    }
+  }, []);
+
   return (
     <div className="app">
       <Routes>
@@ -22,7 +44,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/my-design" element={<Mydesign />} />
         <Route path="/edit-profile" element={<EditProfile />} />
-        <Route path="/product-view/:styleCode" element={<ProductView />} />
+        <Route path="/product-view/:styleCode?" element={<ProductView />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/admin">
           <Route index element={<Login />} />
