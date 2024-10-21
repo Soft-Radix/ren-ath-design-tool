@@ -23,6 +23,7 @@ const Logo = () => {
     handleModelRotation,
     setLogos,
     updatedLogos,
+    orbitalRef,
   } = useProductStore((state) => state);
 
   const [expanded, setExpanded] = React.useState(false);
@@ -183,6 +184,15 @@ const Logo = () => {
     setLogoAngles(remainingLogoAngles);
   };
 
+  const handleRotationOnLogoSelect = (rotationValue) => {
+    orbitalRef.current.reset();
+    const camera = orbitalRef.current.object;
+    camera.zoom /= 1.1; // Adjust zoom factor as needed
+    camera.updateProjectionMatrix();
+    orbitalRef.current.update();
+    handleModelRotation(rotationValue);
+    camera.position.set(0, 2, 8); // Set x, y, z positions
+  };
   return (
     <div className={`${styles.numberWrap} ${styles.logoWrap}`}>
       {logos?.map((logo, index) => {
@@ -229,7 +239,7 @@ const Logo = () => {
                       logoPositions[logoKey] === 1 ? styles.selected : ""
                     }`}
                     onClick={() => {
-                      handleModelRotation(0);
+                      handleRotationOnLogoSelect(0);
                       updateLogosWithPosition(1, logo, logoKey);
                     }}
                   >
@@ -240,7 +250,7 @@ const Logo = () => {
                       logoPositions[logoKey] === 2 ? styles.selected : ""
                     }`}
                     onClick={() => {
-                      handleModelRotation(180);
+                      handleRotationOnLogoSelect(180);
                       updateLogosWithPosition(2, logo, logoKey);
                     }}
                   >
@@ -251,7 +261,7 @@ const Logo = () => {
                       logoPositions[logoKey] === 3 ? styles.selected : ""
                     }`}
                     onClick={() => {
-                      handleModelRotation(270);
+                      handleRotationOnLogoSelect(270);
                       updateLogosWithPosition(3, logo, logoKey);
                     }}
                   >
@@ -262,7 +272,7 @@ const Logo = () => {
                       logoPositions[logoKey] === 4 ? styles.selected : ""
                     }`}
                     onClick={() => {
-                      handleModelRotation(90);
+                      handleRotationOnLogoSelect(90);
                       updateLogosWithPosition(4, logo, logoKey);
                     }}
                   >
@@ -276,7 +286,7 @@ const Logo = () => {
                   min={0.5}
                   max={1.5}
                   step={0.1}
-                  value={logoScale ? logoScale[logoKey] :0.4}
+                  value={logoScale ? logoScale[logoKey] : 0.4}
                   defaultValue={0.3}
                   onChange={(e) => updateLogoScales(logoKey, e)}
                 />

@@ -123,7 +123,7 @@ const ProductView = () => {
 
   useEffect(() => {
     updateOrbitalRef(orbitalRef);
-  }, [updateOrbitalRef]);
+  }, [orbitalRef]);
 
   return (
     <div className={styles.loadingScreen}>

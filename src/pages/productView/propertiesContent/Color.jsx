@@ -27,7 +27,7 @@ const Color = () => {
     patternColor,
     handlePatternColor,
     handleIsDesignGradientEnabled,
-    handleModelRotation,
+    handleModelRotation,orbitalRef
   } = useProductStore((state) => state);
 
   const [expanded, setExpanded] = React.useState(false > false);
@@ -55,7 +55,13 @@ const Color = () => {
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             onClick={() => {
+              orbitalRef.current.reset();
+              const camera = orbitalRef.current.object;
+              camera.zoom /= 1.1; // Adjust zoom factor as needed
+              camera.updateProjectionMatrix();
+              orbitalRef.current.update();
               handleModelRotation(modelRotationValue(childIndex));
+              camera.position.set(0, 2, 8); // Set x, y, z positions
             }}
           >
             <div
