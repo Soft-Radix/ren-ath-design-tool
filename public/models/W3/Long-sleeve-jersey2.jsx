@@ -481,7 +481,7 @@ export function Model(props) {
               : patternScale || 1,
           },
           patternScaleFactor: {
-            value: nonRepeatingPatterns.includes(pattern) ? 1.0 : 0.6,
+            value: nonRepeatingPatterns.includes(pattern) ? 1.0 : 1.0,
           }, // Adjust the factor here dynamically
           isPrimaryGradient: { value: isPrimaryGradient },
           primaryGradientColor1: { value: primaryGradientColor1 },

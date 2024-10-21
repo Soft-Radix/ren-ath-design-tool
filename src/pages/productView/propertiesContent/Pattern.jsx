@@ -158,6 +158,7 @@ const Pattern = () => {
                       disabled={nonRepeatingPatterns.includes(pattern)}
                       max={2}
                       step={0.2}
+                      defaultValue={0.5}
                       value={patternScale[childIndex]}
                       onChange={(e) => {
                         if (childIndex === 0 || childIndex % 2 == 0) {
