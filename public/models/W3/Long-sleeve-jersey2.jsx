@@ -1387,35 +1387,37 @@ export function Model(props) {
 
             {number[3] && (
               <Decal
-                position={[0, 1.4, 0]}
+                position={[0, 1.2, 0]}
                 rotation={[0, degToRad(180), 0]}
-                scale={[4.5, 2.5, 2]}
+                scale={[3.0, 2.0, 2]}
                 origin={[0, 0, 0]}
                 // ref={textDecalRef}
               >
                 <meshStandardMaterial
                   transparent
                   polygonOffset
-                  polygonOffsetFactor={-1}
+                  polygonOffsetFactor={-0.1}
                 >
                   <RenderTexture attach="map">
                     <PerspectiveCamera
                       makeDefault
                       manual
                       aspect={2}
-                      position={[0, 0.1, 2.3]}
+                      position={[0, -0.2, 1.5]}
                     />
                     <GradientText
                       onPointerEnter={toggleHovered}
                       onPointerLeave={toggleHovered}
                       rotation={[0, 0, 0]}
-                      fontSize={1.6}
+                      fontSize={1.1}
+                      position={[0,0,-0.1]}
                       color1={numberColor[3]}
                       color2={numberGradientColor[3]}
                       outlineColor={numberOutline[3]}
                       isNumberGradientColor={isNumberGradientColor}
                       gradientScale={numberScale[3]}
                       gradientRotation={numberAngle[3]}
+                      renderOrder={999}
                       font={
                         numberFont[3] == 1
                           ? font1

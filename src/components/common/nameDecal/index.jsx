@@ -4,7 +4,6 @@ import React from "react";
 import GradientText from "../gradientText/GradientText";
 import { degToRad } from "three/src/math/MathUtils.js";
 import { handleDragLimitX, handleDragLimitY } from "../../../utils/funtions";
-
 const NameDecal = ({
   nameScale,
   item,
@@ -32,7 +31,7 @@ const NameDecal = ({
 
       const xPos = namePosition === 1 ? x * 0.01 : -(x * 0.01);
       const yPos = -(y * 0.02);
-
+    
       const finalPosition = [
         handleDragLimitX(xPos),
         handleDragLimitY(yPos),
@@ -51,12 +50,16 @@ const NameDecal = ({
       scale={nameScale}
       origin={[0, 0, 0]}
     >
-      <meshStandardMaterial transparent polygonOffset polygonOffsetFactor={-1}>
+      <meshStandardMaterial
+        transparent
+        // polygonOffset
+        //  polygonOffsetFactor={0.}
+      >
         <RenderTexture attach="map">
           <PerspectiveCamera
             makeDefault
             manual
-            aspect={1.6}
+            aspect={1.8}
             position={[0, 0.1, 2]}
           />
           <GradientText
@@ -73,6 +76,8 @@ const NameDecal = ({
             gradientScale={nameGradientScale}
             isNumberGradientColor={isNameGradientColor}
             font={nameFont}
+            renderOrder={999999}
+            position={[0, 0, 0]}
           >
             {`${name}`.toUpperCase()}
           </GradientText>

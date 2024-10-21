@@ -91,8 +91,8 @@ const LogoDecal = ({
 
   // Calculate the scale while preserving the aspect ratio
   const decalScale = [
-    aspectRatio * ((logoScale ? logoScale[item] : 0.4) || 0.5) * 1.5, // Adjust width according to aspect ratio
-    ((logoScale ? logoScale[item] : 0.4) || 0.5) * 1.5, // Height
+    aspectRatio * ((logoScale ? logoScale[item] : 0.3) || 0.3) * 1.5, // Adjust width according to aspect ratio
+    ((logoScale ? logoScale[item] : 0.3) || 0.3) * 1.5, // Height
     10, // Depth scale (Adjust if needed)
   ];
 
