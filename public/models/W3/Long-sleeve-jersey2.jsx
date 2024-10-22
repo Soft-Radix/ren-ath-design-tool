@@ -11,7 +11,7 @@ import { useProductStore } from "../../../src/store";
 import {
   calculateScale,
   handleAddNewUniform,
-  nonRepeatingPatterns
+  nonRepeatingPatterns,
 } from "../../../src/utils/funtions";
 
 // ----------------------------- Components import ------------------------------
@@ -383,7 +383,6 @@ export function Model(props) {
     namePositions4,
     modelRef.current,
   ]);
-
 
   useEffect(() => {
     handleAddNewUniform("pattern", {
@@ -1026,6 +1025,7 @@ export function Model(props) {
     nameDecalPositions4,
   ]);
 
+
   return (
     <>
       <ambientLight intensity={6} />
@@ -1410,7 +1410,7 @@ export function Model(props) {
                       onPointerLeave={toggleHovered}
                       rotation={[0, 0, 0]}
                       fontSize={1.1}
-                      position={[0,0,-0.1]}
+                      position={[0, 0, -0.1]}
                       color1={numberColor[3]}
                       color2={numberGradientColor[3]}
                       outlineColor={numberOutline[3]}

@@ -4,6 +4,7 @@ import React from "react";
 import GradientText from "../gradientText/GradientText";
 import { degToRad } from "three/src/math/MathUtils.js";
 import { handleDragLimitX, handleDragLimitY } from "../../../utils/funtions";
+import { useProductStore } from "../../../store";
 const NameDecal = ({
   nameScale,
   item,
@@ -24,6 +25,9 @@ const NameDecal = ({
   fontSize = 0.3,
   nameRotationAngle = 0,
 }) => {
+  const { updateNameScale, nameScale: scale } = useProductStore(
+    (state) => state
+  );
   const bindFront = useDrag(
     ({ offset: [x, y], down }) => {
       orbitalRef.current.enabled = !down;
@@ -31,7 +35,6 @@ const NameDecal = ({
 
       const xPos = namePosition === 1 ? x * 0.01 : -(x * 0.01);
       const yPos = -(y * 0.02);
-    
       const finalPosition = [
         handleDragLimitX(xPos),
         handleDragLimitY(yPos),
@@ -39,6 +42,9 @@ const NameDecal = ({
       ];
 
       setModelNamePosition(finalPosition);
+      if (yPos < -1.0 && scale[name] < 5) {
+        updateNameScale({ [name]: 5 });
+      }
     },
     { pointerEvents: true }
   );
@@ -60,7 +66,7 @@ const NameDecal = ({
             makeDefault
             manual
             aspect={1.8}
-            position={[0, 0.1, 2]}
+            position={[0, 0.1, 2.5]}
           />
           <GradientText
             {...bindFront()}
