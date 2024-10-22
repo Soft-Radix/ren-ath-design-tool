@@ -44,7 +44,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/my-design" element={<Mydesign />} />
         <Route path="/edit-profile" element={<EditProfile />} />
-        <Route path="/product-view" element={<ProductView />} />
+        <Route path="/product-view/:styleCode?" element={<ProductView />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/admin">
           <Route index element={<Login />} />

@@ -5,7 +5,7 @@ import { useProductStore } from "../../../store";
 import ThemeButton from "../ThemeButton";
 import styles from "./productCard.module.scss";
 
-const ProductCard = ({ title, image, id, designCount }) => {
+const ProductCard = ({ title, image, id, designCount, detail }) => {
   const navigate = useNavigate();
   const updateProduct = useProductStore((state) => state.updateProduct);
   const cookies = new Cookies(null, { path: "/" });
@@ -28,7 +28,7 @@ const ProductCard = ({ title, image, id, designCount }) => {
                 name: title,
                 designCount: designCount,
               });
-              navigate("/product-view");
+              navigate(`/product-view`);
             }}
           >
             Customize Now
