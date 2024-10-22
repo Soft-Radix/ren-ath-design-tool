@@ -67,8 +67,12 @@ export default function GradientText({
   isNumberGradientColor,
   onPointerEnter,
   onPointerLeave,
+  renderOrder,
+  position,
   ...props
 }) {
+  console.log("position", position);
+
   const material = useMemo(
     () =>
       new THREE.ShaderMaterial({
@@ -108,6 +112,11 @@ export default function GradientText({
             gl_FragColor = vec4(color, 1.0);
           }
         `,
+        depthWrite: false,
+        depthTest: false,
+        polygonOffset: true,
+        polygonOffsetFactor: 2, // Positive moves object closer to camera
+        polygonOffsetUnits: 2, // Determines how much
       }),
     [color1, color2, gradientScale, gradientRotation]
   );
@@ -118,15 +127,25 @@ export default function GradientText({
         onPointerEnter={onPointerEnter}
         onPointerLeave={onPointerLeave}
         {...props}
-        renderOrder={999}
+        renderOrder={renderOrder}
         color={color1}
         outlineColor={outlineColor}
         outlineWidth={outlineColor ? (outlineWidth ? outlineWidth : 0.04) : 0}
+        depthWrite={false}
+        depthTest={false}
+        position={position}
       >
         {children}
       </Text>
       {isNumberGradientColor && (
-        <Text {...props} material={material} renderOrder={999}>
+        <Text
+          {...props}
+          material={material}
+          renderOrder={renderOrder}
+          depthWrite={false}
+          depthTest={false}
+          position={position}
+        >
           {children}
         </Text>
       )}

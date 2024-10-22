@@ -15,7 +15,7 @@ import resetIcon from "../../../assets/svg/reset.svg";
 import { useProductStore } from "../../../store";
 import {
   modelRotationValue,
-  nonRepeatingPatterns
+  nonRepeatingPatterns,
 } from "../../../utils/funtions";
 import patternPaths from "./images";
 import styles from "./properties.module.scss";
@@ -37,6 +37,7 @@ const Pattern = () => {
     updatePatternScale,
     updatePatternRotationDeegre,
     handleModelRotation,
+    orbitalRef,
   } = useProductStore((state) => state);
 
   const handleChange = (panel) => (event, isExpanded) => {
@@ -91,6 +92,7 @@ const Pattern = () => {
     },
     [loadedImages, updatePattern, updateLayer]
   );
+
   // useEffect(() => {
   //   console.log("patternLayers", patternLayers);
   //   handleAddNewUniform("pattern", {
@@ -110,7 +112,13 @@ const Pattern = () => {
               onChange={handleChange(item?.uuid)}
               expanded={expanded === item?.uuid}
               onClick={() => {
+                orbitalRef.current.reset();
+                const camera = orbitalRef.current.object;
+                camera.zoom /= 1.1; // Adjust zoom factor as needed
+                camera.updateProjectionMatrix();
+                orbitalRef.current.update();
                 handleModelRotation(modelRotationValue(childIndex));
+                camera.position.set(0, 2, 8); // Set x, y, z positions
               }}
             >
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -150,6 +158,7 @@ const Pattern = () => {
                       disabled={nonRepeatingPatterns.includes(pattern)}
                       max={2}
                       step={0.2}
+                      defaultValue={0.5}
                       value={patternScale[childIndex]}
                       onChange={(e) => {
                         if (childIndex === 0 || childIndex % 2 == 0) {

@@ -43,6 +43,7 @@ const Name = () => {
     updateNameFont,
     updateNameRotation,
     updateNameColor,
+    orbitalRef,
   } = useProductStore((state) => state);
 
   const [type, setType] = useState({ 0: 1, 1: 1, 2: 1, 3: 1 });
@@ -140,6 +141,16 @@ const Name = () => {
     setUpdatedNames(newUpdatedNames);
   };
 
+  const handleRotationOnNameSelect = (rotationValue) => {
+    orbitalRef.current.reset();
+    const camera = orbitalRef.current.object;
+    camera.zoom /= 1.1; // Adjust zoom factor as needed
+    camera.updateProjectionMatrix();
+    orbitalRef.current.update();
+    handleModelRotation(rotationValue);
+    camera.position.set(0, 2, 8); // Set x, y, z positions
+  };
+  
   return (
     <div className={`${styles.numberWrap} ${styles.nameWrap}`}>
       {names.map((name, index) => (
@@ -180,7 +191,7 @@ const Name = () => {
                   namePositions[name] === 1 ? styles.selected : ""
                 }`}
                 onClick={() => {
-                  handleModelRotation(0);
+                  handleRotationOnNameSelect(0);
                   updateNamesWithPosition(1, name, index);
                 }}
               >
@@ -192,7 +203,7 @@ const Name = () => {
                   namePositions[name] === 2 ? styles.selected : ""
                 }`}
                 onClick={() => {
-                  handleModelRotation(180);
+                  handleRotationOnNameSelect(180);
                   updateNamesWithPosition(2, name, index);
                   updateNameScale({ [name]: 4 });
                 }}
@@ -205,7 +216,7 @@ const Name = () => {
                   namePositions[name] === 3 ? styles.selected : ""
                 }`}
                 onClick={() => {
-                  handleModelRotation(270);
+                  handleRotationOnNameSelect(270);
                   updateNamesWithPosition(3, name, index);
                 }}
               >
@@ -217,7 +228,7 @@ const Name = () => {
                   namePositions[name] === 4 ? styles.selected : ""
                 }`}
                 onClick={() => {
-                  handleModelRotation(90);
+                  handleRotationOnNameSelect(90);
                   updateNamesWithPosition(4, name, index);
                 }}
               >

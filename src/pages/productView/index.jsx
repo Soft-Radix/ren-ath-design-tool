@@ -68,9 +68,10 @@ const CaptureControl = ({ captureRef, orbitalRef }) => {
       if (orbitalRef.current) {
         orbitalRef.current.reset();
         const camera = orbitalRef.current.object;
-        camera.zoom /= 2.1; // Adjust zoom factor as needed
+        camera.zoom /= 1.1; // Adjust zoom factor as needed
         camera.updateProjectionMatrix();
         orbitalRef.current.update();
+        camera.position.set(0, 2, 8); // Set x, y, z positions
       }
 
       // Delay to allow the rotation and camera reset to complete
@@ -123,7 +124,7 @@ const ProductView = () => {
 
   useEffect(() => {
     updateOrbitalRef(orbitalRef);
-  }, [updateOrbitalRef]);
+  }, [orbitalRef]);
 
   return (
     <div className={styles.loadingScreen}>
