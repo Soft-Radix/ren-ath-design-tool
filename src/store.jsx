@@ -34,7 +34,7 @@ export const useProductStore = create((set) => ({
   },
   isDesignGradientEnabled: false,
   designCount: designCount,
-  designType: 10,
+  designType: null,
 
   patternColor: {},
   pattern: null,

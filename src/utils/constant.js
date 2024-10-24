@@ -49,7 +49,7 @@ export const WarmUpsProducts = [
     title: "Long Sleeve Hitting Tees with Hood",
     thumbnailImage: womenImg1,
     glbFile: "W1",
-    designCount: 4,
+    designCount: 8,
   },
   {
     id: "W2",

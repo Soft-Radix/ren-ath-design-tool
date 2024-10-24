@@ -8,7 +8,7 @@ import { handleAddNewUniform } from "../../../utils/funtions";
 const Design = () => {
   const { id, designCount } = useProductStore((state) => state);
   const { designType, updateDesignType, updateIsDesign, isDesign } =
-    useProductStore((state) => state);
+  useProductStore((state) => state);
 
   useEffect(() => {
     handleAddNewUniform("design", {
